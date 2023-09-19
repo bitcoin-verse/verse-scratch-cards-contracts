@@ -19,11 +19,11 @@ contract VerseVRF is Ownable, VRFConsumerBaseV2 {
     VRFCoordinatorV2Interface private immutable vrfCoordinator;
     ScratchNFT nftContract;
 
-    uint64 constant SUBSCRIPTION_ID = 776;
+    uint64 constant SUBSCRIPTION_ID = 951;
     uint16 constant CONFIRMATIONS_NEEDED = 3;
     uint32 constant CALLBACK_MAX_GAS = 2000000;
     bytes32 constant GAS_KEYHASH = 0xcc294a196eeeb44da2888d17c0625cc88d70d9760a69d58d853ba6581a9ab0cd; // 500 gwei
-    address constant TOKEN_ADDRESS = 0xd4061c196b26C72EcA1951829D90eB7Ad02693F0; // ERC20- Polygon
+    address constant TOKEN_ADDRESS = 0xc708D6F2153933DAA50B2D0758955Be0A93A8FEc; // ERC20- Polygon
 
     uint256[] public ticketsRemaining;
     uint256 public ticketCost;
@@ -53,7 +53,7 @@ contract VerseVRF is Ownable, VRFConsumerBaseV2 {
     constructor(address _vrfCoordinatorV2Address, uint _maxTickets, uint _ticketCost) 
     VRFConsumerBaseV2(_vrfCoordinatorV2Address)
     {
-        nftContract = new ScratchNFT("SV1", "V1");
+        nftContract = new ScratchNFT("SCRATCH", "ST");
         vrfCoordinator = VRFCoordinatorV2Interface(_vrfCoordinatorV2Address);
         ticketCost = _ticketCost;
         
@@ -94,7 +94,7 @@ contract VerseVRF is Ownable, VRFConsumerBaseV2 {
     }
  
     /// @notice request to draw n (numbersDrawn) random numbers between 0 and maximumnumber.
-    function buyScratchTicket() public {
+    function buyScratchTicket(address giftAddress) public {
         require(prizePreset == true, "sale has not started yet");
         require(ticketsRemaining.length > 0, "No tickets remaining");
 
@@ -109,11 +109,14 @@ contract VerseVRF is Ownable, VRFConsumerBaseV2 {
         );
         ++drawId;
 
+        address ticketReceiver = msg.sender;
+        if(giftAddress != address(0)) ticketReceiver = giftAddress;
+
         Drawing memory newDrawing = Drawing({
             result: 0,
             maximumNumber: ticketsRemaining.length,
             drawId: drawId,
-            ticketReceiver: payable(msg.sender)
+            ticketReceiver: payable(ticketReceiver)
         });
 
         requestIdToDrawing[requestId] = newDrawing;
