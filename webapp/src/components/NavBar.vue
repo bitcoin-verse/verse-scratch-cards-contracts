@@ -1,6 +1,6 @@
 <script>
-import { getAccount, waitForTransaction, readContract, writeContract, watchAccount, watchNetwork } from '@wagmi/core'
-import { useWeb3Modal, createWeb3Modal, defaultWagmiConfig } from '@web3modal/wagmi/vue'
+import { getAccount, watchAccount } from '@wagmi/core'
+import { useWeb3Modal } from '@web3modal/wagmi/vue'
 import { ref } from 'vue';
 
 export default {
@@ -62,7 +62,7 @@ export default {
 }
 
     .navbar {
-        background-color: rgba(22, 22, 34, 0.8117647059);
+        background-color: #1d1d3acf;
         width: 100%;
         height: 70px;
         div.logo {
