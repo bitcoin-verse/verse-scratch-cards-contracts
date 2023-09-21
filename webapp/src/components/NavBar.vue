@@ -48,6 +48,16 @@ export default {
 <style lang="scss">
 
 .btn-connect {
+    @media(max-width: 880px) {
+        width: calc(100% - 24px);
+    position: fixed;
+    bottom: 12px;
+    left: 12px;
+    height: 50px;
+    background-color: white;
+    border-radius: 5px;
+    color: #1a1833;
+    }
     margin-top: 2px;
     border: none;
     width: 140px;

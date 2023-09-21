@@ -559,12 +559,21 @@ const web3 = new Web3(new Web3.providers.HttpProvider('https://eth-mainnet.g.alc
 }
 
 .wrongNetworkWarning {
+    @media(max-width: 880px) {
+        font-size: 12px;
+        width: calc(100% - 10px);
+        padding-left: 10px;
+        height: 42px;
+        color: white;
+        font-weight: 600;
+        padding-top: 12px;
+    }
     width: 100%;
     height: 38px;
     padding-top: 15px;
     padding-left: 30px;
     font-weight: 600;
-    background-color: orange;
+    background-color: #ff0085a8;
     color: white;
 }
 .instant {
