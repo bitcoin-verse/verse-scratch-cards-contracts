@@ -27,7 +27,7 @@ const generateImage = async (win) => {
 
       let baseTextFont = Jimp.FONT_SANS_32_WHITE
   
-      let img =  await Jimp.read('./template.png')
+      let img =  await Jimp.read('./template_fix.png')
     
       let font = await Jimp.loadFont(baseTextFont)
   
