@@ -1,42 +1,110 @@
 <script>
 import { getAccount, waitForTransaction, readContract, writeContract, watchAccount, watchNetwork } from '@wagmi/core'
-import { useWeb3Modal, createWeb3Modal, defaultWagmiConfig } from '@web3modal/wagmi/vue'
-import { polygon } from '@wagmi/core/chains'
+import { useWeb3Modal, createWeb3Modal } from '@web3modal/wagmi/vue'
 import { ref } from 'vue';
 import ERC20ABI from '../abi/ERC20.json'
 import ContractABI from '../abi/contract.json'
+import axios from 'axios'
+import Web3 from 'web3'
 
-  const projectId = 'b30bc40c0cdef6000cd5066be1febf74'
-  const chains = [polygon]
-  const wagmiConfig = defaultWagmiConfig({ chains, projectId, appName: 'Verse Labs',  })
+const web3 = new Web3(new Web3.providers.HttpProvider('https://eth-mainnet.g.alchemy.com/v2/jOIyWO860V1Ekgvo9-WGdjDgNr2nYxlh'));
+
   const contractAddress = "0xa38a1a7e437ef9c27077a62e0e9796be171e164d"
-  createWeb3Modal({ 
-    tokens: {
-        137:{
-            address:"0xc708d6f2153933daa50b2d0758955be0a93a8fec",
-            image:"https://assets.coingecko.com/coins/images/28424/small/verselogo.png?1670461811" 
-        },
-    
-    },
-    includeWalletIds: ['107bb20463699c4e614d3a2fb7b961e66f48774cb8f6d6c1aee789853280972c','c57ca95b47569778a828d19178114f4db188b89b763c899ba0be274e97267d96', '19177a98252e07ddfc9af2083ba8e07ef627cb6103467ffebb3f8f4205fd7927'], wagmiConfig, projectId, chains})
-  
 
   export default {
   setup() {
     let account = getAccount()
+    let currentAccountAddress = ref("")
     let modal = useWeb3Modal()
+    let reopenAfterConnection = ref(false)
     let accountActive = ref(false)
     let correctNetwork = ref(true)
-    let modalActive = ref(false)
+    let modalActive = ref(false) // false
+    let ensLoaded = ref("")
     let verseBalance = ref(0);
     let verseAllowance = ref(0)
+    let giftInputLoad = ref(false)
+    let giftAddress = ref("");
     let modalLoading = ref(false)
     let loadingMessage = ref("")
-    let buyStep = ref(0)
-    let giftTicket = ref(false);
+    let buyStep = ref(0) // 0
+    let giftTicket = ref(false); // false
+    
+    let ticketInputAddress = ref("")
+    let ticketInputValid = ref(true)
 
+    let timeoutId;
+
+    async function onTicketInputChange() {
+        ticketInputValid.value = true
+        if (timeoutId) {
+            clearTimeout(timeoutId);
+        }
+
+        timeoutId = setTimeout(async () => {
+            ensLoaded.value = ""
+            giftInputLoad.value = true
+            if(ticketInputAddress.value.length != 42) {
+   
+                // address is invalid unless its ENS
+                try {
+                    const address = await web3.eth.ens.getAddress(ticketInputAddress.value);
+                    if(address.length > 0) {
+                        ensLoaded.value = "ens name: " + ticketInputAddress.value
+                        ticketInputAddress.value = address
+                        ticketInputValid.value = true
+                        giftInputLoad.value = false
+                    } else {
+                        ticketInputValid.value = false
+                        giftInputLoad.value = false
+                    }
+            
+                } catch (e) {
+                    let addr = await verseLookup(ticketInputAddress.value)
+                    if(addr.length > 0) {
+                        ticketInputValid.value = true
+                        ensLoaded.value = "verse name: " + ticketInputAddress.value
+                        ticketInputAddress.value = addr
+                        giftInputLoad.value = false
+
+                    } else {
+                        ticketInputValid.value = false
+                        giftInputLoad.value = false
+                    }
+                }
+            } else {
+                console.log("PROB REAL")
+                // address is probably valid
+                ticketInputValid.value = true
+            }
+        }, 500); 
+
+    }
+
+    async function verseLookup(name) {
+        try {
+            name = name.split("@verse")[0]
+            let res = await axios.get(`http://verse-resolver-l6c2rma45q-uc.a.run.app/username/MATIC/${name}`)
+            if(res.data) {
+                return res.data
+            } 
+            return ""
+        }
+        catch(e) {
+            console.log(e)
+            return ""
+        }
+    }
 
     function toggleModal() {
+        if(buyStep.value == 4 && modalActive.value == true) {
+            // cleanup
+            loadingMessage.value = ""
+            buyStep.value = 0;
+            giftTicket.value = false;
+            giftAddress.value == ""
+            getBalance()
+        }
         modalActive.value = !modalActive.value;
     }
 
@@ -60,13 +128,16 @@ import ContractABI from '../abi/contract.json'
         getAllowance()
     }    
 
-    async function purchaseTicket(giftAddress) {
+    async function purchaseTicket(_giftAddress) {
         try {
+            if(_giftAddress) {
+                giftAddress.value = _giftAddress
+            }
             loadingMessage.value = "waiting for wallet approval.."
             modalLoading.value = true
             let receiver = getAccount().address
-            if(giftAddress && giftAddress.length > 0) {
-                receiver = giftAddress
+            if(_giftAddress && _giftAddress.length > 0) {
+                receiver = _giftAddress
             }
             const { hash } = await writeContract({
             address: contractAddress,
@@ -81,7 +152,11 @@ import ContractABI from '../abi/contract.json'
             // Create an interval to decrement the timer every second
             const countdown = setInterval(() => {
                 timer--; // Decrement the timer
-                loadingMessage.value = `payment success! issuing ticket to your wallet and awaiting final confirmation. Expected arrival in ${timer} seconds!`;
+                if(giftTicket.value == true) {
+                    loadingMessage.value = `payment success! issuing gift ticket to chosen wallet and awaiting final confirmation. Expected arrival in ${timer} seconds!`;
+                } else {
+                    loadingMessage.value = `payment success! issuing ticket to your wallet and awaiting final confirmation. Expected arrival in ${timer} seconds!`;
+                }
 
                 if (timer <= 0) {
                     clearInterval(countdown);
@@ -156,12 +231,29 @@ import ContractABI from '../abi/contract.json'
         }
     })
     watchAccount(async () => {
+        
+        if(!currentAccountAddress.value) {
+            currentAccountAddress.value = getAccount().address
+        }
+        else {
+            if(currentAccountAddress.value != getAccount().address) {
+                // new account detected, reload page
+                console.log("new acc")
+                location.reload()
+            }
+        }
+
+
         if(getAccount().address &&  getAccount().address.length != undefined) {
             accountActive.value = true;
             if(buyStep.value < 1) {
                 buyStep.value = 1;
             }
 
+            if(reopenAfterConnection.value == true) {
+                reopenAfterConnection.value = false;
+                toggleModal()
+            }
             getBalance();
         } else {
             console.log("disable account")
@@ -172,6 +264,8 @@ import ContractABI from '../abi/contract.json'
 
     function connectAndClose() {
         modal.open()
+        // reopen after user is connect
+        reopenAfterConnection.value = true
         toggleModal()
     }
 
@@ -191,12 +285,19 @@ import ContractABI from '../abi/contract.json'
         modalActive,
         toggleModal,
         modalLoading,
+        giftAddress,
         verseBalance,
         verseAllowance,
         loadingMessage,
         purchaseTicket,
         giftTicket,
-        toggleGift
+        ticketInputAddress,
+        toggleGift,
+        verseLookup,
+        onTicketInputChange,
+        ticketInputValid,
+        ensLoaded,
+        giftInputLoad
     }
   }
 }
@@ -239,8 +340,8 @@ import ContractABI from '../abi/contract.json'
             <a class="" target="_blank" href="https://verse.bitcoin.com/"><button class="btn btn-modal verse">Buy on Verse Dex</button></a>
             <a class="" target="_blank" href="https://wallet.polygon.technology/polygon/bridge"><button class="btn btn-modal uniswap">Bridge Verse from Ethereum</button></a>
 
-            <p style="color: white;"><small style="color: white;">Need more help or want to purchase Verse by Credit Card? Learn more about getting Verse at our <a target="blank" style="text-decoration: none; color: #ffaa00;" href="https://www.bitcoin.com/get-started/how-to-buy-verse/">Verse Buying Guide</a></small></p>
-            <p><small>Bought Verse? click <a @click="getBalance()" style="font-weight: 500; cursor: pointer; text-decoration: none; color: #fac63b;">here</a> to refresh your balance</small></p>
+            <p style="color: white;"><small style="color: white;">Need more help or want to purchase Verse by Credit Card? Learn more about getting Verse at our <a target="blank" style="text-decoration: none; color: #ffaa00; font-weight: 500;" href="https://www.bitcoin.com/get-started/how-to-buy-verse/">Verse Buying Guide</a></small></p>
+            <p><small>Bought Verse? click <a @click="getBalance()" style="font-weight: 500; cursor: pointer; text-decoration: none; color: #ffaa01;">here</a> to refresh your balance</small></p>
             </div>
         </div>
         <!-- allowance modal -->
@@ -275,11 +376,33 @@ import ContractABI from '../abi/contract.json'
                 <p>It seems that you have 3000 Verse in your wallet and the contract approval has been set! <br><br>Choose if you want to buy a ticket for yourself or a friend.</p>
                 <a class="" target="_blank" @click="purchaseTicket()"><button class="btn btn-modal verse">Purchase Ticket for myself</button></a>
                 <a class="" target="_blank"><button class="btn btn-modal uniswap" @click="toggleGift()" v-if="!giftTicket">Gift a ticket</button></a>
-                <hr style="margin-top: 20px; border-color: black;"/>
-                <p class="p-gift" v-if="giftTicket">Polygon address to send gift to</p>
-                <input class="giftInput" v-model="ticketInputAddress" type="text" v-if="giftTicket == true">
-                <a class="" target="_blank" @click="purchaseTicket(ticketInputAddress)"><button class="btn btn-modal uniswap" v-if="giftTicket">Gift ticket</button></a>
-                <p style="color: white;"><small style="color: white;">Approvals are part of the default contract that Polygon tokens use. Learn more at <a target="blank" style="text-decoration: none; color: #ffaa00;" href="https://revoke.cash/learn/approvals/what-are-token-approvals">the token approval faq</a></small></p>
+                <hr v-if="giftTicket" style="margin-top: 20px; border-color: black;"/>
+                <div v-if="!giftTicket"><br/></div>
+                <p class="p-gift" style="font-size: 17px; font-weight: 600" v-if="giftTicket">Send ticket as a gift</p>
+                <p v-if="giftTicket" style="font-size: 16px; font-weight: 400;">We will give you a shareable link that you can share with your friend</p>
+                <input placeholder="Polygon Address" class="giftInput" @input="onTicketInputChange" style="color: white;" v-model="ticketInputAddress" type="text" v-if="giftTicket == true">
+                <p v-if="ensLoaded.length > 0" style="color: white; margin-top: 2px;  font-weight: 500"><small>({{ ensLoaded }})</small></p>
+                <p  v-if="!ticketInputValid && ticketInputAddress.length > 0" style="margin-top: 2px; color: rgb(255, 68, 0); font-weight: 500"><small>address is not valid</small></p>
+
+                <div v-if="giftInputLoad == false && giftTicket">
+                    <a class="" target="_blank" @click="purchaseTicket(ticketInputAddress)"><button class="btn btn-modal uniswap" v-if="giftTicket && ticketInputValid && ticketInputAddress.length > 0">Gift ticket</button></a>
+                    <a class="" target="_blank"><button class="btn btn-modal uniswap" style="background-color: #272631!important; color: white" v-if="ticketInputAddress.length == 0 && giftTicket">Submit an Address</button></a>
+                    <a class="" target="_blank" ><button class="btn btn-modal uniswap" style="background-color: #e7e7e7!important;" v-if="giftTicket && !ticketInputValid && ticketInputAddress.length > 0">Input valid address</button></a>
+                </div>
+
+                <div v-if="giftInputLoad == true && giftTicket">
+
+                        <div style="text-align: left;">
+                            <div class="lds-ring">
+                        <div style="height: 20px!important; width: 20px!important;"></div>
+                        <div style="height: 20px!important; width: 20px!important;"></div>
+                        <div style="height: 20px!important; width: 20px!important;"></div>
+                        <div style="height: 20px!important; width: 20px!important;"></div>
+                    </div>
+                        </div>                    
+
+                </div>
+
             </div>
         </div>
         <!-- normal finish -->
@@ -292,10 +415,23 @@ import ContractABI from '../abi/contract.json'
                 </div>
             </div>
             <div v-if="!modalLoading">
-                <h3>Purchase Completed</h3>
-                <p>Time to scratch your ticket!</p>
-                <!-- change this text for gifted tickets -->
-                <a class="" href="/tickets"><button class="btn btn-modal verse">View your tickets!</button></a>
+                <div v-if="giftTicket">
+                    <h3>Gift Purchase Completed</h3>
+                     <p>We have sent the ticket to your specified wallet! Share this link with the recipient to let them know:
+
+                        <input class="ticketlink" type="text" :value="`https://testdomain.com/tickets?gift=1&address=${giftAddress}`">
+                     </p>
+                     <!-- change this text for gifted tickets -->
+                     <a class="" href="/"><button class="btn btn-modal verse">Buy more tickets</button></a>
+                     <a class="" href="/tickets"><button class="btn btn-modal uniswap">View your tickets</button></a>
+
+                </div>
+                <div v-if="!giftTicket">
+                    <h3>Purchase Completed</h3>
+                     <p>Time to scratch your ticket!</p>
+                     <!-- change this text for gifted tickets -->
+                     <a class="" href="/tickets"><button class="btn btn-modal verse">View your tickets!</button></a>
+                </div>
             </div>
         </div>
     </div>
@@ -353,7 +489,19 @@ import ContractABI from '../abi/contract.json'
     </div>
 </template>
 
+
 <style lang="scss" scoped>
+.ticketlink {
+    height: 35px; 
+    padding-left: 10px;
+    width: 80%;
+    font-size: 16px;
+    font-weight: 500;
+    background-color: #464451;
+    border: 1px solid #E7E7E7;
+    color: white;
+    margin-top: 10px;
+}
 .tit {
     @media(max-width: 880px) {
         max-width: 85%!important;
@@ -372,13 +520,18 @@ import ContractABI from '../abi/contract.json'
 }
 .giftInput {
     outline: none;
-    padding-left: 5px;
     width: 375px;
     border: none;
+    padding-left: 7px;
     border-radius: 5px;
-    height: 30px;
+    height: 33px;
+    padding-bottom: 2px;
     margin-top: 10px;
     color: #555;
+    background-color: #423f52;
+    border: 1px solid white;
+    margin-bottom: 9px;
+    font-size: 16px;
 }
 .btn-modal {
     cursor: pointer;
@@ -422,7 +575,6 @@ import ContractABI from '../abi/contract.json'
 .clearfix {
     overflow: auto;
     width: 150%;
-    margin-top: 0!important;
     @media(max-width: 880px) {
         width: 100%!important;
         position: unset;
@@ -446,10 +598,11 @@ import ContractABI from '../abi/contract.json'
 }
 .float-holder{
     width: 100%;
-    height: 100%;
-    margin-top: 30px;
 }
 .btn-buy {
+    @media(max-width: 880px) {
+        width: calc(100% - 45px);
+    }
     margin-right: 10px;
     width: 200px;
     margin-top: 10px;
@@ -466,6 +619,9 @@ import ContractABI from '../abi/contract.json'
 }
 
 .btn-view {
+    @media(max-width: 880px) {
+        width: calc(100% - 45px);
+    }
     margin-right: 10px;
     width: 200px;
     margin-top: 20px;
@@ -527,7 +683,6 @@ import ContractABI from '../abi/contract.json'
     @media(max-width: 880px) {
             width: 100%!important;
             padding: 30px;
-            position: unset;
     }
 
     h2 {
@@ -579,8 +734,7 @@ import ContractABI from '../abi/contract.json'
 }
 .page {
     width: 100%;
-    min-height: 100vh;
-    background-color: #1d1d3acf;
+    padding-top: 50px;
 }
 
 h2 {
@@ -592,14 +746,5 @@ h2 {
 .fa-check {
     color: rgb(35, 226, 35);
 }
-
-
-
-
-
-
-
-
-
 
 </style>

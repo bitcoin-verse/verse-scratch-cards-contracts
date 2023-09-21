@@ -62,7 +62,6 @@ export default {
 }
 
     .navbar {
-        background-color: #1d1d3acf;
         width: 100%;
         height: 70px;
         div.logo {

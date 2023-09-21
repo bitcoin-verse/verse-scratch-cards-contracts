@@ -22,12 +22,7 @@ createWeb3Modal({
 
 </script>
 
-<template>
-
-  <header>
-
-  </header>
-  
+<template>  
   <body>
     <NavBar />
     <RouterView />
@@ -35,19 +30,67 @@ createWeb3Modal({
 </template>
 
 <style lang="scss">
+.backdrop {
+    position: fixed; 
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background-color: #4343438f;
+    z-index: 2;
+
+    .modal {
+        @media(max-width: 880px) {
+            width: 100%;
+            position: absolute;
+            width: 90%;
+            left: 0;
+            padding: 5%;
+        }
+        box-shadow: 0 0 20px rgba(17, 17, 29, 0.7);
+        width: 450px;
+        position: absolute;
+        left: calc(50% - 225px);
+        top: 150px;
+        background-color: #1c1b21;
+        border-radius: 5px;
+        padding: 30px;
+        h3 {
+            margin-top: 0;
+            color: white;
+        }
+        p {
+            color: white;
+        }
+        p.iholder {
+            text-align:right;
+            margin-top: 0;
+            margin-right: 5px;
+            margin-bottom: 0;
+            color: white;
+            i {
+                cursor: pointer;
+            }
+        }
+    }
+  }
+
 body {
   width: 100%;
-  min-height: 100vh;
-  background-image: url("./assets/bg9.webp");
-  background-size: cover;
+  background-image: url("./assets/bg-merge.png");
+  background-size: 100%;
   margin: 0;
   font-family: 'Montserrat', sans-serif;
   background-color: #171c2b;
+  @media(max-width: 1250px) {
+    background-size: 130%!important;
+    background-repeat: no-repeat;
+    background-color: #1a1833;
+  }
 }
 
 #app {
   width: 100%;
-  min-height: 100vh;
 }
 
 svg {
@@ -88,53 +131,6 @@ svg {
   100% {
     transform: rotate(360deg);
   }
-}
-
-.backdrop {
-    position: fixed; 
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100vh;
-    background-color: #4343438f;
-    z-index: 2;
-
-    .modal {
-        @media(max-width: 880px) {
-            width: 100%;
-            position: absolute;
-            width: 90%;
-            left: 0;
-            padding: 5%;
-        }
-        box-shadow: 0 0 20px rgba(17, 17, 29, 0.7);
-        width: 450px;
-        position: absolute;
-        left: calc(50% - 225px);
-        top: 180px;
-        background-color: #1c1b21;
-        border-radius: 5px;
-        padding: 30px;
-        h3 {
-            margin-top: 0;
-            color: white;
-        }
-        p {
-            color: white;
-        }
-        p.iholder {
-            text-align:right;
-            margin-top: 0;
-            margin-right: 5px;
-            margin-bottom: 0;
-            color: white;
-            i {
-                cursor: pointer;
-            }
-        }
-    }
-
-
 }
 
 </style>
