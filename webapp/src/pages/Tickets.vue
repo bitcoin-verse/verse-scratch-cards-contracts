@@ -85,7 +85,11 @@ export default {
         })
 
         async function redeem(nftId) {
+            console.log("TEST")
             modalLoading.value = true
+            console.log(nftId)
+            
+            try {
             const { hash } = await writeContract({
             address: contractAddress,
             abi: ContractABI,
@@ -93,12 +97,17 @@ export default {
             chainId: 137,
             args: [nftId]
             })
-
             await waitForTransaction({ hash })
             modalLoading.value = false
             const objToUpdate = nfts.value.find(obj => obj.id == nftId);
             objToUpdate.claimed = true
             step.value = 1;
+
+            } catch (e) {
+                modalLoading.value = false;
+                console.log(e)
+            }
+
         }
 
         function setScratched(id) {
@@ -279,7 +288,7 @@ export default {
     </div>
 
     <div class="tickets" v-if="accountActive && loading">
-        <div style="text-align: left;">
+        <div style="text-align: center;">
             <div class="lds-ring"><div></div><div></div><div></div><div></div></div>
          </div>
     </div>
@@ -401,6 +410,7 @@ div.tickets {
     padding-top: 50px;
     @media(max-width: 880px) {
         padding-left: 10px;
+        padding-top: 20px;
     }
     h3 {
         font-weight: 400;

@@ -14,6 +14,8 @@ var ScratchCard = function (options) {
   return(this.can);
 };
 
+
+
 ScratchCard.prototype.init = function (canvasID) {
   // Variable to check if a continous press is occurring
   this.pressed = false;
@@ -34,6 +36,16 @@ ScratchCard.prototype.init = function (canvasID) {
   this.can.addEventListener('touchcancel', this.touchUp.bind(this), false);
   // Reset the canvas. Image gets hidden
   this.reset();
+
+  document.addEventListener("touchmove", () => {
+    // fix for mobile
+    this.can = document.getElementById(canvasID);
+    this.ctx = this.can.getContext('2d');
+    var canRect = this.can.getBoundingClientRect();
+    this.offset = { top: canRect.top + document.body.scrollTop, left: canRect.left + document.body.scrollLeft };
+  })
+  
+
 };
 
 ScratchCard.prototype.mouseDown = function (e) {
@@ -44,6 +56,7 @@ ScratchCard.prototype.mouseDown = function (e) {
   var currentY = e.pageY - this.offset.top;
   // Call draw with the X and Y coordinates. The last parameter of the call tells the function
   // whether the user is currently pressing the screen or if its a starting action (mousedown or touchdown).
+  console.log(currentX, currentY)
   this.draw(currentX, currentY, false);
 };
 
@@ -63,6 +76,7 @@ ScratchCard.prototype.mouseUp = function () {
 };
 
 ScratchCard.prototype.touchDown = function (e) {
+  console.log("TOUCHDOWN")
   // Touch is a bit more complicated than mouse usage since mobiel browsers have default
   // functionalities. Also the touch position is not a real position but an array.
   e.preventDefault();
@@ -74,16 +88,19 @@ ScratchCard.prototype.touchDown = function (e) {
 };
 
 ScratchCard.prototype.touchMove = function (e) {
+  console.log("TOUCHMOVE")
   e.preventDefault();
   // To avoid some weird cases we have to check if a touchstart event occured beforehand
   if (this.pressed) {
     var currentX = e.targetTouches[0].pageX - this.offset.left;
+    // bugged
     var currentY = e.targetTouches[0].pageY - this.offset.top;
     this.draw(currentX, currentY, true);
   }
 };
 
 ScratchCard.prototype.touchUp = function () {
+  console.log("TOUCHUP")
   // Reset the control variable
   this.pressed = false;
 };

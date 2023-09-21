@@ -9,6 +9,8 @@ let count = ref(8);
 let imageLoaded = ref(false)
 
 
+
+
 watch(count, async (newValue)=> {
     if (newValue == 0) {
         // fireworks
@@ -48,6 +50,8 @@ watch(count, async (newValue)=> {
 })
 
 onMounted(() => {
+
+
     const img = new Image();
     img.src = `/tickets/${props.detailNFT.id}.png`
     img.onload = () => {
@@ -141,6 +145,15 @@ onMounted(() => {
 
 <style lang="scss">
 .right {
+    @media(max-width: 880px) {
+        position: fixed;
+        background-color: #1a1833;
+        padding: 20px;
+        bottom: 0;
+        left: 0;
+        z-index: 3;
+        border-top: 1px solid white;
+    }
     padding-top: 130px;
     .claim {
         color: white;
@@ -172,8 +185,10 @@ h3.win {
 }
 .left {
     @media(max-width: 880px) {
-        width: calc(100% - 40px);
-        padding: 20px;
+       padding: 20px;
+       width: calc(100% - 40px);
+       margin-top: 0;
+       padding-top: 0;
     }
     margin-top: 50px;
     width: 32.7%;
@@ -219,7 +234,11 @@ h3.win {
 .cont {
     float: left;
     @media(max-width: 880px) {
-
+        padding-top: 0;
+        padding-left: 0;
+        padding-bottom: 200px;
+        width: 100%;
+        overflow: scroll;
     }
     padding-top: 25px;
     h2 {
@@ -234,6 +253,7 @@ h3.win {
     background-repeat: no-repeat;
     width: 383px;
     height: 720px;
+
 }
 #scratchcanvas1 {
     border-radius: 50%;

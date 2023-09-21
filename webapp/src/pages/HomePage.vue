@@ -510,6 +510,7 @@ const web3 = new Web3(new Web3.providers.HttpProvider('https://eth-mainnet.g.alc
 .subtitle {
     @media(max-width: 880px) {
         width: 85%!important;
+        margin-top: 0;
     }
 }
 .p-gift {
@@ -585,6 +586,10 @@ const web3 = new Web3(new Web3.providers.HttpProvider('https://eth-mainnet.g.alc
 }
 .bubble {
 
+    @media(max-width: 880px) {
+        width: 41%!important;
+        margin-right: 2%!important;
+    }
     margin-bottom: 20px;
     width: 150px; 
     height: 18px;
@@ -595,6 +600,9 @@ const web3 = new Web3(new Web3.providers.HttpProvider('https://eth-mainnet.g.alc
     float: left;
     margin-right: 10px;
     p {
+        @media(max-width: 880px) {
+            font-size: 11px;
+        }
         color: white;
         font-size: 13px;
         margin: 0;
@@ -685,8 +693,10 @@ const web3 = new Web3(new Web3.providers.HttpProvider('https://eth-mainnet.g.alc
     left: 0;
     color: white;
     @media(max-width: 880px) {
+        
         width: calc(100% - 30px)!important;
         padding: 15px;
+        padding-bottom: 200px;
     }
 
     h2 {
@@ -739,6 +749,7 @@ const web3 = new Web3(new Web3.providers.HttpProvider('https://eth-mainnet.g.alc
 .page {
     @media(max-width: 880px) {
         width: 100%;
+        padding-top: 0;
     }
     width: 100%;
     padding-top: 50px;

@@ -62,6 +62,9 @@ export default {
 }
 
     .navbar {
+        @media(max-width: 880px) {
+            height: 105px;
+        }
         width: 100%;
         height: 70px;
         div.logo {
@@ -78,6 +81,7 @@ export default {
         div.links { 
             @media(max-width: 880px) {
             width: 100%!important;
+            padding-top: 0;
             }
             margin: 0;
             padding-top: 10px;
@@ -87,6 +91,7 @@ export default {
             ul {
             @media(max-width: 880px) {
                 padding-left: 0;
+                margin-top: 0;
             }
             display: inline-block;
             margin-left: 0 auto;
@@ -106,10 +111,13 @@ export default {
         }
         div.wallet {
             @media(max-width: 930px) {
-                position: fixed;
-                bottom: 16px;
-                width: 400px;
-                left: 10px;
+                background-color: #1a1833;
+                position: fixed; 
+                width: 100%;
+                left: 0;
+                bottom: 0;
+                padding: 10px;
+                z-index:2;
             }
             margin: 0;
             margin-top: 10px;
