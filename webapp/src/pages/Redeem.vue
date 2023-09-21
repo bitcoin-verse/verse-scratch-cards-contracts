@@ -6,6 +6,8 @@ const props = defineProps(['closeDetailScreen', 'detailNFT', 'setScratched', 'to
 
 
 let count = ref(8);
+let imageLoaded = ref(false)
+
 
 watch(count, async (newValue)=> {
     if (newValue == 0) {
@@ -46,36 +48,49 @@ watch(count, async (newValue)=> {
 })
 
 onMounted(() => {
-    let scratched = [false, false, false, false, false, false, false, false];
-    var options1 = { id: 'scratchcanvas1', brushSize: 10, lineJoin: 'round', percentRequired: 10, fillColor: '#bdbdbd' };
-    var options2 = { id: 'scratchcanvas2', brushSize: 10, lineJoin: 'round', percentRequired: 10, fillColor: '#bdbdbd' };
-    var options3 = { id: 'scratchcanvas3', brushSize: 10, lineJoin: 'round', percentRequired: 10, fillColor: '#bdbdbd' };
-    var options4 = { id: 'scratchcanvas4', brushSize: 10, lineJoin: 'round', percentRequired: 10, fillColor: '#bdbdbd' };
-    var options5 = { id: 'scratchcanvas5', brushSize: 10, lineJoin: 'round', percentRequired: 10, fillColor: '#bdbdbd' };
-    var options6 = { id: 'scratchcanvas6', brushSize: 10, lineJoin: 'round', percentRequired: 10, fillColor: '#bdbdbd' };
-    var options7 = { id: 'scratchcanvas7', brushSize: 10, lineJoin: 'round', percentRequired: 10, fillColor: '#bdbdbd' };
-    var options8 = { id: 'scratchcanvas8', brushSize: 10, lineJoin: 'round', percentRequired: 10, fillColor: '#bdbdbd' };
-    let one = new window.ScratchCard(options1);
-    let two = new window.ScratchCard(options2);
-    let three = new window.ScratchCard(options3);
-    let four = new window.ScratchCard(options4);
-    let five = new window.ScratchCard(options5);
-    let six = new window.ScratchCard(options6);
-    let seven = new window.ScratchCard(options7);
-    let eight = new window.ScratchCard(options8);
+    const img = new Image();
+    img.src = `/tickets/${props.detailNFT.id}.png`
+    img.onload = () => {
+        console.log("LOADED")
+        console.log(imageLoaded.value)
+        imageLoaded.value = true;
+        setTimeout(() => {
+            setupScratch()
+        }, 10);
+    };
 
-    let arr = [one, two, three, four, five, six, seven, eight]
-    arr.forEach((item, idx) => {
-        item.addEventListener('success', function (e) {
-        if(scratched[idx] == false) {
-            scratched[idx] = true
-            count.value--;
-        }
-        if(count.value == 0) {
-            props.setScratched(props.detailNFT.id);
-        }
-    }, false);
-    })
+    function setupScratch() {
+        let scratched = [false, false, false, false, false, false, false, false];
+        var options1 = { id: 'scratchcanvas1', brushSize: 10, lineJoin: 'round', percentRequired: 10, fillColor: '#bdbdbd' };
+        var options2 = { id: 'scratchcanvas2', brushSize: 10, lineJoin: 'round', percentRequired: 10, fillColor: '#bdbdbd' };
+        var options3 = { id: 'scratchcanvas3', brushSize: 10, lineJoin: 'round', percentRequired: 10, fillColor: '#bdbdbd' };
+        var options4 = { id: 'scratchcanvas4', brushSize: 10, lineJoin: 'round', percentRequired: 10, fillColor: '#bdbdbd' };
+        var options5 = { id: 'scratchcanvas5', brushSize: 10, lineJoin: 'round', percentRequired: 10, fillColor: '#bdbdbd' };
+        var options6 = { id: 'scratchcanvas6', brushSize: 10, lineJoin: 'round', percentRequired: 10, fillColor: '#bdbdbd' };
+        var options7 = { id: 'scratchcanvas7', brushSize: 10, lineJoin: 'round', percentRequired: 10, fillColor: '#bdbdbd' };
+        var options8 = { id: 'scratchcanvas8', brushSize: 10, lineJoin: 'round', percentRequired: 10, fillColor: '#bdbdbd' };
+        let one = new window.ScratchCard(options1);
+        let two = new window.ScratchCard(options2);
+        let three = new window.ScratchCard(options3);
+        let four = new window.ScratchCard(options4);
+        let five = new window.ScratchCard(options5);
+        let six = new window.ScratchCard(options6);
+        let seven = new window.ScratchCard(options7);
+        let eight = new window.ScratchCard(options8);
+
+        let arr = [one, two, three, four, five, six, seven, eight]
+        arr.forEach((item, idx) => {
+            item.addEventListener('success', function (e) {
+            if(scratched[idx] == false) {
+                scratched[idx] = true
+                count.value--;
+            }
+            if(count.value == 0) {
+                props.setScratched(props.detailNFT.id);
+            }
+        }, false);
+        })
+    }
 
 })
 
@@ -95,7 +110,7 @@ onMounted(() => {
         </div>
         </div>
         <div class="cont">
-        <div class="ticketholder" :style="{'background-image': 'url(/tickets/' + detailNFT.id + '.png)' } ">
+        <div class="ticketholder" v-show="imageLoaded" :style="{'background-image': 'url(/tickets/' + detailNFT.id + '.png)' } ">
             <canvas id="scratchcanvas1" width="68" height="68"></canvas>
             <canvas id="scratchcanvas2" width="68" height="68"></canvas>
             <canvas id="scratchcanvas3" width="68" height="68"></canvas>
