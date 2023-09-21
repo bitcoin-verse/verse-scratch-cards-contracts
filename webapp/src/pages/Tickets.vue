@@ -413,7 +413,9 @@ export default {
 
 
 div.tickets {
-    width: 100%;
+    width: calc(100% - 100px);
+    display: inline-block;
+    margin-bottom: 500px;
     padding-left: 100px;
     padding-top: 50px;
     @media(max-width: 880px) {
