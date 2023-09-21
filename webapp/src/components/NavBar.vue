@@ -1,5 +1,5 @@
 <script>
-import { getAccount, watchAccount } from '@wagmi/core'
+import { getAccount, watchAccount, disconnect } from '@wagmi/core'
 import { useWeb3Modal } from '@web3modal/wagmi/vue'
 import { ref } from 'vue';
 
@@ -10,6 +10,7 @@ export default {
         let accountActive = ref(false)
 
         function openWalletModal() {
+            disonnect()
             modal.open()
         }
 
