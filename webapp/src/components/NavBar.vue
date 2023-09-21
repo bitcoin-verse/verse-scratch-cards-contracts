@@ -10,7 +10,7 @@ export default {
         let accountActive = ref(false)
 
         function openWalletModal() {
-            disonnect()
+            disconnect()
             modal.open()
         }
 
@@ -50,14 +50,17 @@ export default {
 
 .btn-connect {
     @media(max-width: 880px) {
-        width: calc(100% - 24px);
+        width: 100%;
     position: fixed;
-    bottom: 12px;
-    left: 12px;
+    bottom: 0;
+    font-weight: 600;
+    font-size: 15px;
+    left: 0;
     height: 50px;
-    background-color: white;
-    border-radius: 5px;
-    color: #1a1833;
+    background-color: #2f2b5d;
+    border-radius: 0;
+    color: white;
+    border: none;
     }
     margin-top: 2px;
     border: none;
