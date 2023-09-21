@@ -289,7 +289,7 @@ export default {
     </div>
 
     <div class="tickets" v-if="accountActive && loading">
-        <div style="text-align: center;">
+        <div class="spin" >
             <div class="lds-ring"><div></div><div></div><div></div><div></div></div>
          </div>
     </div>
@@ -328,7 +328,14 @@ export default {
 
 
 <style lang="scss">
-
+.spin {
+    width: 50px;
+    padding-left: calc(50% - 50px);
+    // text-align: left;
+    @media(max-width: 880px) {
+        text-align: center!important;
+    }
+}
 .title {
     margin-bottom: 0;
 }
@@ -410,8 +417,11 @@ div.tickets {
     padding-left: 100px;
     padding-top: 50px;
     @media(max-width: 880px) {
+        width: calc(100% - 10px);
+        display: inline-block;
         padding-left: 10px;
         padding-top: 20px;
+        margin-bottom: 200px!important;
     }
     h3 {
         font-weight: 400;

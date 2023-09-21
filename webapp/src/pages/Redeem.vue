@@ -55,9 +55,9 @@ onMounted(() => {
     const img = new Image();
     img.src = `/tickets/${props.detailNFT.id}.png`
     img.onload = () => {
-        imageLoaded.value = true;
         setTimeout(() => {
             setupScratch()
+            imageLoaded.value = true;
         }, 4);
     };
 
