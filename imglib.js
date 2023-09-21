@@ -89,23 +89,10 @@ const generateImage = async (win) => {
       }, 300,50 )
   
           
-  
+      img.resize(795, 1501)
       
       img.writeAsync(`tickets/${item.id}.png`);
-    
-    
 
-    // let imgPrep = await img.getBufferAsync(Jimp.AUTO);
-
-    // const uploadedImage = await s3.upload({
-    //   Bucket: process.env.AWS_S3_BUCKET_NAME,
-    //   Key: Date.now() + '.jpg',
-    //   Body: imgPrep,
-    //   ContentType: 'image/jpeg',
-    //   ACL: 'public-read'
-    // }).promise()
-
-    // return uploadedImage.Location
   } catch (e) {
     throw new Error(e)
     
