@@ -163,6 +163,22 @@ ScratchCard.prototype.clearPercentage = function (clearedAmount) {
 ScratchCard.prototype.reset = function () {
   // Reset the canvas. Fill it with paint so the user can scratch again.
   this.ctx.globalCompositeOperation = 'source-over';
-  this.ctx.fillStyle = this.color;
+  // overwrite with gradient
+
+// Set the source of the image
+const img = new Image();
+img.src = './texture3.png'; // Replace with the actual path to your image
+
+// Wait for the image to load
+img.onload = () => {
+  const pattern = this.ctx.createPattern(img, 'repeat');
+  this.ctx.fillStyle = pattern;
+  // const gradient = this.ctx.createLinearGradient(0, 0, 68, 68);
+  // gradient.addColorStop(0, '#e6e6e6'); // Light grey at the start
+  // gradient.addColorStop(0.5, '#5F6EF3'); // White in the middle
+  // gradient.addColorStop(1, '#CF11EE'); // Light grey at the end
+
+  // this.ctx.fillStyle = gradient;
   this.ctx.fillRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
-};
+  };
+}

@@ -15,8 +15,8 @@ export default {
 
         const route = useRoute()
 
-        const contractAddress = "0xA38A1a7e437eF9c27077a62E0E9796Be171e164D"
-        const nftContract = "0x3aec78547f92357238851e615ac7cc7614d87584"
+        const contractAddress = "0xfe5d5C480C575C313f46FFC23df5fbd414D4813e"
+        const nftContract = "0x0b5bda6c48f81957cc56ad433df6e8ae16dd3755"
 
         let list = []
         let account = getAccount()
@@ -308,7 +308,7 @@ export default {
             </p>
 
             <div v-if="item.claimed == false">
-                <img v-if="item.scratched == false" src="/src/assets/scratch_ad3.png">
+                <img v-if="item.scratched == false" src="/src/assets/scratch_ad4.png">
                 <img v-if="item.scratched == true" :src="'/tickets/' + item.id + '.png'">
             </div>
             <div v-if="item.claimed == true">

@@ -104,9 +104,9 @@ onMounted(() => {
         <div class="left">
             <div class="btn-holder">
             <a style="cursor: pointer" @click="closeDetailScreen()"><h5 class="breadcrumb"><i class="fa-solid fa-arrow-left"></i> Return to Ticket Overview</h5></a>
-            <h2>Scratch <span>same number 3 times</span> to win</h2>
+            <h2><span style="color: #fac43b">Scratch same number 3 times to win</span></h2>
             <h3>Fields left to scratch: {{ count }}</h3>
-            <p>Scratch the tickets by moving your mouse over the scratch fields. Alternatively you can check the prize by clicking on the check prize
+            <p style="color: white; font-weight: 500;">Scratch the tickets by dragging your mouse over the scratch fields. Alternatively you can check the prize by clicking on the check prize
                 button below.
             </p>
         </div>
@@ -171,7 +171,7 @@ onMounted(() => {
     float: left;
 }
 .breadcrumb {
-    color: #fac43b;
+    color: white;
 }
 h2.win {
     margin-bottom: 0;
@@ -280,7 +280,7 @@ h3.win {
     border-radius: 50%;
     position: absolute;
     bottom: 256px;
-    left: 284px;
+    left: 283.5px;
 }
 
 #scratchcanvas5 {
@@ -294,14 +294,14 @@ h3.win {
     border-radius: 50%;
     position: absolute;
     bottom: 173px;
-    left: 109px;
+    left: 109.5px;
 }
 
 #scratchcanvas7 {
     border-radius: 50%;
     position: absolute;
     bottom: 173px;
-    left: 196px;
+    left: 196.9px;
 }
 
 #scratchcanvas8 {

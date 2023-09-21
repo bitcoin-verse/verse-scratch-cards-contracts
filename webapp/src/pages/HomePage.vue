@@ -9,7 +9,7 @@ import Web3 from 'web3'
 
 const web3 = new Web3(new Web3.providers.HttpProvider('https://eth-mainnet.g.alchemy.com/v2/jOIyWO860V1Ekgvo9-WGdjDgNr2nYxlh'));
 
-  const contractAddress = "0xa38a1a7e437ef9c27077a62e0e9796be171e164d"
+  const contractAddress = "0xfe5d5C480C575C313f46FFC23df5fbd414D4813e"
 
   export default {
   setup() {
@@ -419,7 +419,7 @@ const web3 = new Web3(new Web3.providers.HttpProvider('https://eth-mainnet.g.alc
                     <h3>Gift Purchase Completed</h3>
                      <p>We have sent the ticket to your specified wallet! Share this link with the recipient to let them know:
 
-                        <input class="ticketlink" type="text" :value="`https://testdomain.com/tickets?gift=1&address=${giftAddress}`">
+                        <input class="ticketlink" type="text" :value="`https://main--chipper-hotteok-85cbb2.netlify.app/tickets?gift=1&address=${giftAddress}`">
                      </p>
                      <!-- change this text for gifted tickets -->
                      <a class="" href="/"><button class="btn btn-modal verse">Buy more tickets</button></a>
@@ -483,7 +483,7 @@ const web3 = new Web3(new Web3.providers.HttpProvider('https://eth-mainnet.g.alc
         </div>
 
         <div class="card-holder">
-            <img class="animate__animated animate__fadeInDownBig" src="../assets/scratch_ad3.png">
+            <img class="animate__animated animate__fadeInDownBig" src="../assets/scratch_ad4.png">
         </div>
         </div>
     </div>
