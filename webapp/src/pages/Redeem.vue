@@ -95,7 +95,7 @@ onMounted(() => {
         </div>
         </div>
         <div class="cont">
-        <div class="ticketholder" :style="{'background-image': 'url(/assets/tickets/' + detailNFT.id + '.png)' } ">
+        <div class="ticketholder" :style="{'background-image': 'url(/tickets/' + detailNFT.id + '.png)' } ">
             <canvas id="scratchcanvas1" width="68" height="68"></canvas>
             <canvas id="scratchcanvas2" width="68" height="68"></canvas>
             <canvas id="scratchcanvas3" width="68" height="68"></canvas>
