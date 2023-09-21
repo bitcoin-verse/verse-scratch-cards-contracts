@@ -51,8 +51,6 @@ onMounted(() => {
     const img = new Image();
     img.src = `/tickets/${props.detailNFT.id}.png`
     img.onload = () => {
-        console.log("LOADED")
-        console.log(imageLoaded.value)
         imageLoaded.value = true;
         setTimeout(() => {
             setupScratch()
@@ -110,6 +108,11 @@ onMounted(() => {
         </div>
         </div>
         <div class="cont">
+        <div v-if="!imageLoaded" style="padding: 100px;">
+            <div style="text-align: center;">
+                <div class="lds-ring"><div></div><div></div><div></div><div></div></div>
+            </div>
+        </div>
         <div class="ticketholder" v-show="imageLoaded" :style="{'background-image': 'url(/tickets/' + detailNFT.id + '.png)' } ">
             <canvas id="scratchcanvas1" width="68" height="68"></canvas>
             <canvas id="scratchcanvas2" width="68" height="68"></canvas>
