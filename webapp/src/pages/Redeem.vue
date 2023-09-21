@@ -58,7 +58,7 @@ onMounted(() => {
         imageLoaded.value = true;
         setTimeout(() => {
             setupScratch()
-        }, 10);
+        }, 4);
     };
 
     function setupScratch() {

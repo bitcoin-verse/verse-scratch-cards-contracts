@@ -84,7 +84,7 @@ const web3 = new Web3(new Web3.providers.HttpProvider('https://eth-mainnet.g.alc
     async function verseLookup(name) {
         try {
             name = name.split("@verse")[0]
-            let res = await axios.get(`http://verse-resolver-l6c2rma45q-uc.a.run.app/username/MATIC/${name}`)
+            let res = await axios.get(`https://verse-resolver-l6c2rma45q-uc.a.run.app/username/MATIC/${name}`)
             if(res.data) {
                 return res.data
             } 
