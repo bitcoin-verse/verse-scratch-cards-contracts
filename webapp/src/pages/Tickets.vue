@@ -299,11 +299,11 @@ export default {
             </p>
 
             <div v-if="item.claimed == false">
-                <img v-if="item.scratched == false" src="../assets/scratch_ad3.png">
-                <img v-if="item.scratched == true" :src="'../src/assets/tickets/' + item.id + '.png'">
+                <img v-if="item.scratched == false" src="/src/assets/scratch_ad3.png">
+                <img v-if="item.scratched == true" :src="'/src/assets/tickets/' + item.id + '.png'">
             </div>
             <div v-if="item.claimed == true">
-                <img :src="'../src/assets/tickets/' + item.id + '.png'">
+                <img :src="'/src/assets/tickets/' + item.id + '.png'">
             </div>
 
             <button v-if="item.scratched == false && item.claimed == false" class="btn-action main" @click="openDetailScreen(item.id)">Scratch Ticket</button>
