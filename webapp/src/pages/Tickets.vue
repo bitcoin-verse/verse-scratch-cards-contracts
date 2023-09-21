@@ -252,6 +252,7 @@ export default {
                 <!-- change this text for gifted tickets -->
                 <a @click="closeGiftModal(true)" v-if="accountActive == false"><button class="btn btn-modal verse">Connect and Redeem</button></a>
                 <a @click="closeGiftModal(false)" v-if="accountActive == true"><button class="btn btn-modal verse">Close</button></a>
+                <img url="/gift.png">
             </div>
         </div>
         
