@@ -483,7 +483,7 @@ const web3 = new Web3(new Web3.providers.HttpProvider('https://eth-mainnet.g.alc
         </div>
 
         <div class="card-holder">
-            <img class="animate__animated animate__fadeInDownBig" src="../assets/scratch_advertisement.png">
+            <img class="animate__animated animate__fadeInDownBig" src="../assets/scratch_ad3.png">
         </div>
         </div>
     </div>

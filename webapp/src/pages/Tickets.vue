@@ -299,7 +299,7 @@ export default {
             </p>
 
             <div v-if="item.claimed == false">
-                <img v-if="item.scratched == false" src="../assets/scratch_ad.jpg">
+                <img v-if="item.scratched == false" src="../assets/scratch_ad3.png">
                 <img v-if="item.scratched == true" :src="'../src/assets/tickets/' + item.id + '.png'">
             </div>
             <div v-if="item.claimed == true">
