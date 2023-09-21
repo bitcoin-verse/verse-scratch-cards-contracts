@@ -567,6 +567,9 @@ const web3 = new Web3(new Web3.providers.HttpProvider('https://eth-mainnet.g.alc
     color: white;
 }
 .instant {
+    @media(max-width: 880px) {
+        display: none;
+    }
     width: 200px;
     text-align: center;
     font-size: 12px;
@@ -581,6 +584,7 @@ const web3 = new Web3(new Web3.providers.HttpProvider('https://eth-mainnet.g.alc
     }
 }
 .bubble {
+
     margin-bottom: 20px;
     width: 150px; 
     height: 18px;
@@ -601,7 +605,7 @@ const web3 = new Web3(new Web3.providers.HttpProvider('https://eth-mainnet.g.alc
 }
 .btn-buy {
     @media(max-width: 880px) {
-        width: calc(100% - 45px);
+        width: 100%;
     }
     margin-right: 10px;
     width: 200px;
@@ -620,7 +624,7 @@ const web3 = new Web3(new Web3.providers.HttpProvider('https://eth-mainnet.g.alc
 
 .btn-view {
     @media(max-width: 880px) {
-        width: calc(100% - 45px);
+        width: 100%;
     }
     margin-right: 10px;
     width: 200px;
@@ -681,8 +685,8 @@ const web3 = new Web3(new Web3.providers.HttpProvider('https://eth-mainnet.g.alc
     left: 0;
     color: white;
     @media(max-width: 880px) {
-            width: 100%!important;
-            padding: 30px;
+        width: calc(100% - 30px)!important;
+        padding: 15px;
     }
 
     h2 {
@@ -733,6 +737,9 @@ const web3 = new Web3(new Web3.providers.HttpProvider('https://eth-mainnet.g.alc
     }
 }
 .page {
+    @media(max-width: 880px) {
+        width: 100%;
+    }
     width: 100%;
     padding-top: 50px;
 }

@@ -41,7 +41,6 @@ createWeb3Modal({
 
     .modal {
         @media(max-width: 880px) {
-            width: 100%;
             position: absolute;
             width: 90%;
             left: 0;
@@ -76,6 +75,7 @@ createWeb3Modal({
   }
 
 body {
+  position: fixed;
   width: 100%;
   background-image: url("./assets/bg-merge.png");
   background-size: 100%;

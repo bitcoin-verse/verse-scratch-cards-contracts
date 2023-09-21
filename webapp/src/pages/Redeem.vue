@@ -171,6 +171,10 @@ h3.win {
     font-size: 40px;
 }
 .left {
+    @media(max-width: 880px) {
+        width: calc(100% - 40px);
+        padding: 20px;
+    }
     margin-top: 50px;
     width: 32.7%;
     float: left;
@@ -214,7 +218,9 @@ h3.win {
 
 .cont {
     float: left;
-    
+    @media(max-width: 880px) {
+
+    }
     padding-top: 25px;
     h2 {
         color: white;

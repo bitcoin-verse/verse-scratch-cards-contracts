@@ -85,6 +85,9 @@ export default {
             width: 32%;
             text-align: center;
             ul {
+            @media(max-width: 880px) {
+                padding-left: 0;
+            }
             display: inline-block;
             margin-left: 0 auto;
             list-style-type: none;
@@ -103,7 +106,7 @@ export default {
         }
         div.wallet {
             @media(max-width: 930px) {
-                position: absolute;
+                position: fixed;
                 bottom: 16px;
                 width: 400px;
                 left: 10px;

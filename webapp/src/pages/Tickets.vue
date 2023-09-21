@@ -274,8 +274,8 @@ export default {
 <Redeem v-if="openDetail" :toggleModal="toggleModal" :closeDetailScreen="closeDetailScreen" :detailNFT="detailNFT" :setScratched="setScratched"/>
 <div class="page" v-if="!openDetail">
     <div class="head">
-        <h2>My Tickets</h2>
-        <div v-if="!accountActive">Connect your wallet to view your tickets. </div>
+        <h2 class="tickhead">My Tickets</h2>
+        <div class="tickconnect" v-if="!accountActive">Connect your wallet to view your tickets. </div>
     </div>
 
     <div class="tickets" v-if="accountActive && loading">
@@ -354,6 +354,16 @@ export default {
     }
 }
 
+.tickconnect {
+    margin-top: 50px;
+    text-align: center;
+}
+.tickhead {
+    @media(max-width: 880px) {
+        display: none;
+    }
+}
+
 .btn-modal {
     cursor: pointer;
     margin-top: 10px;
@@ -388,11 +398,19 @@ export default {
 div.tickets {
     width: 100%;
     padding-left: 100px;
+    padding-top: 50px;
+    @media(max-width: 880px) {
+        padding-left: 10px;
+    }
     h3 {
         font-weight: 400;
         color: white;
     }
     .ticket {
+        @media(max-width: 880px) {
+            width: 90%;
+            margin-left: 3%;
+        }
         position: relative;
         color: white;
         width: 260px;
@@ -404,6 +422,10 @@ div.tickets {
     }
 }
 .head {
+    @media(max-width: 880px) {
+       text-align : center;
+       padding-left: 0;
+    }
     padding-left: 100px;
     color: white;
 }
