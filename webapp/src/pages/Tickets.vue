@@ -453,11 +453,10 @@ div.tickets {
     color: white;
 }
 .page {
-    overflow: scroll;
     width: 100%;
     height: calc(100vh - 100px);
     padding-left: 0;
-    overflow: scroll;
+    overflow: auto;
 }
 
 </style>

@@ -55,11 +55,8 @@ onMounted(() => {
     const img = new Image();
     img.src = `/tickets/${props.detailNFT.id}.png`
     img.onload = () => {
-        imageLoaded.value = true;
-        
-        setTimeout(() => {
-            setupScratch()
-        }, 1);
+        setupScratch()
+        imageLoaded.value = true;       
     };
 
     function setupScratch() {
@@ -112,13 +109,13 @@ onMounted(() => {
             </p>
         </div>
         </div>
-        <div class="cont">
+        <div class="cont" id="conthandler">
         <div v-if="!imageLoaded" style="padding: 100px;">
             <div style="text-align: center;">
                 <div class="lds-ring"><div></div><div></div><div></div><div></div></div>
             </div>
         </div>
-        <div class="ticketholder" v-show="imageLoaded" :style="{'background-image': 'url(/tickets/' + detailNFT.id + '.png)' } ">
+        <div class="ticketholder animate__animated animate__backInDown " v-show="imageLoaded" :style="{'background-image': 'url(/tickets/' + detailNFT.id + '.png)' } ">
             <canvas id="scratchcanvas1" width="68" height="68"></canvas>
             <canvas id="scratchcanvas2" width="68" height="68"></canvas>
             <canvas id="scratchcanvas3" width="68" height="68"></canvas>
@@ -239,7 +236,7 @@ h3.win {
         padding-left: 0;
         padding-bottom: 200px;
         width: 100%;
-        overflow: scroll;
+        overflow: auto;
     }
     padding-top: 25px;
     h2 {

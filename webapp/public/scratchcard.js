@@ -21,10 +21,12 @@ ScratchCard.prototype.init = function (canvasID) {
   this.pressed = false;
   // Get the canvas and its 2d context
   this.can = document.getElementById(canvasID);
+
   this.ctx = this.can.getContext('2d');
   // Initialize offsets of the canvas
   var canRect = this.can.getBoundingClientRect();
   this.offset = { top: canRect.top + document.body.scrollTop, left: canRect.left + document.body.scrollLeft };
+  
   // Register mouse event listeners
   this.can.addEventListener('mousedown', this.mouseDown.bind(this), false);
   this.can.addEventListener('mousemove', this.mouseMove.bind(this), false);
@@ -35,7 +37,17 @@ ScratchCard.prototype.init = function (canvasID) {
   this.can.addEventListener('touchend', this.touchUp.bind(this), false);
   this.can.addEventListener('touchcancel', this.touchUp.bind(this), false);
   // Reset the canvas. Image gets hidden
+
   this.reset();
+
+  setTimeout(() => {
+    this.can = document.getElementById(canvasID);
+    this.ctx = this.can.getContext('2d');
+    var canRect = this.can.getBoundingClientRect();
+    
+    // 1000ms for vuejs to render component and animation to play, afterwards get the element
+    this.offset = { top: canRect.top + document.body.scrollTop, left: canRect.left + document.body.scrollLeft };
+  }, 1000)
 
   document.addEventListener("touchmove", () => {
     // fix for mobile
@@ -44,6 +56,8 @@ ScratchCard.prototype.init = function (canvasID) {
     var canRect = this.can.getBoundingClientRect();
     this.offset = { top: canRect.top + document.body.scrollTop, left: canRect.left + document.body.scrollLeft };
   })
+
+
   
 
 };
@@ -56,7 +70,6 @@ ScratchCard.prototype.mouseDown = function (e) {
   var currentY = e.pageY - this.offset.top;
   // Call draw with the X and Y coordinates. The last parameter of the call tells the function
   // whether the user is currently pressing the screen or if its a starting action (mousedown or touchdown).
-  console.log(currentX, currentY)
   this.draw(currentX, currentY, false);
 };
 
@@ -182,3 +195,4 @@ img.onload = () => {
   this.ctx.fillRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
   };
 }
+
