@@ -11,6 +11,7 @@ const s3 = new AWS.S3({
 
 const generateImages = async (winArray) => {
   let promiseArray = []
+  // generateImage(winArray[0])
   winArray.forEach(win => {
     promiseArray.push(generateImage(win))
   })
@@ -27,40 +28,40 @@ const generateImage = async (win) => {
 
       let baseTextFont = Jimp.FONT_SANS_32_WHITE
   
-      let img =  await Jimp.read('./template_fix.png')
+      let img =  await Jimp.read(`./templates/${win.edition}.png`)
     
-      let font = await Jimp.loadFont(baseTextFont)
+      let font = await Jimp.loadFont(baseTextFont)  
   
       // number 1 
-      img.print(font, -35, 875,   {
+      img.print(font, -19, 865,   {
         text: item.numbers[0],
         alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER,
         alignmentY: Jimp.VERTICAL_ALIGN_TOP
       }, 300,50 )
   
       // number 2
-      img.print(font, 150, 875,   {
+      img.print(font, 165, 865,   {
         text: item.numbers[1],
         alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER,
         alignmentY: Jimp.VERTICAL_ALIGN_TOP
       }, 300,50 )
   
       // number 3
-      img.print(font, 330, 875,   {
+      img.print(font, 351, 865,   {
         text: item.numbers[2],
         alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER,
         alignmentY: Jimp.VERTICAL_ALIGN_TOP
       }, 300,50 )
   
       // number 4
-      img.print(font, 515, 875,   {
+      img.print(font, 540, 865,   {
         text: item.numbers[3],
         alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER,
         alignmentY: Jimp.VERTICAL_ALIGN_TOP
       }, 300,50 )
   
       // number 5
-      img.print(font, -35, 1050,   {
+      img.print(font, -19, 1040,   {
         text: item.numbers[4],
         alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER,
         alignmentY: Jimp.VERTICAL_ALIGN_TOP
@@ -68,21 +69,21 @@ const generateImage = async (win) => {
   
   
       // number 6
-      img.print(font, 150, 1050,   {
+      img.print(font, 165, 1040,   {
         text: item.numbers[5],
         alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER,
         alignmentY: Jimp.VERTICAL_ALIGN_TOP
       }, 300,50 )
   
       // number 7
-      img.print(font, 330, 1050,   {
+      img.print(font, 351, 1040,   {
         text: item.numbers[6],
         alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER,
         alignmentY: Jimp.VERTICAL_ALIGN_TOP
       }, 300,50 )
   
       // number 8
-      img.print(font, 515, 1050,   {
+      img.print(font, 540, 1040,   {
         text: item.numbers[7],
         alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER,
         alignmentY: Jimp.VERTICAL_ALIGN_TOP
