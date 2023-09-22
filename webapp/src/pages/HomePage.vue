@@ -9,7 +9,7 @@ import Web3 from 'web3'
 
 const web3 = new Web3(new Web3.providers.HttpProvider('https://eth-mainnet.g.alchemy.com/v2/jOIyWO860V1Ekgvo9-WGdjDgNr2nYxlh'));
 
-  const contractAddress = "0xd14b727A79438C595AccD5622430849B677E0B31"
+  const contractAddress = "0xaF6132b6ea32F17809831F0C3b21623275F4c199"
 
   export default {
   setup() {

@@ -15,8 +15,8 @@ export default {
 
         const route = useRoute()
 
-        const contractAddress = "0xd14b727A79438C595AccD5622430849B677E0B31"
-        const nftContract = "0xb61459c18b5f236c2749195f302af29a38db0717"
+        const contractAddress = "0xaF6132b6ea32F17809831F0C3b21623275F4c199"
+        const nftContract = "0xfd26ed90dc1c81a8cfb8e84782e6f86bc2ae0590"
 
         let list = []
         let account = getAccount()
@@ -313,7 +313,7 @@ export default {
             </p>
 
             <div v-if="item.claimed == false">
-                <img style="height: 490px" class="mobreset" v-if="item.scratched == false" :src="'/prescratch/compressed/' + item.edition + '.png'">
+                <img style="height: 490px" class="mobreset" v-if="item.scratched == false" :src="'/prescratch/' + item.edition + '.png'">
                 <img style="height: 490px" class="mobreset" v-if="item.scratched == true" :src="'/tickets/' + item.id + '.png'">
             </div>
             <div v-if="item.claimed == true">
@@ -409,6 +409,8 @@ export default {
     &.x {
         background-color: #222;
         color: white;
+        height: 47px;
+        margin-left: 5px;
     }
 
     &.verse {
