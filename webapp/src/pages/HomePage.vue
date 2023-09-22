@@ -743,7 +743,7 @@ const web3 = new Web3(new Web3.providers.HttpProvider('https://eth-mainnet.g.alc
     img {
         border-radius: 8px;
         width: 100%;
-             box-shadow: 5px 8px 5px 1px rgba(255,255,255,0.2);
+             box-shadow: 5px 6px 5px 1px rgba(255,255,255,0.1);
         // -webkit-box-shadow: 5px 8px 5px 1px rgba(255,255,255,0.2);
         // -moz-box-shadow: 5px 8px 5px 1px rgba(255,255,255,0.2);
         }
