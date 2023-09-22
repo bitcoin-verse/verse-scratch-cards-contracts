@@ -447,7 +447,9 @@ const web3 = new Web3(new Web3.providers.HttpProvider('https://eth-mainnet.g.alc
                 <div class="bubble"><p>100 tickets available</p></div>
             </div>
 
-            <p class="subtitle" style="font-weight: 300; margin-bottom: 20px; padding-left: 0;">Enjoy the thrill of instant wins and discover your fate with our scratch tickets. Instant payouts, secured by the Polygon blockchain.</p>
+            <p class="subtitle" style="font-weight: 300; margin-bottom: 20px; padding-left: 0;">
+                Purchase and play scratch tickets right from the comfort of your home or on-the-go. Get instant results and claim your winnings immediately!
+            </p>
 
 
             <!-- <div class="blocks">
@@ -479,6 +481,7 @@ const web3 = new Web3(new Web3.providers.HttpProvider('https://eth-mainnet.g.alc
 
             <p class="instant"><i class="fa fa-solid fa-bolt-lightning"></i> Instant Delivery</p>
 
+        
         </div>
 
         <div class="card-holder">
