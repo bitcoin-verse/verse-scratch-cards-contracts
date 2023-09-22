@@ -550,6 +550,8 @@ const web3 = new Web3(new Web3.providers.HttpProvider('https://eth-mainnet.g.alc
     &.verse {
         background-image: radial-gradient(circle farthest-corner at 10% 20%, rgb(51 249 238) 0%, rgb(19 255 179) 100.2%);
         color: #333;
+        background: radial-gradient(circle farthest-corner at 10% 20%, rgb(249, 232, 51) 0%, rgb(250, 196, 59) 100.2%);
+
         font-weight: 600;
     }
     &.uniswap {
@@ -636,6 +638,8 @@ const web3 = new Web3(new Web3.providers.HttpProvider('https://eth-mainnet.g.alc
     border: none;
     cursor: pointer;
     background-image: radial-gradient(circle farthest-corner at 10% 20%, rgb(51 249 238) 0%, rgb(19 255 179) 100.2%);
+    background: radial-gradient(circle farthest-corner at 10% 20%, rgb(249, 232, 51) 0%, rgb(250, 196, 59) 100.2%);
+
 
 }
 
@@ -730,7 +734,7 @@ const web3 = new Web3(new Web3.providers.HttpProvider('https://eth-mainnet.g.alc
     left: 60%;
     
     width: 330px;
-    margin-top: 10px;
+    margin-top: 5px;
     border-radius: 6px;
     padding-left: 100px;
     background-color: transparent;
