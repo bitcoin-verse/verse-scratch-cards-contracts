@@ -313,7 +313,7 @@ export default {
             </p>
 
             <div v-if="item.claimed == false">
-                <img style="height: 490px" class="mobreset" v-if="item.scratched == false" :src="'/prescratch/' + item.edition + '.png'">
+                <img style="height: 490px" class="mobreset" v-if="item.scratched == false" :src="'/prescratch/compressed/' + item.edition + '.png'">
                 <img style="height: 490px" class="mobreset" v-if="item.scratched == true" :src="'/tickets/' + item.id + '.png'">
             </div>
             <div v-if="item.claimed == true">
