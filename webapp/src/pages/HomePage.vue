@@ -523,6 +523,9 @@ const web3 = new Web3(new Web3.providers.HttpProvider('https://eth-mainnet.g.alc
     font-weight: 500;
 }
 .giftInput {
+    @media(max-width: 880px) {
+        width: calc(100% - 10px);
+    }
     outline: none;
     width: 375px;
     border: none;
@@ -549,6 +552,9 @@ const web3 = new Web3(new Web3.providers.HttpProvider('https://eth-mainnet.g.alc
     font-size: 15px;
     padding: 13px 25px;
     font-weight: 600;
+    @media(max-width: 880px) {
+        width: 100%;
+    }
 
     &.verse {
         background-image: radial-gradient(circle farthest-corner at 10% 20%, rgb(51 249 238) 0%, rgb(19 255 179) 100.2%);
@@ -769,7 +775,11 @@ const web3 = new Web3(new Web3.providers.HttpProvider('https://eth-mainnet.g.alc
     @media(max-width: 880px) {
         width: 100%;
         padding-top: 0;
+        height: calc(100vh - 100px);
+        
     }
+    height: unset;
+    min-height: calc(100vh - 100px);
     width: 100%;
     padding-top: 50px;
 }

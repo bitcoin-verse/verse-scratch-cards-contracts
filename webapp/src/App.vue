@@ -37,6 +37,7 @@ createWeb3Modal({
     width: 100%;
     min-height: 100vh;
     background-color: #4343438f;
+
     z-index: 2;
 
     .modal {
@@ -52,6 +53,7 @@ createWeb3Modal({
         left: calc(50% - 225px);
         top: 150px;
         background-color: #1c1b21;
+        // background-color: #141223;
         border-radius: 5px;
         padding: 30px;
         h3 {
