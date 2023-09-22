@@ -116,14 +116,14 @@ onMounted(() => {
             </div>
         </div>
         <div class="ticketholder animate__animated animate__backInDown " v-show="imageLoaded" :style="{'background-image': 'url(/tickets/' + detailNFT.id + '.png)' } ">
-            <canvas id="scratchcanvas1" width="68" height="68"></canvas>
-            <canvas id="scratchcanvas2" width="68" height="68"></canvas>
-            <canvas id="scratchcanvas3" width="68" height="68"></canvas>
-            <canvas id="scratchcanvas4" width="68" height="68"></canvas>
-            <canvas id="scratchcanvas5" width="68" height="68"></canvas>
-            <canvas id="scratchcanvas6" width="68" height="68"></canvas>
-            <canvas id="scratchcanvas7" width="68" height="68"></canvas>
-            <canvas id="scratchcanvas8" width="68" height="68"></canvas>
+            <canvas id="scratchcanvas1" width="75" height="75"></canvas>
+            <canvas id="scratchcanvas2" width="75" height="75"></canvas>
+            <canvas id="scratchcanvas3" width="75" height="75"></canvas>
+            <canvas id="scratchcanvas4" width="75" height="75"></canvas>
+            <canvas id="scratchcanvas5" width="75" height="75"></canvas>
+            <canvas id="scratchcanvas6" width="75" height="75"></canvas>
+            <canvas id="scratchcanvas7" width="75" height="75"></canvas>
+            <canvas id="scratchcanvas8" width="75" height="75"></canvas>
         </div>
         </div>
 
@@ -256,57 +256,57 @@ h3.win {
 #scratchcanvas1 {
     border-radius: 50%;
     position: absolute;
-    bottom: 256px;
-    left: 22px;
+    bottom: 254px;
+    left: 24px;
 }
 
 #scratchcanvas2 {
     border-radius: 50%;
     position: absolute;
-    bottom: 256px;
-    left: 109px;
+    bottom: 254px;
+    left: 111px;
 }
 
 #scratchcanvas3 {
     border-radius: 50%;
     position: absolute;
-    bottom: 256px;
-    left: 196px;
+    bottom: 254px;
+    left: 197px;
 }
 
 #scratchcanvas4 {
     border-radius: 50%;
     position: absolute;
-    bottom: 256px;
-    left: 283.5px;
+    bottom: 254px;
+    left: 284.5px;
 }
 
 #scratchcanvas5 {
     border-radius: 50%;
     position: absolute;
-    bottom: 173px;
-    left: 22px;
+    bottom: 169px;
+    left: 24px;
 }
 
 #scratchcanvas6 {
     border-radius: 50%;
     position: absolute;
-    bottom: 173px;
-    left: 109.5px;
+    bottom: 169px;
+    left: 111px;
 }
 
 #scratchcanvas7 {
     border-radius: 50%;
     position: absolute;
-    bottom: 173px;
-    left: 196.9px;
+    bottom: 169px;
+    left: 197px;
 }
 
 #scratchcanvas8 {
     border-radius: 50%;
     position: absolute;
-    bottom: 173px;
-    left: 284px;
+    bottom: 169px;
+    left: 284.5px;
 }
 
 

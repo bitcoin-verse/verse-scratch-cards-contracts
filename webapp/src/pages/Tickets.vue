@@ -15,8 +15,8 @@ export default {
 
         const route = useRoute()
 
-        const contractAddress = "0xfe5d5C480C575C313f46FFC23df5fbd414D4813e"
-        const nftContract = "0x0b5bda6c48f81957cc56ad433df6e8ae16dd3755"
+        const contractAddress = "0xd14b727A79438C595AccD5622430849B677E0B31"
+        const nftContract = "0xb61459c18b5f236c2749195f302af29a38db0717"
 
         let list = []
         let account = getAccount()
@@ -171,10 +171,14 @@ export default {
                 args: [id]
                 })
                 if(data) {
+                    const objToUpdate = nfts.value.find(obj => obj.id == id);
+                    let edition = parseInt(data.split("&edition=")[1])
+                    objToUpdate.edition = edition
                     if(data.includes("/true")) {
-                        const objToUpdate = nfts.value.find(obj => obj.id == id);
                         if (objToUpdate) {
                             objToUpdate.claimed = true;
+                        } else {
+                            objToUpdate.claimed = false
                         }
                     }
                     return data
@@ -309,8 +313,8 @@ export default {
             </p>
 
             <div v-if="item.claimed == false">
-                <img v-if="item.scratched == false" src="/src/assets/scratch_ad4.png">
-                <img v-if="item.scratched == true" :src="'/tickets/' + item.id + '.png'">
+                <img style="height: 490px" class="mobreset" v-if="item.scratched == false" :src="'/prescratch/' + item.edition + '.png'">
+                <img style="height: 490px" class="mobreset" v-if="item.scratched == true" :src="'/tickets/' + item.id + '.png'">
             </div>
             <div v-if="item.claimed == true">
                 <img :src="'/tickets/' + item.id + '.png'">
@@ -328,6 +332,12 @@ export default {
 
 
 <style lang="scss">
+
+.mobreset {
+    @media(max-width: 880px) {
+        height: unset!important;
+    }
+}
 .spin {
     width: 50px;
     padding-left: calc(50% - 50px);

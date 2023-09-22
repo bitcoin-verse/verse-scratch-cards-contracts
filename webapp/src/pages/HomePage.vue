@@ -9,7 +9,7 @@ import Web3 from 'web3'
 
 const web3 = new Web3(new Web3.providers.HttpProvider('https://eth-mainnet.g.alchemy.com/v2/jOIyWO860V1Ekgvo9-WGdjDgNr2nYxlh'));
 
-  const contractAddress = "0xfe5d5C480C575C313f46FFC23df5fbd414D4813e"
+  const contractAddress = "0xd14b727A79438C595AccD5622430849B677E0B31"
 
   export default {
   setup() {
@@ -439,10 +439,9 @@ const web3 = new Web3(new Web3.providers.HttpProvider('https://eth-mainnet.g.alc
     <div class="page">
         <div class="float-holder clearfix">
             <div class="card-info">
-                <h2>Scratch & Win</h2>
+                <h2>Space Expeditions</h2>
                 <h3 class="tit" style="margin-top: 10px; margin-bottom: 20px; ">On-Chain Scratch Tickets Powered by Verse</h3>
                 <div class="clearfix">
-                <div class="bubble"><p>Scratch Tickets</p></div>
                 <div class="bubble"><p>Entry: 3000 Verse</p></div>
                 <div class="bubble"><p>Jackpot 100.000 Verse</p></div>
                 <div class="bubble"><p>100 tickets available</p></div>
@@ -483,7 +482,7 @@ const web3 = new Web3(new Web3.providers.HttpProvider('https://eth-mainnet.g.alc
         </div>
 
         <div class="card-holder">
-            <img class="animate__animated animate__fadeInDownBig" src="../assets/scratch_ad4.png">
+            <img class="animate__animated animate__rotateInUpLeft"  src="../assets/collection3.png">
         </div>
         </div>
     </div>
@@ -508,6 +507,7 @@ const web3 = new Web3(new Web3.providers.HttpProvider('https://eth-mainnet.g.alc
     }
 }
 .subtitle {
+    width: 75%;
     @media(max-width: 880px) {
         width: 85%!important;
         margin-top: 0;
@@ -701,12 +701,13 @@ const web3 = new Web3(new Web3.providers.HttpProvider('https://eth-mainnet.g.alc
 }
 .card-info {
     padding: 30px;
-    padding-top: 50px;
+    padding-top: 80px;
     padding-left: 150px;
     float: left;
-    padding-left: 7%;
+    padding-left: 8%;
     width: 47%;
     color: white;
+    padding-right: 0;
     @media(max-width: 880px) {
         width: calc(100% - 30px)!important;
         padding: 15px;
@@ -731,21 +732,21 @@ const web3 = new Web3(new Web3.providers.HttpProvider('https://eth-mainnet.g.alc
     @media(max-width: 880px) {
         display: none;
     }
-    left: 60%;
+    left: 40%;
     float: right;
-    width: 21%;
+    width: 42%;
     min-width: 240px;
-    margin-right: 8%;
-    margin-top: 5px;
+    margin-right: 2%;
+    margin-top: 20px;
     border-radius: 6px;
-    padding-left: 100px;
+    padding-left: 0px;
     background-color: transparent;
 
 
     img {
         border-radius: 8px;
         width: 100%;
-             box-shadow: 5px 6px 5px 1px rgba(255,255,255,0.1);
+            //  box-shadow: 5px 6px 5px 1px rgba(255,255,255,0.1);
         // -webkit-box-shadow: 5px 8px 5px 1px rgba(255,255,255,0.2);
         // -moz-box-shadow: 5px 8px 5px 1px rgba(255,255,255,0.2);
         }

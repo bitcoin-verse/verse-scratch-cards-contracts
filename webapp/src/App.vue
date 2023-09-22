@@ -77,7 +77,7 @@ createWeb3Modal({
 body {
   position: fixed;
   width: 100%;
-  background-image: url("./assets/bg-merge.png");
+  background-image: url("./assets/bg3.png");
   background-size: 100%;
   margin: 0;
   font-family: 'Montserrat', sans-serif;
