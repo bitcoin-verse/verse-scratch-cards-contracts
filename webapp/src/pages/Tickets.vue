@@ -421,7 +421,7 @@ div.tickets {
     display: inline-block;
     margin-bottom: 500px;
     padding-left: 100px;
-    padding-top: 50px;
+    padding-top: 20px;
     @media(max-width: 880px) {
         width: calc(100% - 10px);
         display: inline-block;
@@ -438,10 +438,11 @@ div.tickets {
             width: 90%;
             margin-left: 3%;
         }
-        position: relative;
+        position: static;
         color: white;
+        display: inherit;
         width: 260px;
-        float: left;
+
         margin-right: 10px;
         img {
             width: 100%;
@@ -460,7 +461,7 @@ div.tickets {
     width: 100%;
     height: calc(100vh - 100px);
     padding-left: 0;
-    overflow: auto;
+    overflow: scroll;
 }
 
 </style>
