@@ -75,6 +75,7 @@ const web3 = new Web3(new Web3.providers.HttpProvider('https://eth-mainnet.g.alc
             } else {
                 console.log("PROB REAL")
                 // address is probably valid
+                giftInputLoad.value = false;
                 ticketInputValid.value = true
             }
         }, 500); 
