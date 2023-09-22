@@ -31,20 +31,20 @@ watch(count, async (newValue)=> {
 
         const particleCount = 50 * (timeLeft / duration);
 
-        // since particles fall down, start a bit higher than random
         confetti(
-            Object.assign({}, defaults, {
-            particleCount,
-            origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 },
-            })
-        );
-        confetti(
-            Object.assign({}, defaults, {
-            particleCount,
-            origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 },
-            })
-        );
-        }, 250);
+                Object.assign({}, defaults, {
+                particleCount,
+                origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 },
+                })
+            );
+            confetti(
+                Object.assign({}, defaults, {
+                particleCount,
+                origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 },
+                })
+            );
+            
+        }, 200)
     }
 
 })
@@ -102,10 +102,10 @@ onMounted(() => {
         <div class="left">
             <div class="btn-holder">
             <a style="cursor: pointer" @click="closeDetailScreen()"><h5 class="breadcrumb"><i class="fa-solid fa-arrow-left"></i> Return to Ticket Overview</h5></a>
-            <h2><span style="color: #fac43b">Scratch same number 3 times to win</span></h2>
+            <h2><span style="color: #fac43b">Scratch 3 matching numbers to win</span></h2>
             <h3>Fields left to scratch: {{ count }}</h3>
-            <p style="color: white; font-weight: 500;">Scratch the tickets by dragging your mouse over the scratch fields. Alternatively you can check the prize by clicking on the check prize
-                button below.
+            <p style="color: white; font-weight: 500;">Scratch the tickets by dragging your mouse over the scratch fields. You can redeem your winnings after the fields have been scratched. 
+   
             </p>
         </div>
         </div>
