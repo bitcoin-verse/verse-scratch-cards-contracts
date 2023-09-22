@@ -486,7 +486,7 @@ const web3 = new Web3(new Web3.providers.HttpProvider('https://eth-mainnet.g.alc
         </div>
 
         <div class="card-holder">
-            <img class="animate__animated animate__rotateInUpLeft"  src="../assets/collection_comp.png">
+            <img class="animate__animated animate__rotateInUpLeft"  src="../assets/collection_comp2.png">
         </div>
         </div>
     </div>
