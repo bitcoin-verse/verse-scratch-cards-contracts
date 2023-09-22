@@ -589,7 +589,8 @@ const web3 = new Web3(new Web3.providers.HttpProvider('https://eth-mainnet.g.alc
 }
 .clearfix {
     overflow: auto;
-    width: 150%;
+    max-width: 1600px;
+    width: 100%;
     @media(max-width: 880px) {
         width: 100%!important;
         position: unset;
@@ -620,7 +621,8 @@ const web3 = new Web3(new Web3.providers.HttpProvider('https://eth-mainnet.g.alc
     }
 }
 .float-holder{
-    width: 100%;
+    margin: 0 auto;
+    min-height: 100vh; // remove this after
 }
 .btn-buy {
     @media(max-width: 880px) {
@@ -701,12 +703,11 @@ const web3 = new Web3(new Web3.providers.HttpProvider('https://eth-mainnet.g.alc
     padding: 30px;
     padding-top: 50px;
     padding-left: 150px;
-    width: 35%;
-    position: absolute;
-    left: 0;
+    float: left;
+    padding-left: 7%;
+    width: 47%;
     color: white;
     @media(max-width: 880px) {
-        
         width: calc(100% - 30px)!important;
         padding: 15px;
         padding-bottom: 200px;
@@ -730,10 +731,11 @@ const web3 = new Web3(new Web3.providers.HttpProvider('https://eth-mainnet.g.alc
     @media(max-width: 880px) {
         display: none;
     }
-    position: absolute;
     left: 60%;
-    
-    width: 330px;
+    float: right;
+    width: 21%;
+    min-width: 240px;
+    margin-right: 8%;
     margin-top: 5px;
     border-radius: 6px;
     padding-left: 100px;
