@@ -6,6 +6,7 @@ import ERC20ABI from '../abi/ERC20.json'
 import ContractABI from '../abi/contract.json'
 import axios from 'axios'
 import Web3 from 'web3'
+import { copyText } from 'vue3-clipboard'
 
 const web3 = new Web3(new Web3.providers.HttpProvider('https://eth-mainnet.g.alchemy.com/v2/jOIyWO860V1Ekgvo9-WGdjDgNr2nYxlh'));
 
@@ -16,10 +17,11 @@ const web3 = new Web3(new Web3.providers.HttpProvider('https://eth-mainnet.g.alc
     let account = getAccount()
     let currentAccountAddress = ref("")
     let modal = useWeb3Modal()
+    let copyDone = ref(false)
     let reopenAfterConnection = ref(false)
     let accountActive = ref(false)
     let correctNetwork = ref(true)
-    let modalActive = ref(false) // false
+    let modalActive = ref(true) // false
     let ensLoaded = ref("")
     let verseBalance = ref(0);
     let verseAllowance = ref(0)
@@ -27,8 +29,8 @@ const web3 = new Web3(new Web3.providers.HttpProvider('https://eth-mainnet.g.alc
     let giftAddress = ref("");
     let modalLoading = ref(false)
     let loadingMessage = ref("")
-    let buyStep = ref(0) // 0
-    let giftTicket = ref(false); // false
+    let buyStep = ref(4) // 0
+    let giftTicket = ref(true); // false
     
     let ticketInputAddress = ref("")
     let ticketInputValid = ref(true)
@@ -73,7 +75,6 @@ const web3 = new Web3(new Web3.providers.HttpProvider('https://eth-mainnet.g.alc
                     }
                 }
             } else {
-                console.log("PROB REAL")
                 // address is probably valid
                 giftInputLoad.value = false;
                 ticketInputValid.value = true
@@ -263,6 +264,17 @@ const web3 = new Web3(new Web3.providers.HttpProvider('https://eth-mainnet.g.alc
         }
     })
 
+    function copyText() {
+        let text = `https://main--chipper-hotteok-85cbb2.netlify.app/tickets?gift=1&address=${giftAddress.value}`
+        navigator.clipboard.writeText(text);
+        copyDone.value = true;
+
+        setTimeout(() => {
+            copyDone.value = false
+        }, 1400)
+
+    }
+
     function connectAndClose() {
         modal.open()
         // reopen after user is connect
@@ -287,12 +299,14 @@ const web3 = new Web3(new Web3.providers.HttpProvider('https://eth-mainnet.g.alc
         toggleModal,
         modalLoading,
         giftAddress,
+        copyDone,
         verseBalance,
         verseAllowance,
         loadingMessage,
         purchaseTicket,
         giftTicket,
         ticketInputAddress,
+        copyText,
         toggleGift,
         verseLookup,
         onTicketInputChange,
@@ -421,10 +435,13 @@ const web3 = new Web3(new Web3.providers.HttpProvider('https://eth-mainnet.g.alc
                      <p>We have sent the ticket to your specified wallet! Share this link with the recipient to let them know:
 
                         <input class="ticketlink" type="text" :value="`https://main--chipper-hotteok-85cbb2.netlify.app/tickets?gift=1&address=${giftAddress}`">
+                        <button style="cursor:pointer" v-if="!copyDone" class="btn-copy" @click="() => copyText()"><i class="fa fa-copy"></i></button>
+                        <button style="cursor:pointer" v-if="copyDone" class="btn-copy" @click="() => copyText()"><i style="color: white" class="fa fa-check"></i></button>
                      </p>
                      <!-- change this text for gifted tickets -->
                      <a class="" href="/"><button class="btn btn-modal verse">Buy more tickets</button></a>
                      <a class="" href="/tickets"><button class="btn btn-modal uniswap">View your tickets</button></a>
+
 
                 </div>
                 <div v-if="!giftTicket">
@@ -494,6 +511,17 @@ const web3 = new Web3(new Web3.providers.HttpProvider('https://eth-mainnet.g.alc
 
 
 <style lang="scss" scoped>
+.btn-copy {
+    height: 40px;
+    top: -1px;
+    position: relative;
+    width: 10%;
+    border: none;
+    left: 1%;
+    color: white;
+    border: 1px solid white;
+    background-color: #2f2b5d;
+}
 .ticketlink {
     height: 35px; 
     padding-left: 10px;
@@ -503,7 +531,10 @@ const web3 = new Web3(new Web3.providers.HttpProvider('https://eth-mainnet.g.alc
     background-color: #464451;
     border: 1px solid #E7E7E7;
     color: white;
-    margin-top: 10px;
+    margin-top: 20px;
+    @media(max-width: 880px) {
+        width: 85%;
+    }
 }
 .tit {
     @media(max-width: 880px) {
