@@ -453,8 +453,10 @@ const web3 = new Web3(new Web3.providers.HttpProvider('https://eth-mainnet.g.alc
             </div>
         </div>
     </div>
-    <div class="wrongNetworkWarning" v-if="correctNetwork == false">Wrong network selected, please switch network to Polygon</div>
+    <div class="wrongNetworkWarning" v-if="correctNetwork == false"><i class="fa fa-warning" style="margin-right: 10px; margin-left: 5px;"></i>Wallet connected to the wrong network, please switch your wallet to Polygon</div>
     <div class="page">
+
+
         <div class="float-holder clearfix">
             <div class="card-info">
                 <h2>Space Expeditions</h2>
@@ -603,21 +605,23 @@ const web3 = new Web3(new Web3.providers.HttpProvider('https://eth-mainnet.g.alc
 
 .wrongNetworkWarning {
     @media(max-width: 880px) {
-        font-size: 12px;
+        font-size: 13px;
         width: calc(100% - 10px);
-        padding-left: 10px;
-        height: 42px;
+        padding-left: 15px;
         color: white;
         font-weight: 600;
+        padding-bottom: 15px;
         padding-top: 12px;
     }
+    z-index: 5;
+    position: relative;
     width: 100%;
-    height: 38px;
     padding-top: 15px;
+    padding-bottom: 15px;
     padding-left: 30px;
     font-weight: 600;
-    background-color: #ff0085a8;
-    color: white;
+    background-color: #4a42aa;
+    color: #fff;
 }
 .instant {
     @media(max-width: 880px) {
@@ -825,5 +829,6 @@ h2 {
 .fa-check {
     color: rgb(35, 226, 35);
 }
+
 
 </style>
