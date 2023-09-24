@@ -49,11 +49,23 @@ createWeb3Modal({
             left: 0;
             padding: 5%;
         }
+
+
+        @media(max-height: 800px) {
+          top: 100px;
+        }
+
+        @media(max-height: 600px) {
+          top: 55px!important;
+        }
+
+
         box-shadow: 0 0 20px rgba(17, 17, 29, 0.7);
         width: 450px;
         position: absolute;
         left: calc(50% - 225px);
         top: 150px;
+
         background-color: #1c1b21;
         // background-color: #141223;
         border-radius: 5px;
