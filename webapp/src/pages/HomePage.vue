@@ -344,7 +344,7 @@ const web3 = new Web3(new Web3.providers.HttpProvider('https://eth-mainnet.g.alc
 
 <template>
     <div class="backdrop" v-if="buyModal">
-        <p class="closeBuy"><i @click="closeBuy()" class="fa fa-times"></i></p>
+        <p class="closeBuy"><i @click="closeBuy()" class="fa fa-times" style="cursor: pointer;"></i></p>
         <div class="modal" style="top: 70px; padding-top: 5px;">
             <h3 style="position: absolute; top: 31px;">Buy Verse</h3>
             <div id="debridgeWidget" style="width: 50%;"></div>
