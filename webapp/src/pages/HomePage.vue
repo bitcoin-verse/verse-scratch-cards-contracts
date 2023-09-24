@@ -37,6 +37,21 @@ const web3 = new Web3(new Web3.providers.HttpProvider('https://eth-mainnet.g.alc
 
     let timeoutId;
 
+
+    let buyModal = ref(false)
+
+    function closeBuy() {
+        buyModal.value = false;
+    }
+
+    function openBuy() {
+        modalActive.value = false;
+        buyModal.value = true;
+        setTimeout(() => {
+            deBridge.widget({"v":"1","element":"debridgeWidget","title":"Verse","description":"Get Verse on Polygon","width":"200%","height":"630","r":null,"affiliateFeePercent":"1","affiliateFeeRecipient":"0xA02351E83625c5185908835846B26719Fcd3d53F","supportedChains":"{\"inputChains\":{\"1\":\"all\",\"10\":\"all\",\"56\":\"all\",\"137\":\"all\",\"8453\":\"all\",\"42161\":\"all\",\"43114\":\"all\",\"59144\":\"all\",\"7565164\":\"all\"},\"outputChains\":{\"1\":\"all\",\"10\":\"all\",\"56\":\"all\",\"137\":[\"0xc708d6f2153933daa50b2d0758955be0a93a8fec\"],\"8453\":\"all\",\"42161\":\"all\",\"43114\":\"all\",\"59144\":\"all\",\"7565164\":\"all\"}}","inputChain":1,"outputChain":137,"inputCurrency":"","outputCurrency":"","address":"","showSwapTransfer":false,"amount":"10","lang":"en","mode":"deswap","isEnableBundle":false,"styles":"eyJhcHBCYWNrZ3JvdW5kIjoiIzFjMWIyMSIsImFwcEFjY2VudEJnIjoiIzFjMWIyMSIsImJvcmRlclJhZGl1cyI6OCwicHJpbWFyeSI6IiNmZmQyMDAiLCJzZWNvbmRhcnkiOiIjMjM0YzZjIiwic3VjY2VzcyI6IiNkYWNmMDIiLCJlcnJvciI6IiNmZmJkMDAiLCJpY29uQ29sb3IiOiIjNDk0OTQ5IiwiZm9udEZhbWlseSI6Ik1vbnRzZXJyYXQifQ==","theme":"dark","isHideLogo":true})        }, 100)
+    }
+
+
     async function onTicketInputChange() {
         ticketInputValid.value = true
         if (timeoutId) {
@@ -106,7 +121,9 @@ const web3 = new Web3(new Web3.providers.HttpProvider('https://eth-mainnet.g.alc
             giftTicket.value = false;
             giftAddress.value == ""
             getBalance()
+            
         }
+
         modalActive.value = !modalActive.value;
     }
 
@@ -218,6 +235,10 @@ const web3 = new Web3(new Web3.providers.HttpProvider('https://eth-mainnet.g.alc
                     buyStep.value = 2;
                     /// step 2, check allowance       
                     getAllowance()
+                 } else {
+                    setTimeout(() => {
+
+                        deBridge.widget({"v":"1","element":"debridgeWidget","title":"Verse","description":"","width":"600","height":"800","r":null,"affiliateFeePercent":"1","affiliateFeeRecipient":"0xA02351E83625c5185908835846B26719Fcd3d53F","supportedChains":"{\"inputChains\":{\"1\":\"all\",\"10\":\"all\",\"56\":\"all\",\"137\":\"all\",\"8453\":\"all\",\"42161\":\"all\",\"43114\":\"all\",\"59144\":\"all\",\"7565164\":\"all\"},\"outputChains\":{\"1\":\"all\",\"10\":\"all\",\"56\":\"all\",\"137\":[\"0xc708d6f2153933daa50b2d0758955be0a93a8fec\"],\"8453\":\"all\",\"42161\":\"all\",\"43114\":\"all\",\"59144\":\"all\",\"7565164\":\"all\"}}","inputChain":1,"outputChain":137,"inputCurrency":"","outputCurrency":"","address":"","showSwapTransfer":false,"amount":"10","lang":"en","mode":"deswap","isEnableBundle":false,"styles":"eyJhcHBCYWNrZ3JvdW5kIjoiIzFjMWIyMSIsImFwcEFjY2VudEJnIjoiIzFjMWIyMSIsImJvcmRlclJhZGl1cyI6OCwicHJpbWFyeSI6IiNmZmQyMDAiLCJzZWNvbmRhcnkiOiIjMjM0YzZjIiwic3VjY2VzcyI6IiNkYWNmMDIiLCJlcnJvciI6IiNmZjkyOTIiLCJpY29uQ29sb3IiOiIjNDk0OTQ5IiwiZm9udEZhbWlseSI6Ik1vbnRzZXJyYXQifQ==","theme":"dark","isHideLogo":true})                    }, 500)
                  }
             }
             } catch (e) {
@@ -295,6 +316,9 @@ const web3 = new Web3(new Web3.providers.HttpProvider('https://eth-mainnet.g.alc
         accountActive,
         correctNetwork,
         approve,
+        openBuy,
+        closeBuy,
+        buyModal,
         modalActive,
         toggleModal,
         modalLoading,
@@ -319,8 +343,16 @@ const web3 = new Web3(new Web3.providers.HttpProvider('https://eth-mainnet.g.alc
 </script>
 
 <template>
+    <div class="backdrop" v-if="buyModal">
+        <p class="closeBuy"><i @click="closeBuy()" class="fa fa-times"></i></p>
+        <div class="modal" style="top: 70px; padding-top: 5px;">
+            <h3 style="position: absolute; top: 31px;">Buy Verse</h3>
+            <div id="debridgeWidget" style="width: 50%;"></div>
+        </div>
+    </div>
     <!-- modals -->
     <div class="backdrop" v-if="modalActive">
+       
         <!-- modal for connecting account -->
         <div class="modal" v-if="buyStep == 0">
             <div v-if="modalLoading">
@@ -352,8 +384,10 @@ const web3 = new Web3(new Web3.providers.HttpProvider('https://eth-mainnet.g.alc
             <p>You need 3000 Verse on Polygon in order to purchase a lottery ticket</p>
             <p>Wallet Balance<br> <strong>{{ verseBalance ? verseBalance.toFixed(2) : 0 }} Verse</strong></p>
 
-            <a class="" target="_blank" href="https://verse.bitcoin.com/"><button class="btn btn-modal verse">Buy on Verse Dex</button></a>
-            <a class="" target="_blank" href="https://wallet.polygon.technology/polygon/bridge"><button class="btn btn-modal uniswap">Bridge Verse from Ethereum</button></a>
+            <a class="" target="_blank" @click="openBuy"><button class="btn btn-modal verse">Buy Verse</button></a>
+            
+            <a class="" target="_blank" href="https://wallet.polygon.technology/polygon/bridge"><button class="btn btn-modal uniswap">Bridge Verse</button></a>
+
 
             <p style="color: white;"><small style="color: white;">Need more help or want to purchase Verse by Credit Card? Learn more about getting Verse at our <a target="blank" style="text-decoration: none; color: #ffaa00; font-weight: 500;" href="https://www.bitcoin.com/get-started/how-to-buy-verse/">Verse Buying Guide</a></small></p>
             <p><small>Bought Verse? click <a @click="getBalance()" style="font-weight: 500; cursor: pointer; text-decoration: none; color: #ffaa01;">here</a> to refresh your balance</small></p>
@@ -513,6 +547,23 @@ const web3 = new Web3(new Web3.providers.HttpProvider('https://eth-mainnet.g.alc
 
 
 <style lang="scss" scoped>
+.closeBuy {
+    right: calc(50% - 300px);
+    position: absolute; top: 25px; 
+    color: white;
+    @media(max-width: 880px) {
+        left: unset;
+        right: 15px;
+    }
+
+
+        @media(max-height: 600px) {
+          top: 15px!important;
+        }
+}
+iframe {
+    width: 205%!important;
+}
 .btn-copy {
     height: 40px;
     top: -1px;
