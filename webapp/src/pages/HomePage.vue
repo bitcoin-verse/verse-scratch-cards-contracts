@@ -10,7 +10,7 @@ import { copyText } from 'vue3-clipboard'
 
 const web3 = new Web3(new Web3.providers.HttpProvider('https://eth-mainnet.g.alchemy.com/v2/jOIyWO860V1Ekgvo9-WGdjDgNr2nYxlh'));
 
-  const contractAddress = "0xaF6132b6ea32F17809831F0C3b21623275F4c199"
+  const contractAddress = "0x105B14A1bB13172cBEDA5F8085D7Bbd7d50a322A"
 
   export default {
   setup() {
@@ -505,7 +505,7 @@ const web3 = new Web3(new Web3.providers.HttpProvider('https://eth-mainnet.g.alc
         </div>
 
         <div class="card-holder">
-            <img class="animate__animated animate__rotateInUpLeft"  src="../assets/collection_comp2.png">
+            <img class="animate__animated animate__rotateInUpLeft"  src="../assets/collection_comp3.png">
         </div>
         </div>
     </div>

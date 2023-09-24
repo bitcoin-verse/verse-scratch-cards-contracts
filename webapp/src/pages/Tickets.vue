@@ -15,8 +15,8 @@ export default {
 
         const route = useRoute()
 
-        const contractAddress = "0xaF6132b6ea32F17809831F0C3b21623275F4c199"
-        const nftContract = "0xfd26ed90dc1c81a8cfb8e84782e6f86bc2ae0590"
+        const contractAddress = "0x105B14A1bB13172cBEDA5F8085D7Bbd7d50a322A"
+        const nftContract = "0xfabb1b73f27a2e5d8c8cde58572cfb485d9b01e4"
 
         let list = []
         let account = getAccount()
@@ -111,7 +111,7 @@ export default {
         }
 
         function setScratched(id) {
-            localStorage.setItem(id, true)
+            localStorage.setItem(id.toString() + '/' + nftContract.toString(), true)
             const objToUpdate = nfts.value.find(obj => obj.id === id);
 
             if (objToUpdate) {
@@ -215,7 +215,7 @@ export default {
                  let arr = []
                  data.forEach(dat => {
                     let scratched = false
-                    if(localStorage.getItem(dat.toString()) == 'true') {
+                    if(localStorage.getItem(dat.toString() + '/' + nftContract.toString()) == 'true') {
                         scratched = true
                     }
                     arr.push({id: parseInt(dat.toString()), scratched, claimed: false })
@@ -322,7 +322,7 @@ export default {
 
             <button v-if="item.scratched == false && item.claimed == false" class="btn-action main" @click="openDetailScreen(item.id)">Scratch Ticket</button>
             <button v-if="item.scratched == true && item.claimed == false" @click="toggleModal(item.id)" class="btn-action main" >Claim {{item.prize}} Verse</button>
-            <button v-if="item.claimed == true" class="btn-action main dis" >Prize Claimed</button>
+            <button v-if="item.claimed == true" class="btn-action main dis" >{{item.prize}} Verse Claimed</button>
         </div>
     </div>
 
