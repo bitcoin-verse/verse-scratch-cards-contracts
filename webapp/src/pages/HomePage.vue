@@ -364,9 +364,14 @@ const web3 = new Web3(new Web3.providers.HttpProvider('https://eth-mainnet.g.alc
             <div v-if="!modalLoading">
             <p class="iholder"><i @click="toggleModal()" class="fa fa-times"></i></p>
             <h3>Connect Wallet</h3>
-            <p>Connect your wallet to get started</p>
+            <p style="font-weight: 300;">Connect your wallet below to get started. We support all major wallet providers.</p>
+            <p style="font-weight: 300">Haven't set up a wallet yet? Get your wallet up and running with just a few clicks at <a target="_blank" style="color: orange; text-decoration: none; font-weight: 500;" href="https://wallet.bitcoin.com/">wallet.bitcoin.com </a></p>
+
 
             <a @click="connectAndClose()"><button class="btn btn-modal verse" >Connect Wallet</button></a>
+
+
+            <!-- <p style="font-weight: 300;"><small>Interested in understanding crypto wallets and how to secure your cryptocurrency effectively? Click  <a href="https://www.bitcoin.com/get-started" target="blank" style="font-weight: 500; cursor: pointer; text-decoration: none; color: #ffaa01;">here </a> for more information.</small></p> -->
 
             </div>
         </div>
