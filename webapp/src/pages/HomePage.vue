@@ -151,6 +151,8 @@ const web3 = new Web3(new Web3.providers.HttpProvider('https://eth-mainnet.g.alc
         try {
             if(_giftAddress) {
                 giftAddress.value = _giftAddress
+            } else {
+                giftTicket.value = false;
             }
             loadingMessage.value = "waiting for wallet approval.."
             modalLoading.value = true
