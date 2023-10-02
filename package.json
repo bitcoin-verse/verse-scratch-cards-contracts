@@ -10,10 +10,11 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@openzeppelin/merkle-tree": "^1.0.5",
     "@truffle/hdwallet-provider": "^2.1.15",
-    "aws-sdk": "^2.1451.0",
+    "aws-sdk": "^2.1467.0",
     "dotenv": "^16.3.1",
     "jimp": "^0.22.10",
-    "web3": "^4.1.1"
+    "web3": "^1.8.1"
   }
 }

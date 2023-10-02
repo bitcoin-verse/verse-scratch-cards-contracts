@@ -1,4 +1,3 @@
-// copied from VNFT
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.8;
 
@@ -9,29 +8,31 @@ contract ScratchNFT is ERC721Enumerable, Ownable {
     using Strings for uint256;
 
     // Mapping to store the revealed property for each token ID
-    mapping(uint256 => bool) private claimed;
+    mapping(uint256 => bool) public claimed;
     mapping(uint256 => string) public tokenURIs;
+    mapping(uint256 => uint256) public editions;
+    mapping(uint256 => uint256) public prizes;
 
     constructor(string memory name, string memory symbol) ERC721(name, symbol) {}
 
     // Mint a new NFT with a unique revealed property
-    function mint(uint256 tokenId, address receiver) public onlyOwner {
-        _mint(receiver, tokenId);
-        claimed[tokenId] = false;
+    function mint(uint256 _tokenId, uint256 _editionId, uint256 _prize, address _receiver) public onlyOwner {
+        _mint(_receiver, _tokenId);
+        claimed[_tokenId] = false;
+        prizes[_tokenId] = _prize;
+        editions[_tokenId] = _editionId;
+        emit mintCompleted(_tokenId, uint32(_editionId), _prize);
     }
 
-    // Get the revealed property for a specific token ID
-    function getClaimedProperty(uint256 tokenId) public view returns (bool) {
-        require(_exists(tokenId), "Token does not exist");
-        return claimed[tokenId];
-    }
 
     // Override the standard tokenURI function to include the revealed property
     function tokenURI(uint256 tokenId) public view override returns (string memory) {
         require(_exists(tokenId), "Token does not exist");
         string memory baseURI = _baseURI();
         string memory claimDone = claimed[tokenId] ? "true" : "false";
-        return string(abi.encodePacked(baseURI, tokenId.toString(), "/", claimDone));
+        uint editionIdFromToken = editions[tokenId];
+
+        return string(abi.encodePacked(baseURI, tokenId.toString(), "/", claimDone, "&edition=", editionIdFromToken.toString()));
     }
 
     function ownedByAddress(address _owner) public view returns (uint256[] memory)
@@ -48,5 +49,11 @@ contract ScratchNFT is ERC721Enumerable, Ownable {
         require(_exists(tokenId), "Token does not exist");
         claimed[tokenId] = true;
     }
+
+    event mintCompleted(
+        uint256 indexed tokenId,
+        uint32 edition,
+        uint256 prize
+    );
 
 }
