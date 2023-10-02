@@ -6,6 +6,4 @@ const app = createApp(App)
 
 app.use(router)
 app.use(VueClipboard)
-
-
 app.mount('#app')

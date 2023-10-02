@@ -7,10 +7,11 @@ import ContractABI from '../abi/contract.json'
 import axios from 'axios'
 import Web3 from 'web3'
 import { copyText } from 'vue3-clipboard'
+import GLOBALS from '../globals.js'
 
 const web3 = new Web3(new Web3.providers.HttpProvider('https://eth-mainnet.g.alchemy.com/v2/jOIyWO860V1Ekgvo9-WGdjDgNr2nYxlh'));
 
-  const contractAddress = "0x105B14A1bB13172cBEDA5F8085D7Bbd7d50a322A"
+  const contractAddress = GLOBALS.CONTRACT_ADDRESS
 
   export default {
   setup() {

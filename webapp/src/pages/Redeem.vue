@@ -1,19 +1,16 @@
 <script setup>
 
 import { ref, onMounted, watch } from 'vue';
+import GLOBALS from '../globals.js'
 
 const props = defineProps(['closeDetailScreen', 'detailNFT', 'setScratched', 'toggleModal'])
 
-
 let count = ref(8);
 let imageLoaded = ref(false)
-
-
-
+let nftAddress = GLOBALS.NFT_ADDRESS
 
 watch(count, async (newValue)=> {
     if (newValue == 0) {
-        // fireworks
         const duration = 3 * 1000,
         animationEnd = Date.now() + duration,
         defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
@@ -53,7 +50,7 @@ onMounted(() => {
 
 
     const img = new Image();
-    img.src = `/tickets/${props.detailNFT.id}.png`
+    img.src = `https://scratchverse.s3.us-west-1.amazonaws.com/${props.detailNFT.id}/${nftAddress}.jpg`
     img.onload = () => {
         setupScratch()
         imageLoaded.value = true;       
@@ -115,7 +112,7 @@ onMounted(() => {
                 <div class="lds-ring"><div></div><div></div><div></div><div></div></div>
             </div>
         </div>
-        <div class="ticketholder animate__animated animate__backInDown " v-show="imageLoaded" :style="{'background-image': 'url(/tickets/' + detailNFT.id + '.png)' } ">
+        <div class="ticketholder animate__animated animate__backInDown " v-show="imageLoaded" :style="{'background-image': `url(https://scratchverse.s3.us-west-1.amazonaws.com/${detailNFT.id}/${nftAddress}.jpg)` } ">
             <canvas id="scratchcanvas1" width="75" height="75"></canvas>
             <canvas id="scratchcanvas2" width="75" height="75"></canvas>
             <canvas id="scratchcanvas3" width="75" height="75"></canvas>

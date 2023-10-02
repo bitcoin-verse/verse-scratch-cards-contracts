@@ -5,7 +5,9 @@ import ERC721ABI from '../abi/ERC721.json'
 import Redeem from '../pages/Redeem.vue'
 import { useWeb3Modal } from '@web3modal/wagmi/vue'
 import ContractABI from '../abi/contract.json'
+import ERC721 from '../abi/ERC721.json'
 import { useRoute } from 'vue-router'
+import GLOBALS from '../globals.js'
 
 export default {
     components: {
@@ -15,8 +17,8 @@ export default {
 
         const route = useRoute()
 
-        const contractAddress = "0x105B14A1bB13172cBEDA5F8085D7Bbd7d50a322A"
-        const nftContract = "0xfabb1b73f27a2e5d8c8cde58572cfb485d9b01e4"
+        const contractAddress = GLOBALS.CONTRACT_ADDRESS
+        const nftContract = GLOBALS.NFT_ADDRESS
 
         let list = []
         let account = getAccount()
@@ -85,17 +87,17 @@ export default {
         })
 
         async function redeem(nftId) {
-            console.log("TEST")
             modalLoading.value = true
-            console.log(nftId)
-            
+            const obj = nfts.value.find(obj => obj.id == nftId);
+            console.log(obj)
+
             try {
             const { hash } = await writeContract({
             address: contractAddress,
             abi: ContractABI,
             functionName: 'claimPrize',
             chainId: 137,
-            args: [nftId]
+            args: [obj.id]
             })
             await waitForTransaction({ hash })
             modalLoading.value = false
@@ -132,12 +134,58 @@ export default {
             giftModal.value = false
         }
 
+
+        async function getClaimed(id) {
+            try {
+                const data = await readContract({
+                address: GLOBALS.NFT_ADDRESS,
+                abi: ERC721,
+                functionName: 'claimed',
+                args: [id]
+                })
+                
+                if(data) {
+                    const objToUpdate = nfts.value.find(obj => obj.id == id);
+                        if (objToUpdate) {
+                            objToUpdate.claimed = data;
+                          
+                        }
+                        return data 
+                }
+            } catch (e) {
+                console.log(e)
+            }
+               
+        }
+
+
+        async function getEdition(id) {
+            try {
+                const data = await readContract({
+                address: GLOBALS.NFT_ADDRESS,
+                abi: ERC721,
+                functionName: 'editions',
+                args: [id]
+                })
+                if(data) {
+                    const objToUpdate = nfts.value.find(obj => obj.id == id);
+                        if (objToUpdate) {
+                            objToUpdate.edition = parseInt(data);
+                        }
+                        return data 
+                }
+            } catch (e) {
+                console.log(e)
+            }
+               
+        }
+
         async function getPrizeAmount(id) {
             try {
                 const data = await readContract({
-                address: contractAddress,
-                abi: ContractABI,
-                functionName: 'prizeMapping',
+                address: GLOBALS.NFT_ADDRESS,
+                abi: ERC721,
+                functionName: 'prizes',
                 args: [id]
                 })
                 if(data) {
@@ -152,6 +200,7 @@ export default {
             }
                
         }
+
 
         function toggleModal(id) {
             // if(openDetail.value == true) {
@@ -172,8 +221,8 @@ export default {
                 })
                 if(data) {
                     const objToUpdate = nfts.value.find(obj => obj.id == id);
-                    let edition = parseInt(data.split("&edition=")[1])
-                    objToUpdate.edition = edition
+                    // let edition = parseInt(data.split("&edition=")[1])
+                    // objToUpdate.edition = edition
                     if(data.includes("/true")) {
                         if (objToUpdate) {
                             objToUpdate.claimed = true;
@@ -220,10 +269,14 @@ export default {
                     }
                     arr.push({id: parseInt(dat.toString()), scratched, claimed: false })
                     promiseArray.push(getRedemptionStatus(dat.toString()))
-                    promiseArray.push(getPrizeAmount(dat.toString()))
-
                 })
                 nfts.value = arr
+
+                nfts.value.forEach(nft => {
+                    promiseArray.push(promiseArray.push(getClaimed(nft.id)))
+                    promiseArray.push(promiseArray.push(getEdition(nft.id)))
+                    promiseArray.push(promiseArray.push(getPrizeAmount(nft.id)))
+                })
                 await Promise.all(promiseArray)
                  loading.value = false;
             }
@@ -234,7 +287,7 @@ export default {
         }   
 
         return {
-            list, nfts, account, closeGiftModal, step, loading, giftModal, giftAccount, claimNFT, claimActive, modalLoading, toggleModal, accountActive, getTicketIds, ticketList, openDetail, openDetailScreen, closeDetailScreen, detailNFT, setScratched, getPrizeAmount, redeem, getRedemptionStatus
+            list, nfts, account, nftContract, closeGiftModal, step, loading, giftModal, giftAccount, claimNFT, claimActive, modalLoading, toggleModal, accountActive, getTicketIds, ticketList, openDetail, openDetailScreen, closeDetailScreen, detailNFT, setScratched, redeem, getRedemptionStatus
         }   
     }
 }
@@ -314,10 +367,12 @@ export default {
 
             <div v-if="item.claimed == false">
                 <img style="height: 490px" class="mobreset" v-if="item.scratched == false" :src="'/prescratch/' + item.edition + '.png'">
-                <img style="height: 490px" class="mobreset" v-if="item.scratched == true" :src="'/tickets/' + item.id + '.png'">
+                <img style="height: 490px" class="mobreset" v-if="item.scratched == true" :src="`https://scratchverse.s3.us-west-1.amazonaws.com/${item.id}/${nftContract}.jpg`">
             </div>
+
+            
             <div v-if="item.claimed == true">
-                <img :src="'/tickets/' + item.id + '.png'">
+                <img :src="`https://scratchverse.s3.us-west-1.amazonaws.com/${item.id}/${nftContract}.jpg`">
             </div>
 
             <button v-if="item.scratched == false && item.claimed == false" class="btn-action main" @click="openDetailScreen(item.id)">Scratch Ticket</button>
