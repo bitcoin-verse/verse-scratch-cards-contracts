@@ -14,9 +14,7 @@ export default {
         Redeem
     },  
     setup() {
-
         const route = useRoute()
-
         const contractAddress = GLOBALS.CONTRACT_ADDRESS
         const nftContract = GLOBALS.NFT_ADDRESS
 
@@ -59,7 +57,6 @@ export default {
 
         const particleCount = 50 * (timeLeft / duration);
 
-        // since particles fall down, start a bit higher than random
         confetti(
             Object.assign({}, defaults, {
             particleCount,
@@ -146,11 +143,11 @@ export default {
                 
                 if(data) {
                     const objToUpdate = nfts.value.find(obj => obj.id == id);
-                        if (objToUpdate) {
-                            objToUpdate.claimed = data;
-                          
-                        }
-                        return data 
+                    if (objToUpdate) {
+                        objToUpdate.claimed = data;
+                        
+                    }
+                    return data 
                 }
             } catch (e) {
                 console.log(e)
@@ -169,10 +166,10 @@ export default {
                 })
                 if(data) {
                     const objToUpdate = nfts.value.find(obj => obj.id == id);
-                        if (objToUpdate) {
-                            objToUpdate.edition = parseInt(data);
-                        }
-                        return data 
+                    if (objToUpdate) {
+                        objToUpdate.edition = parseInt(data);
+                    }
+                    return data 
                 }
             } catch (e) {
                 console.log(e)
@@ -190,10 +187,10 @@ export default {
                 })
                 if(data) {
                     const objToUpdate = nfts.value.find(obj => obj.id == id);
-                        if (objToUpdate) {
-                            objToUpdate.prize = parseInt(data);
-                        }
-                        return data 
+                    if (objToUpdate) {
+                        objToUpdate.prize = parseInt(data);
+                    }
+                    return data 
                 }
             } catch (e) {
                 console.log(e)
@@ -203,9 +200,6 @@ export default {
 
 
         function toggleModal(id) {
-            // if(openDetail.value == true) {
-            //     openDetail.value = false;
-            // }
             step.value = 0;
             if(id) claimNFT.value = nfts.value.find(obj => obj.id === id);
             claimActive.value = !claimActive.value
@@ -298,15 +292,12 @@ export default {
         <!-- gift-->
         <div class="modal" v-if="giftModal">
             <p class="iholder"><i @click="closeGiftModal()" class="fa fa-times"></i></p>
-
-            <div >
-
+            <div>
                 <h3>Gift Ticket Received!</h3>
                 <p style="font-weight: 300;">Somebody has sent a scratch ticket to you. Your ticket has a <span style="color: orange; font-weight: 600;"> chance to win 100.000 Verse!</span>
                 <br><br>No transaction needed to scratch. Connect your account (<span style="color: orange; font-weight: 600;"> {{ giftAccount.slice(0, 7) }}..</span>) to redeem the ticket.
                 </p>
                 
-                <!-- change this text for gifted tickets -->
                 <a @click="closeGiftModal(true)" v-if="accountActive == false"><button class="btn btn-modal verse">Connect and Redeem</button></a>
                 <a @click="closeGiftModal(false)" v-if="accountActive == true"><button class="btn btn-modal verse">Close</button></a>
                 <img url="/gift.png">
@@ -325,13 +316,11 @@ export default {
             <div v-if="!modalLoading && step == 0">
                 <h3>Congrats on your win!</h3>
                 <p>Funds will immediately be in your wallet after the transaction has been completed.</p>
-                <!-- change this text for gifted tickets -->
                 <a @click="redeem(claimNFT.id)"><button class="btn btn-modal verse">Claim {{claimNFT.prize }} Verse</button></a>
             </div>
             <div v-if="!modalLoading && step == 1">
                 <h3>Successfully Claimed Win</h3>
                 <p>Thanks for playing!</p>
-                <!-- change this text for gifted tickets -->
                 <a href="/"><button class="btn btn-modal verse">Buy new Ticket</button></a>
                 <a href="/"><button class="btn btn-modal x">Gift a Ticket</button></a>
             </div>
@@ -396,7 +385,6 @@ export default {
 .spin {
     width: 50px;
     padding-left: calc(50% - 50px);
-    // text-align: left;
     @media(max-width: 880px) {
         text-align: center!important;
     }
@@ -427,8 +415,6 @@ export default {
         font-weight: 600;
         background-image: radial-gradient(circle farthest-corner at 10% 20%, rgb(51 249 238) 0%, rgb(19 255 179) 100.2%);
         background: radial-gradient(circle farthest-corner at 10% 20%, rgb(249, 232, 51) 0%, rgb(250, 196, 59) 100.2%);
-
-
     }
 
     &.dis {

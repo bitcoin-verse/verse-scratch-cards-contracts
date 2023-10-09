@@ -19,13 +19,11 @@ createWeb3Modal({
     
     },
     includeWalletIds: ['107bb20463699c4e614d3a2fb7b961e66f48774cb8f6d6c1aee789853280972c','c57ca95b47569778a828d19178114f4db188b89b763c899ba0be274e97267d96', '19177a98252e07ddfc9af2083ba8e07ef627cb6103467ffebb3f8f4205fd7927'], wagmiConfig, projectId, chains})
-  
 
 </script>
 
 <template>  
   <body>
-    <!-- <Stars /> -->
     <NavBar />
     <RouterView />
   </body>
@@ -39,7 +37,6 @@ createWeb3Modal({
     width: 100%;
     min-height: 100vh;
     background-color: #4343438f;
-
     z-index: 2;
 
     .modal {
@@ -67,7 +64,6 @@ createWeb3Modal({
         top: 150px;
 
         background-color: #1c1b21;
-        // background-color: #141223;
         border-radius: 5px;
         padding: 30px;
         h3 {

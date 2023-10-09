@@ -52,7 +52,6 @@ const web3 = new Web3(new Web3.providers.HttpProvider('https://eth-mainnet.g.alc
             deBridge.widget({"v":"1","element":"debridgeWidget","title":"Verse","description":"Get Verse on Polygon","width":"200%","height":"630","r":null,"affiliateFeePercent":"1","affiliateFeeRecipient":"0xA02351E83625c5185908835846B26719Fcd3d53F","supportedChains":"{\"inputChains\":{\"1\":\"all\",\"10\":\"all\",\"56\":\"all\",\"137\":\"all\",\"8453\":\"all\",\"42161\":\"all\",\"43114\":\"all\",\"59144\":\"all\",\"7565164\":\"all\"},\"outputChains\":{\"1\":\"all\",\"10\":\"all\",\"56\":\"all\",\"137\":[\"0xc708d6f2153933daa50b2d0758955be0a93a8fec\"],\"8453\":\"all\",\"42161\":\"all\",\"43114\":\"all\",\"59144\":\"all\",\"7565164\":\"all\"}}","inputChain":1,"outputChain":137,"inputCurrency":"","outputCurrency":"","address":"","showSwapTransfer":false,"amount":"10","lang":"en","mode":"deswap","isEnableBundle":false,"styles":"eyJhcHBCYWNrZ3JvdW5kIjoiIzFjMWIyMSIsImFwcEFjY2VudEJnIjoiIzFjMWIyMSIsImJvcmRlclJhZGl1cyI6OCwicHJpbWFyeSI6IiNmZmQyMDAiLCJzZWNvbmRhcnkiOiIjMjM0YzZjIiwic3VjY2VzcyI6IiNkYWNmMDIiLCJlcnJvciI6IiNmZmJkMDAiLCJpY29uQ29sb3IiOiIjNDk0OTQ5IiwiZm9udEZhbWlseSI6Ik1vbnRzZXJyYXQifQ==","theme":"dark","isHideLogo":true})        }, 100)
     }
 
-
     async function onTicketInputChange() {
         ticketInputValid.value = true
         if (timeoutId) {
@@ -78,17 +77,8 @@ const web3 = new Web3(new Web3.providers.HttpProvider('https://eth-mainnet.g.alc
                     }
             
                 } catch (e) {
-                    let addr = await verseLookup(ticketInputAddress.value)
-                    if(addr.length > 0) {
-                        ticketInputValid.value = true
-                        ensLoaded.value = "verse name: " + ticketInputAddress.value
-                        ticketInputAddress.value = addr
-                        giftInputLoad.value = false
-
-                    } else {
-                        ticketInputValid.value = false
-                        giftInputLoad.value = false
-                    }
+                    ticketInputValid.value = false
+                    giftInputLoad.value = false
                 }
             } else {
                 // address is probably valid
@@ -97,21 +87,6 @@ const web3 = new Web3(new Web3.providers.HttpProvider('https://eth-mainnet.g.alc
             }
         }, 500); 
 
-    }
-
-    async function verseLookup(name) {
-        try {
-            name = name.split("@verse")[0]
-            let res = await axios.get(`https://verse-resolver-l6c2rma45q-uc.a.run.app/username/MATIC/${name}`)
-            if(res.data) {
-                return res.data
-            } 
-            return ""
-        }
-        catch(e) {
-            console.log(e)
-            return ""
-        }
     }
 
     function toggleModal() {
@@ -205,7 +180,6 @@ const web3 = new Web3(new Web3.providers.HttpProvider('https://eth-mainnet.g.alc
             modalLoading.value = false;
 
             /// step 2, check allowance 
-      
             if(data) {
                  let dataString = data.toString()
                  verseAllowance.value= parseFloat(dataString) / Math.pow(10, 18);
@@ -335,7 +309,6 @@ const web3 = new Web3(new Web3.providers.HttpProvider('https://eth-mainnet.g.alc
         ticketInputAddress,
         copyText,
         toggleGift,
-        verseLookup,
         onTicketInputChange,
         ticketInputValid,
         ensLoaded,
@@ -370,12 +343,7 @@ const web3 = new Web3(new Web3.providers.HttpProvider('https://eth-mainnet.g.alc
             <p style="font-weight: 300;">Connect your wallet below to get started. We support all major wallet providers.</p>
             <p style="font-weight: 300">Haven't set up a wallet yet? Get your wallet up and running with just a few clicks at <a target="_blank" style="color: orange; text-decoration: none; font-weight: 500;" href="https://wallet.bitcoin.com/">wallet.bitcoin.com </a></p>
 
-
             <a @click="connectAndClose()"><button class="btn btn-modal verse" >Connect Wallet</button></a>
-
-
-            <!-- <p style="font-weight: 300;"><small>Interested in understanding crypto wallets and how to secure your cryptocurrency effectively? Click  <a href="https://www.bitcoin.com/get-started" target="blank" style="font-weight: 500; cursor: pointer; text-decoration: none; color: #ffaa01;">here </a> for more information.</small></p> -->
-
             </div>
         </div>
         <!-- // modal for purchasing verse -->
@@ -513,31 +481,6 @@ const web3 = new Web3(new Web3.providers.HttpProvider('https://eth-mainnet.g.alc
                 Purchase and play scratch tickets right from the comfort of your home or on-the-go. Get instant results and claim your winnings immediately!
             </p>
 
-
-            <!-- <div class="blocks">
-                <div class="block">
-                    <h5>Instant Delivery</h5>
-                    <h3><i class="fa-solid fa-bolt-lightning"></i></h3>
-                    <p>Scratch tickets in browser and claim prize immediately</p>
-                </div>
-                <div class="block">
-                    <h5>Gift to friends</h5>
-                    <h3><i class="fa-solid fa-gift"></i></h3>
-                    <p>Tickets are stored in your wallet as an NFT and can be gifted to other users</p>
-                </div>
-                <div class="block">
-                    <h5>Provably Random</h5>
-                    <h3><i class="fa-solid fa-check-circle"></i></h3>
-                    <p>Prize distribution is provably random using Chainlink VRF service</p>
-                </div>
-            </div> -->
-
-            <!-- <p><i class="fa-solid fa-check"></i>  Scratch tickets in browser and claim prize immediately</p>
-
-            <p><i class="fa-solid fa-check"></i>  Tickets are ERC721 compatible NFT and can be gifted to other users.</p>
-
-            <p><i class="fa-solid fa-check"></i> Prize distribution is provably random using Chainlink VRF service.</p> -->
-
             <button class="btn-buy" @click="toggleModal()"><i class="fa-solid fa-gift"></i> Get Ticket</button>
             <a href="/tickets"><button class="btn-view" ><i class="fa-solid fa-list"></i> View My Tickets</button></a>
 
@@ -565,9 +508,9 @@ const web3 = new Web3(new Web3.providers.HttpProvider('https://eth-mainnet.g.alc
     }
 
 
-        @media(max-height: 600px) {
-          top: 15px!important;
-        }
+    @media(max-height: 600px) {
+        top: 15px!important;
+    }
 }
 iframe {
     width: 205%!important;
