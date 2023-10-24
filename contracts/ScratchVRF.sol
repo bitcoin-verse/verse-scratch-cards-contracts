@@ -157,15 +157,13 @@ contract VerseVRF is Ownable, VRFConsumerBaseV2 {
         require(nftContract.ownerOf(tokenId) == address(msg.sender), "only NFT owner can claim prize");
         require(nftContract.claimed(tokenId) != true, "prize has been claimed already");
 
-        // DISABLED FOR TESTING
-        // uint256 prize = nftContract.prizes(tokenId);
-        // uint256 prizeWei = prize * 1 ether;
-        // uint256 balance = IERC20(TOKEN_ADDRESS).balanceOf(address(this));
-        // require(balance >= prizeWei, "contract does not have enough funds to payout");
+        uint256 prize = nftContract.prizes(tokenId);
+        uint256 prizeWei = prize * 1 ether;
+        uint256 balance = IERC20(TOKEN_ADDRESS).balanceOf(address(this));
+        require(balance >= prizeWei, "contract does not have enough funds to payout");
         
         nftContract.setClaimed(tokenId);
-        // DISABLED FOR TESTING
-        // IERC20(TOKEN_ADDRESS).safeTransfer(msg.sender, prizeWei);
+        IERC20(TOKEN_ADDRESS).safeTransfer(msg.sender, prizeWei);
     }
 
     // withdraw tokens from smart contract
