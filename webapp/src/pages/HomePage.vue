@@ -67,7 +67,7 @@ const web3 = new Web3(new Web3.providers.HttpProvider('https://eth-mainnet.g.alc
                 try {
                     const address = await web3.eth.ens.getAddress(ticketInputAddress.value);
                     if(address.length > 0) {
-                        ensLoaded.value = "ens name: " + ticketInputAddress.value
+                        ensLoaded.value = "ENS name: " + ticketInputAddress.value
                         ticketInputAddress.value = address
                         ticketInputValid.value = true
                         giftInputLoad.value = false
@@ -320,7 +320,7 @@ const web3 = new Web3(new Web3.providers.HttpProvider('https://eth-mainnet.g.alc
 
 <template>
     <div class="backdrop" v-if="buyModal">
-        <p class="closeBuy"><i @click="closeBuy()" class="fa fa-times" style="cursor: pointer;"></i></p>
+        <p class="closeBuy"><i @click="closeBuy()" class="close-btn" style="cursor: pointer;"></i></p>
         <div class="modal" style="top: 70px; padding-top: 5px;">
             <h3 style="position: absolute; top: 31px;">Buy Verse</h3>
             <div id="debridgeWidget" style="width: 50%;"></div>
@@ -329,136 +329,168 @@ const web3 = new Web3(new Web3.providers.HttpProvider('https://eth-mainnet.g.alc
     <!-- modals -->
     <div class="backdrop" v-if="modalActive">
        
-        <!-- modal for connecting account -->
-        <div class="modal" v-if="buyStep == 0">
-            <div v-if="modalLoading">
-                <p style="text-align: center">{{ loadingMessage }}</p>
-                <div style="text-align: center;">
-                    <div class="lds-ring"><div></div><div></div><div></div><div></div></div>
-                </div>
+        <!-- modal for loading -->
+        <div class="modal" v-if="modalLoading">
+            <div class="modal-head">
+                <h3 class="title">Buy Ticket</h3>
+                <p class="iholder"><i @click="toggleModal()" class="close-btn" ></i></p>
             </div>
-            <div v-if="!modalLoading">
-            <p class="iholder"><i @click="toggleModal()" class="fa fa-times"></i></p>
-            <h3>Connect Wallet</h3>
-            <p style="font-weight: 300;">Connect your wallet below to get started. We support all major wallet providers.</p>
-            <p style="font-weight: 300">Haven't set up a wallet yet? Get your wallet up and running with just a few clicks at <a target="_blank" style="color: orange; text-decoration: none; font-weight: 500;" href="https://wallet.bitcoin.com/">wallet.bitcoin.com </a></p>
+            <div class="modal-divider" v-if="buyStep < 3">
+                <div class="modal-progress p50"></div>
+            </div>  
+            <div class="modal-divider" v-if="buyStep >= 3">
+                <div class="modal-progress p75"></div>
+            </div>  
+            <div class="modal-body">
 
-            <a @click="connectAndClose()"><button class="btn btn-modal verse" >Connect Wallet</button></a>
+                <p class="loadingText">{{loadingMessage}}</p>
+            </div>
+        </div>
+        <!-- modal for connecting account -->
+        <div class="modal" v-if="buyStep == 0 && !modalLoading">
+            <div>
+            <div class="modal-head">
+                <h3 class="title">Buy Ticket</h3>
+                <p class="iholder"><i @click="toggleModal()" class="close-btn" ></i></p>
+            </div>
+            <div class="modal-divider">
+                <div class="modal-progress p25"></div>
+            </div>  
+            <div class="modal-body">
+                <div class="img-wallet"></div>
+                <h3 class="title">No Wallet Connected</h3>
+                <p class="subtext short">Connect your wallet below to get started. We support all major wallet providers.</p>
+                <a class="" target="_blank" @click="connectAndClose()"><button class="btn verse-wide">Connect Wallet</button></a>
+                <p class="modal-footer">Haven't set up a wallet yet? Get your wallet up and running with just a few clicks at <a target="_blank" href="https://wallet.bitcoin.com/">wallet.bitcoin.com </a></p>
+            </div>
             </div>
         </div>
         <!-- // modal for purchasing verse -->
-        <div class="modal" v-if="buyStep == 1">
-            <div v-if="modalLoading">
-                <p style="text-align: center">{{ loadingMessage }}</p>
-                <div style="text-align: center;">
-                    <div class="lds-ring"><div></div><div></div><div></div><div></div></div>
+        <div class="modal" v-if="buyStep == 1 && !modalLoading">
+            <div>
+                <div class="modal-head">
+                    <h3 class="title">Buy Ticket</h3>
+                    <p class="iholder"><i @click="toggleModal()" class="close-btn" ></i></p>
                 </div>
-            </div>
-            <div v-if="!modalLoading">
-            <p class="iholder"><i @click="toggleModal()" class="fa fa-times"></i></p>
-            <h3>Purchase Ticket</h3>
-            <p>You need 3000 Verse on Polygon in order to purchase a lottery ticket</p>
-            <p>Wallet Balance<br> <strong>{{ verseBalance ? verseBalance.toFixed(2) : 0 }} Verse</strong></p>
+                <div class="modal-divider">
+                    <div class="modal-progress p50"></div>
+                </div>  
+                <div class="modal-body">
+                    <div class="img-verse"></div>
+                    <h3 class="title">Not Enough Verse</h3>
+                    <p class="subtext short">You need <span>3000 VERSE</span> on Polygon in order to purchase a lottery ticket</p>
 
-            <a class="" target="_blank" @click="openBuy"><button class="btn btn-modal verse">Buy Verse</button></a>
-            
-            <a class="" target="_blank" href="https://wallet.polygon.technology/polygon/bridge"><button class="btn btn-modal uniswap">Bridge Verse</button></a>
+                    <div class="wallet-balance">
+                        <p class="balance-title">WALLET BALANCE</p>
+                        <p class="balance">{{ verseBalance ? verseBalance.toFixed(2) : 0 }} VERSE</p>
+                    </div>
+    
 
-
-            <p style="color: white;"><small style="color: white;">Need more help or want to purchase Verse by Credit Card? Learn more about getting Verse at our <a target="blank" style="text-decoration: none; color: #ffaa00; font-weight: 500;" href="https://www.bitcoin.com/get-started/how-to-buy-verse/">Verse Buying Guide</a></small></p>
-            <p><small>Bought Verse? click <a @click="getBalance()" style="font-weight: 500; cursor: pointer; text-decoration: none; color: #ffaa01;">here</a> to refresh your balance</small></p>
+                    <a class="" target="_blank" @click="openBuy"><button class="btn verse-wide half">Buy Verse</button></a>
+                    <a class="" target="_blank" href="https://wallet.polygon.technology/polygon/bridge"><button class="btn verse-wide half secondary">Bridge Verse</button></a>
+                    <p class="modal-footer">Bought Verse? click <a @click="getBalance()">here</a> to refresh your balance</p>
+                </div>
+        
             </div>
         </div>
         <!-- allowance modal -->
-        <div class="modal" v-if="buyStep == 2">
-            <p class="iholder"><i @click="toggleModal()" class="fa fa-times"></i></p>
-            <div v-if="modalLoading">
-                <p style="text-align: center">{{ loadingMessage }}</p>
-                <div style="text-align: center;">
-                    <div class="lds-ring"><div></div><div></div><div></div><div></div></div>
-                </div>
+        <div class="modal" v-if="buyStep == 2 && !modalLoading">
+            <div class="modal-head">
+                <h3 class="title">Buy Ticket</h3>
+                <p class="iholder"><i @click="toggleModal()" class="close-btn" ></i></p>
             </div>
-            <div v-if="!modalLoading">
-                <h3>Purchase Step 1/2</h3>
-                <p>You need to set approval for 3000 verse from your wallet, this approval is used to purchase your ticket. <br><br>Alternatively you can choose to set an unlimited allowance, this way you can skip this step on your next purchase.</p>
-                <a class="" target="_blank" @click="approve()"><button class="btn btn-modal verse">Approve 3000 Verse</button></a>
-                <a class="" target="_blank" @click="approve(true)"><button class="btn btn-modal uniswap">Set infinite approval</button></a>
+            <div class="modal-divider">
+                <div class="modal-progress p50"></div>
+            </div>  
+            <div class="modal-body">
+                <div class="img-approve"></div>
+                <h3 class="title">Approve the use of VERSE</h3>
+                <p class="subtext">You need to set approval for <span>3000 verse</span> from your wallet, this approval is used to purchase your ticket. </p>
+                    
+                <div class="helper">
+                    <div class="bulb-icn"></div>
+                    <p>Alternatively you can choose to set an unlimited allowance, this way you can skip this step on your next purchase</p>
+                </div>
+                
+                <a class="" target="_blank" @click="approve()"><button class="btn verse-wide half">Approve 3000 Verse</button></a>
+                <a class="" target="_blank" @click="approve(true)"><button class="btn verse-wide half secondary">Set infinite approval</button></a>
 
-                <p style="color: white;"><small style="color: white;">Approvals are part of the default contract that Polygon tokens use. Learn more at <a target="blank" style="text-decoration: none; color: #ffaa00;" href="https://revoke.cash/learn/approvals/what-are-token-approvals">the token approval faq</a></small></p>
+                <p class="modal-footer">Approvals are part of the default contract that Polygon tokens use. Learn more at <a target="blank" href="https://revoke.cash/learn/approvals/what-are-token-approvals">the token approval faq</a></p>
             </div>
         </div>
         <!-- purchase modal -->
-        <div class="modal" v-if="buyStep == 3">
-            <p class="iholder"><i @click="toggleModal()" class="fa fa-times"></i></p>
-            <div v-if="modalLoading">
-                <p style="text-align: center">{{ loadingMessage }}</p>
-                <div style="text-align: center;">
-                    <div class="lds-ring"><div></div><div></div><div></div><div></div></div>
-                </div>
+        <div class="modal" v-if="buyStep == 3 && !modalLoading">
+            <div class="modal-head">
+                <h3 class="title">Buy Ticket</h3>
+                <p class="iholder"><i @click="toggleModal()" class="close-btn" ></i></p>
             </div>
-            <div v-if="!modalLoading">
-                <h3>Purchase Step 2/2</h3>
-                <p>It seems that you have 3000 Verse in your wallet and the contract approval has been set! <br><br>Choose if you want to buy a ticket for yourself or a friend.</p>
-                <a class="" target="_blank" @click="purchaseTicket()"><button class="btn btn-modal verse">Purchase Ticket for myself</button></a>
-                <a class="" target="_blank"><button class="btn btn-modal uniswap" @click="toggleGift()" v-if="!giftTicket">Gift a ticket</button></a>
-                <hr v-if="giftTicket" style="margin-top: 20px; border-color: black;"/>
-                <div v-if="!giftTicket"><br/></div>
-                <p class="p-gift" style="font-size: 17px; font-weight: 600" v-if="giftTicket">Send ticket as a gift</p>
-                <p v-if="giftTicket" style="font-size: 16px; font-weight: 400;">We will give you a shareable link that you can share with your friend</p>
-                <input placeholder="Polygon Address" class="giftInput" @input="onTicketInputChange" style="color: white;" v-model="ticketInputAddress" type="text" v-if="giftTicket == true">
-                <p v-if="ensLoaded.length > 0" style="color: white; margin-top: 2px;  font-weight: 500"><small>({{ ensLoaded }})</small></p>
-                <p  v-if="!ticketInputValid && ticketInputAddress.length > 0" style="margin-top: 2px; color: rgb(255, 68, 0); font-weight: 500"><small>address is not valid</small></p>
+            <div class="modal-divider">
+                <div class="modal-progress p75"></div>
+            </div>  
+            <div class="modal-body">
+                <div class="img-purchase"></div>
+                <h3 class="title">Buy Ticket</h3>
+                <p class="subtext">It seems you have <span>3000 Verse</span> in your wallet and contract approval has been set!</p>
+                <div class="gift-toggle-holder" :class="{ opened: giftTicket }">
+                    <h3 class="title">Send ticket as gift?</h3>
+                    <label class="switch">
+                    <input type="checkbox" v-on:change="toggleGift">
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+                <div class="gift-toggle-holder-bottom" v-if="giftTicket">
+                    <p>Please provide us with the Polygon wallet address of the person who you want to gift the ticket to.</p>
+                    <input placeholder="Polygon Address" class="giftInput" @input="onTicketInputChange" style="color: white;" v-model="ticketInputAddress" type="text" v-if="giftTicket == true">
+                    <p v-if="ensLoaded.length > 0" style="color: white; text-align: center;  margin-top: 5px;  font-weight: 500"><small>{{ ensLoaded }}</small></p>
+                    <p  v-if="!ticketInputValid && ticketInputAddress.length > 0" style="margin-top: 11px; color: #c6bfff; text-align: center; font-weight: 500"><small>address is not valid</small></p>
+                </div>  
+
+                <div v-if="!giftTicket">
+                    <a class="" target="_blank" @click="purchaseTicket()" ><button class="btn verse-wide">Buy a Ticket</button></a>
+                </div>
+
+                <div v-if="giftInputLoad && giftTicket">
+                    <a class="" target="_blank" ><button class="btn verse-wide disabled">Checking Address</button></a>
+                </div>
 
                 <div v-if="giftInputLoad == false && giftTicket">
-                    <a class="" target="_blank" @click="purchaseTicket(ticketInputAddress)"><button class="btn btn-modal uniswap" v-if="giftTicket && ticketInputValid && ticketInputAddress.length > 0">Gift ticket</button></a>
-                    <a class="" target="_blank"><button class="btn btn-modal uniswap" style="background-color: #272631!important; color: white" v-if="ticketInputAddress.length == 0 && giftTicket">Submit an Address</button></a>
-                    <a class="" target="_blank" ><button class="btn btn-modal uniswap" style="background-color: #e7e7e7!important;" v-if="giftTicket && !ticketInputValid && ticketInputAddress.length > 0">Input valid address</button></a>
+                    <a class="" target="_blank" @click="purchaseTicket(ticketInputAddress)" v-if="giftTicket && ticketInputValid && ticketInputAddress.length > 0"><button class="btn verse-wide">Buy a Ticket</button></a>
+                    <a class="" target="_blank" v-if="ticketInputAddress.length == 0 && giftTicket"><button class="btn verse-wide disabled">Submit an Address</button></a>
+                    <a class="" target="_blank" v-if="giftTicket && !ticketInputValid && ticketInputAddress.length > 0"><button class="btn verse-wide disabled">Input Valid Address</button></a>
                 </div>
-
-                <div v-if="giftInputLoad == true && giftTicket">
-
-                        <div style="text-align: left;">
-                            <div class="lds-ring">
-                        <div style="height: 20px!important; width: 20px!important;"></div>
-                        <div style="height: 20px!important; width: 20px!important;"></div>
-                        <div style="height: 20px!important; width: 20px!important;"></div>
-                        <div style="height: 20px!important; width: 20px!important;"></div>
-                    </div>
-                        </div>                    
-
-                </div>
-
             </div>
         </div>
         <!-- normal finish -->
-        <div class="modal" v-if="buyStep == 4">
-            <p class="iholder"><i @click="toggleModal()" class="fa fa-times"></i></p>
-            <div v-if="modalLoading">
-                <p style="text-align: center">{{ loadingMessage }}</p>
-                <div style="text-align: center;">
-                    <div class="lds-ring"><div></div><div></div><div></div><div></div></div>
-                </div>
+        <div class="modal" v-if="buyStep == 4 && !modalLoading">
+            <div class="modal-head">
+                <h3 class="title">Buy Ticket</h3>
+                <p class="iholder"><i @click="toggleModal()" class="close-btn" ></i></p>
             </div>
-            <div v-if="!modalLoading">
-                <div v-if="giftTicket">
-                    <h3>Gift Purchase Completed</h3>
-                     <p>We have sent the ticket to your specified wallet! Share this link with the recipient to let them know:
+            <div class="modal-divider">
+                <div class="modal-progress p100"></div>
+            </div>  
+            <div class="modal-body">
+                <div>
+                    <div class="img-success"></div>
+                    <div v-if="giftTicket">
+                        <h3 class="title">Ticket Bought & Gifted!</h3>
+                        <p class="subtext">We have sent the ticket to your specified wallet! Share this link with the recipient to let them know:
+
+                        </p>
 
                         <input class="ticketlink" type="text" :value="`https://main--chipper-hotteok-85cbb2.netlify.app/tickets?gift=1&address=${giftAddress}`">
-                        <button style="cursor:pointer" v-if="!copyDone" class="btn-copy" @click="() => copyText()"><i class="fa fa-copy"></i></button>
-                        <button style="cursor:pointer" v-if="copyDone" class="btn-copy" @click="() => copyText()"><i style="color: white" class="fa fa-check"></i></button>
-                     </p>
-                     <!-- change this text for gifted tickets -->
-                     <a class="" href="/"><button class="btn btn-modal verse">Buy more tickets</button></a>
-                     <a class="" href="/tickets"><button class="btn btn-modal uniswap">View your tickets</button></a>
-
-
-                </div>
-                <div v-if="!giftTicket">
-                    <h3>Purchase Completed</h3>
-                     <p>Time to scratch your ticket!</p>
-                     <!-- change this text for gifted tickets -->
-                     <a class="" href="/tickets"><button class="btn btn-modal verse">View your tickets!</button></a>
+                            <button style="cursor:pointer" v-if="!copyDone" class="btn-copy" @click="() => copyText()">copy</button>
+                            <button style="cursor:pointer" v-if="copyDone" class="btn-copy" @click="() => copyText()">copied</button>
+                        <!-- change this text for gifted tickets -->
+                        <a class="" href="/"><button class="btn verse-wide half extraTop extraTopMobile">Buy Another Ticket</button></a>
+                        <a class="" href="/tickets"><button class="btn verse-wide half secondary extraTop">View your tickets</button></a>
+                    </div>
+                    <div v-if="!giftTicket">
+                        <h3 class="title">Ticket Bought!</h3>
+                        <p class="subtext short" style="margin-bottom: 0;">Time to scratch your ticket and test your luck!</p>
+                        <!-- change this text for gifted tickets -->
+                        <a class="" href="/tickets"><button class="btn verse-wide">View your tickets!</button></a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -498,6 +530,7 @@ const web3 = new Web3(new Web3.providers.HttpProvider('https://eth-mainnet.g.alc
 
 
 <style lang="scss" scoped>
+
 .closeBuy {
     right: calc(50% - 300px);
     position: absolute; top: 25px; 
@@ -516,29 +549,32 @@ iframe {
     width: 205%!important;
 }
 .btn-copy {
-    height: 40px;
-    top: -1px;
-    position: relative;
-    width: 10%;
+    height: 24px;
+    position: absolute;
+
+    width: 55px;
     border: none;
-    left: 1%;
+    right: 40px;
+    top: 368px;
+    font-size: 12px;
     color: white;
-    border: 1px solid white;
-    background-color: #2f2b5d;
+    background: linear-gradient(180deg, #0EBEF0 0%, #0085FF 100%);
+    padding: 0px, 12px, 0px, 12px;
+    border-radius: 100px;
 }
 .ticketlink {
-    height: 35px; 
+    height: 46px; 
     padding-left: 10px;
-    width: 80%;
+    padding-right: 80px;
+    position: relative;
+    width: calc(100% - 90px);
     font-size: 16px;
     font-weight: 500;
-    background-color: #464451;
-    border: 1px solid #E7E7E7;
+    background-color: #030C14;
+    border: 1px solid #313E57;
     color: white;
     margin-top: 20px;
-    @media(max-width: 880px) {
-        width: 85%;
-    }
+    border-radius: 12px;
 }
 .tit {
     @media(max-width: 880px) {
@@ -559,21 +595,19 @@ iframe {
     font-weight: 500;
 }
 .giftInput {
-    @media(max-width: 880px) {
-        width: calc(100% - 10px);
-    }
     outline: none;
-    width: 375px;
+    width: calc(100% - 18px);
+    font-family: 'Barlow', sans-serif;
+    font-weight: 600;
     border: none;
-    padding-left: 7px;
-    border-radius: 5px;
-    height: 33px;
+    border-radius: 12px;
+    height: 48px;
     padding-bottom: 2px;
-    margin-top: 10px;
-    color: #555;
-    background-color: #423f52;
-    border: 1px solid white;
-    margin-bottom: 9px;
+    margin-top: 16px;
+    color: #899BB5;
+    background-color: #030C14;
+    border: 1px solid #0085FF;
+    padding-left: 16px;
     font-size: 16px;
 }
 .btn-modal {
@@ -586,7 +620,6 @@ iframe {
     margin-right: 5px;
     font-weight: 500;
     font-size: 15px;
-    padding: 13px 25px;
     font-weight: 600;
     @media(max-width: 880px) {
         width: 100%;

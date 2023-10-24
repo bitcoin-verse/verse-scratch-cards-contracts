@@ -458,10 +458,9 @@ export default {
         color: #333;
         font-weight: 600;
         background-image: radial-gradient(circle farthest-corner at 10% 20%, rgb(51 249 238) 0%, rgb(19 255 179) 100.2%);
-            background: radial-gradient(circle farthest-corner at 10% 20%, rgb(249, 232, 51) 0%, rgb(250, 196, 59) 100.2%);
-
-
+        background: radial-gradient(circle farthest-corner at 10% 20%, rgb(249, 232, 51) 0%, rgb(250, 196, 59) 100.2%);
     }
+    
     &.uniswap {
         background-color: white!important;
         color: #1c1b22;
