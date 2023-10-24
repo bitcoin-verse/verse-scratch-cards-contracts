@@ -37,6 +37,7 @@ i.close-btn {
     display: block;
     background-size: cover;
     position: absolute;
+    z-index: 5;
     right: 32.5px;
     top: 26.5px;
 }
@@ -144,6 +145,11 @@ i.close-btn {
           padding: 24px;
         }
 
+        &.short {
+          height: unset;
+          padding-bottom: 47px;
+        }
+
         .modal-footer {
           @media(max-width: 880px) {
             position: fixed;
@@ -206,6 +212,14 @@ i.close-btn {
         }
 
         .verse-wide {
+          &.fixBottomMobile {
+            @media(max-width: 880px) {
+              position: fixed;
+              left: 32px;
+              width: calc(100% - 64px);
+              bottom: 48px;
+            }
+          }
           &.extraTop {
             margin-top: 120px;
           }
@@ -255,6 +269,17 @@ i.close-btn {
           background-size: cover;
           margin: 0 auto;
           margin-top: 70px;
+        }
+        .img-gift {
+          margin-top: 10px!important;
+          background-image: url("./assets/icons/gift.png");
+          width: 148px;
+          height: 120px;
+          background-size: cover;
+          margin: 0 auto;
+          @media(max-width: 880px) {
+            margin-top: 199px!important;
+          }
         }
         .img-wallet {
           background-image: url("./assets/icons/wallet.png");

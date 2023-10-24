@@ -291,15 +291,18 @@ export default {
     <div class="backdrop" v-if="claimActive || giftModal">
         <!-- gift-->
         <div class="modal" v-if="giftModal">
-            <p class="iholder"><i @click="closeGiftModal()" class="fa fa-times"></i></p>
-            <div>
-                <h3>Gift Ticket Received!</h3>
-                <p style="font-weight: 300;">Somebody has sent a scratch ticket to you. Your ticket has a <span style="color: orange; font-weight: 600;"> chance to win 100.000 Verse!</span>
-                <br><br>No transaction needed to scratch. Connect your account (<span style="color: orange; font-weight: 600;"> {{ giftAccount.slice(0, 7) }}..</span>) to redeem the ticket.
+            <div class="modal-head">
+                <p class="iholder"><i @click="closeGiftModal(false)" class="close-btn" ></i></p>
+            </div>
+            <div class="modal-body short">
+                <div class="img-gift"></div>
+                <h3 class="title">Gift Ticket Received!</h3>
+                <p class="subtext">Somebody has sent a scratch ticket to you. Your ticket has a chance to win <span>100.000 Verse!</span>
+                <br><br>No transaction needed to scratch. Connect your account (<span> {{ giftAccount.slice(0, 7) }}..</span>) to redeem the ticket.
                 </p>
                 
-                <a @click="closeGiftModal(true)" v-if="accountActive == false"><button class="btn btn-modal verse">Connect and Redeem</button></a>
-                <a @click="closeGiftModal(false)" v-if="accountActive == true"><button class="btn btn-modal verse">Close</button></a>
+                <a @click="closeGiftModal(true)" v-if="accountActive == false"><button class="btn verse-wide fixBottomMobile">Connect and Redeem</button></a>
+                <a @click="closeGiftModal(false)" v-if="accountActive == true"><button class="btn verse-wide fixBottomMobile">Redeem</button></a>
                 <img url="/gift.png">
             </div>
         </div>

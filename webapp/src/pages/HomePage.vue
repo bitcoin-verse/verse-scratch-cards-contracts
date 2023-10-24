@@ -29,7 +29,7 @@ const web3 = new Web3(new Web3.providers.HttpProvider('https://eth-mainnet.g.alc
     let giftInputLoad = ref(false)
     let giftAddress = ref("");
     let modalLoading = ref(false)
-    let loadingMessage = ref("")
+    let loadingMessage = ref("loading")
     let buyStep = ref(0) // 0
     let giftTicket = ref(false); // false
     
@@ -513,7 +513,7 @@ const web3 = new Web3(new Web3.providers.HttpProvider('https://eth-mainnet.g.alc
                 Purchase and play scratch tickets right from the comfort of your home or on-the-go. Get instant results and claim your winnings immediately!
             </p>
 
-            <button class="btn-buy" @click="toggleModal()"><i class="fa-solid fa-gift"></i> Get Ticket</button>
+            <button class="btn-buy" @click="toggleModal()"><i class="fa-solid fa-gift"></i> Buy Ticket</button>
             <a href="/tickets"><button class="btn-view" ><i class="fa-solid fa-list"></i> View My Tickets</button></a>
 
             <p class="instant"><i class="fa fa-solid fa-bolt-lightning"></i> Instant Delivery</p>
