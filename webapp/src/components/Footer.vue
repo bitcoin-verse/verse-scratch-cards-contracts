@@ -29,7 +29,8 @@
     flex: 0 1 0%;
     z-index: 1;
     color: rgb(255, 255, 255);
-    background: rgb(0, 0, 0);
+    background: linear-gradient(0deg, #030C14, #030C14), linear-gradient(0deg, #1A2231, #1A2231);
+
     .footer-content {
         display: flex;
         justify-content: space-between;

@@ -857,7 +857,7 @@ iframe {
 .page {
     @media(max-width: 880px) {
         width: 100%;
-        padding-top: 0;
+        padding-top: 50px;
         height: calc(100vh - 100px);
         
     }
