@@ -3,6 +3,7 @@
 import { RouterView } from 'vue-router'
 import { polygon } from '@wagmi/core/chains'
 import NavBar from './components/NavBar.vue'
+import Footer from './components/Footer.vue'
 import Stars from './components/Stars.vue'
 
 import { defaultWagmiConfig, createWeb3Modal } from '@web3modal/wagmi/vue'
@@ -24,12 +25,34 @@ createWeb3Modal({
 
 <template>  
   <body>
-    <NavBar />
-    <RouterView />
+    <div class="global-wrap">
+      <div class="flex-wrap">
+        <NavBar />
+        <RouterView />
+        <Footer />
+      </div>
+    </div>
   </body>
 </template>
 
 <style lang="scss">
+.global-wrap {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+.flex-wrap {
+  @media(min-width: 768px) {
+    width: 100%;
+    align-items: center;
+    z-index: 1;
+    max-width: 80rem;
+    margin: 0px auto;
+    gap: 1rem;
+    grid-template-columns: min-content max-content auto;
+  }
+}
 i.close-btn {
     background-image: url("./assets/icons/close.png");
     width: 24px;
@@ -140,6 +163,11 @@ i.close-btn {
       }
 
       .modal-body {
+        .loadingText {
+          color: #FFFFFF;
+          font-size: 18px;
+          font-weight: 600;
+        }
         position: relative;
         @media(max-width: 880px) {
           padding: 24px;
@@ -234,6 +262,13 @@ i.close-btn {
         }
 
         .verse-wide {
+          &:hover {
+            background: linear-gradient(rgb(49, 201, 244) 0%, rgb(44, 150, 246) 100%);
+          }
+          &:active {
+            background:linear-gradient(rgb(1, 137, 254) 0%, rgb(44, 150, 246) 100%)
+          }
+          
           &.fixBottomMobile {
             @media(max-width: 880px) {
               position: fixed;

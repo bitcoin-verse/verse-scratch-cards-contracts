@@ -40,7 +40,7 @@ export default {
             </ul>
         </div>
         <div class="wallet">
-            <button class="btn btn-connect" v-if="!accountActive" @click="openWalletModal">Connect Wallet</button>
+            <button class="btn verse-nav" v-if="!accountActive" @click="openWalletModal">Connect Wallet</button>
             <w3m-button v-if="accountActive"  />
         </div>
     </div>
@@ -48,6 +48,30 @@ export default {
 
 <style lang="scss">
 
+.verse-nav {
+    border: none;
+    outline: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+    cursor: pointer;
+    text-wrap: nowrap;
+    border-radius: 100px;
+    font-family: Barlow, Helvetica, sans-serif;
+    font-weight: 600;
+    color: rgb(255, 255, 255);
+    background: linear-gradient(rgb(14, 190, 240) 0%, rgb(0, 133, 255) 100%);
+    font-size: 14px;
+    height: 36px;
+    padding: 0px 16px;
+    &:hover {
+        background: linear-gradient(rgb(49, 201, 244) 0%, rgb(44, 150, 246) 100%);
+    }
+    &:active {
+        background:linear-gradient(rgb(1, 137, 254) 0%, rgb(44, 150, 246) 100%)
+    }
+}
 .btn-connect {
     @media(max-width: 880px) {
         width: 100%;
@@ -125,13 +149,7 @@ export default {
         }
         div.wallet {
             @media(max-width: 930px) {
-                background-color: #1a1833;
-                position: fixed; 
-                width: 100%;
-                left: 0;
-                bottom: 0;
-                padding: 10px;
-                z-index:2;
+                display: none;
             }
             margin: 0;
             margin-top: 10px;
