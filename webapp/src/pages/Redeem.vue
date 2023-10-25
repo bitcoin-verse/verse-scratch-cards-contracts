@@ -1,19 +1,16 @@
 <script setup>
 
 import { ref, onMounted, watch } from 'vue';
+import GLOBALS from '../globals.js'
 
 const props = defineProps(['closeDetailScreen', 'detailNFT', 'setScratched', 'toggleModal'])
 
-
 let count = ref(8);
 let imageLoaded = ref(false)
-
-
-
+let nftAddress = GLOBALS.NFT_ADDRESS
 
 watch(count, async (newValue)=> {
     if (newValue == 0) {
-        // fireworks
         const duration = 3 * 1000,
         animationEnd = Date.now() + duration,
         defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
@@ -53,7 +50,7 @@ onMounted(() => {
 
 
     const img = new Image();
-    img.src = `/tickets/${props.detailNFT.id}.png`
+    img.src = `https://scratchverse.s3.us-west-1.amazonaws.com/${props.detailNFT.id}/${nftAddress}.jpg`
     img.onload = () => {
         setupScratch()
         imageLoaded.value = true;       
@@ -81,62 +78,56 @@ onMounted(() => {
         let arr = [one, two, three, four, five, six, seven, eight]
         arr.forEach((item, idx) => {
             item.addEventListener('success', function (e) {
-            if(scratched[idx] == false) {
-                scratched[idx] = true
-                count.value--;
-            }
-            if(count.value == 0) {
-                props.setScratched(props.detailNFT.id);
-            }
-        }, false);
+                if(scratched[idx] == false) {
+                    scratched[idx] = true
+                    count.value--;
+                }
+                if(count.value == 0) {
+                    props.setScratched(props.detailNFT.id);
+                }
+            }, false);
         })
     }
 
 })
-
-
 </script>
 
 <template>
     <div class="page">
         <div class="left">
             <div class="btn-holder">
-            <a style="cursor: pointer" @click="closeDetailScreen()"><h5 class="breadcrumb"><i class="fa-solid fa-arrow-left"></i> Return to Ticket Overview</h5></a>
-            <h2><span style="color: #fac43b">Scratch 3 matching numbers to win</span></h2>
-            <h3>Fields left to scratch: {{ count }}</h3>
-            <p style="color: white; font-weight: 500;">Scratch the tickets by dragging your mouse over the scratch fields. You can redeem your winnings after the fields have been scratched. 
-   
-            </p>
-        </div>
-        </div>
-        <div class="cont" id="conthandler">
-        <div v-if="!imageLoaded" style="padding: 100px;">
-            <div style="text-align: center;">
-                <div class="lds-ring"><div></div><div></div><div></div><div></div></div>
+                <a style="cursor: pointer" @click="closeDetailScreen()"><h5 class="breadcrumb"><i class="fa-solid fa-arrow-left"></i> Return to Ticket Overview</h5></a>
+                <h2><span style="color: #fac43b">Scratch 3 matching numbers to win</span></h2>
+                <h3>Fields left to scratch: {{ count }}</h3>
+                <p style="color: white; font-weight: 500;">Scratch the tickets by dragging your mouse over the scratch fields. You can redeem your winnings after the fields have been scratched. 
+                </p>
             </div>
         </div>
-        <div class="ticketholder animate__animated animate__backInDown " v-show="imageLoaded" :style="{'background-image': 'url(/tickets/' + detailNFT.id + '.png)' } ">
-            <canvas id="scratchcanvas1" width="75" height="75"></canvas>
-            <canvas id="scratchcanvas2" width="75" height="75"></canvas>
-            <canvas id="scratchcanvas3" width="75" height="75"></canvas>
-            <canvas id="scratchcanvas4" width="75" height="75"></canvas>
-            <canvas id="scratchcanvas5" width="75" height="75"></canvas>
-            <canvas id="scratchcanvas6" width="75" height="75"></canvas>
-            <canvas id="scratchcanvas7" width="75" height="75"></canvas>
-            <canvas id="scratchcanvas8" width="75" height="75"></canvas>
-        </div>
+        <div class="cont" id="conthandler">
+            <div v-if="!imageLoaded" style="padding: 100px;">
+                <div style="text-align: center;">
+                    <div class="lds-ring"><div></div><div></div><div></div><div></div></div>
+                </div>
+            </div>
+            <div class="ticketholder animate__animated animate__backInDown " v-show="imageLoaded" :style="{'background-image': `url(https://scratchverse.s3.us-west-1.amazonaws.com/${detailNFT.id}/${nftAddress}.jpg)` } ">
+                <canvas id="scratchcanvas1" width="75" height="75"></canvas>
+                <canvas id="scratchcanvas2" width="75" height="75"></canvas>
+                <canvas id="scratchcanvas3" width="75" height="75"></canvas>
+                <canvas id="scratchcanvas4" width="75" height="75"></canvas>
+                <canvas id="scratchcanvas5" width="75" height="75"></canvas>
+                <canvas id="scratchcanvas6" width="75" height="75"></canvas>
+                <canvas id="scratchcanvas7" width="75" height="75"></canvas>
+                <canvas id="scratchcanvas8" width="75" height="75"></canvas>
+            </div>
         </div>
 
         <div class="right" v-if="count == 0">
             <h2 class="win">You won a prize!</h2>
-         
-         <h3 class="win"> {{ detailNFT.prize }} Verse</h3>
-         <p class="claim">Congratulations! You can claim your prize instantly</p>
-         <button class="btn btn-redeem" style="cursor: pointer" v-if="detailNFT.claimed == false" @click="toggleModal(detailNFT.id)" >Claim Now</button>
-         <button href="/tickets" class="btn btn-redeem" style="cursor: pointer" v-if="detailNFT.claimed == true" @click="closeDetailScreen()">Back to overview</button>
+            <h3 class="win"> {{ detailNFT.prize }} Verse</h3>
+            <p class="claim">Congratulations! You can claim your prize instantly</p>
+            <button class="btn btn-redeem" style="cursor: pointer" v-if="detailNFT.claimed == false" @click="toggleModal(detailNFT.id)" >Claim Now</button>
+            <button href="/tickets" class="btn btn-redeem" style="cursor: pointer" v-if="detailNFT.claimed == true" @click="closeDetailScreen()">Back to overview</button>
         </div>
-
-        
     </div>
 </template>
 

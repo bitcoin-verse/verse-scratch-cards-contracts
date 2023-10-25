@@ -2,8 +2,21 @@
 	{
 		"inputs": [
 			{
+				"internalType": "address[]",
+				"name": "receivers",
+				"type": "address[]"
+			}
+		],
+		"name": "bulkSend",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
 				"internalType": "address",
-				"name": "giftAddress",
+				"name": "receiver",
 				"type": "address"
 			}
 		],
@@ -31,11 +44,6 @@
 				"internalType": "address",
 				"name": "_vrfCoordinatorV2Address",
 				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "_maxTickets",
-				"type": "uint256"
 			},
 			{
 				"internalType": "uint256",
@@ -148,12 +156,6 @@
 			},
 			{
 				"indexed": false,
-				"internalType": "uint256",
-				"name": "maxNumber",
-				"type": "uint256"
-			},
-			{
-				"indexed": false,
 				"internalType": "uint32",
 				"name": "result",
 				"type": "uint32"
@@ -161,24 +163,6 @@
 		],
 		"name": "requestFulfilled",
 		"type": "event"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256[]",
-				"name": "keys",
-				"type": "uint256[]"
-			},
-			{
-				"internalType": "uint256[]",
-				"name": "values",
-				"type": "uint256[]"
-			}
-		],
-		"name": "setPrizes",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
 	},
 	{
 		"inputs": [
@@ -198,25 +182,6 @@
 		"name": "withdraw",
 		"outputs": [],
 		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"name": "claimedPrize",
-		"outputs": [
-			{
-				"internalType": "bool",
-				"name": "",
-				"type": "bool"
-			}
-		],
-		"stateMutability": "view",
 		"type": "function"
 	},
 	{
@@ -272,11 +237,21 @@
 				"type": "uint256"
 			}
 		],
-		"name": "prizeMapping",
+		"name": "prizeTiers",
 		"outputs": [
 			{
 				"internalType": "uint256",
-				"name": "",
+				"name": "start",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "end",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "prizeAmount",
 				"type": "uint256"
 			}
 		],
@@ -294,22 +269,12 @@
 		"name": "requestIdToDrawing",
 		"outputs": [
 			{
-				"internalType": "uint32",
-				"name": "result",
-				"type": "uint32"
-			},
-			{
-				"internalType": "uint256",
-				"name": "maximumNumber",
-				"type": "uint256"
-			},
-			{
 				"internalType": "uint256",
 				"name": "drawId",
 				"type": "uint256"
 			},
 			{
-				"internalType": "address payable",
+				"internalType": "address",
 				"name": "ticketReceiver",
 				"type": "address"
 			}
@@ -320,25 +285,6 @@
 	{
 		"inputs": [],
 		"name": "ticketCost",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"name": "ticketsRemaining",
 		"outputs": [
 			{
 				"internalType": "uint256",
