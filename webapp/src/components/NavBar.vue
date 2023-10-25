@@ -29,9 +29,18 @@ export default {
 </script>
 
 <template>
+    <div class="navbar-mobile">
+        <a href="verse.bitcoin.com" target="_blank">
+            <div class="nav-chev"></div>
+            <div class="nav-verse"></div>
+        </a>
+        <h3 class="title-nav">Verse Scratch Tickets</h3>
+        <button class="btn verse-nav" v-if="!accountActive" @click="openWalletModal">Connect</button>
+        <!-- <w3m-button v-if="accountActive"  /> TODO MOBILE ACCOUNT ACTIVE -->
+    </div>
     <div class="navbar">
         <a style="cursor: pointer;" href="/"><div class="logo">
-            <h2>Verse Labs</h2>
+            <h2>Verse Scratch</h2>
         </div></a>
         <div class="links">
             <ul>
@@ -99,10 +108,65 @@ export default {
     cursor: pointer;
 }
 
-    .navbar {
-        @media(max-width: 880px) {
-            height: 105px;
+    .navbar-mobile {
+        background-color: black;
+        width: 100%;
+        height: 56px;
+        position: relative;
+        background: linear-gradient(0deg, #0F1823, #0F1823),linear-gradient(0deg, #1A2231, #1A2231);
+
+
+        .verse-nav {
+            position: absolute;
+            right: 16px;
+            top: 10px;
         }
+
+        .title-nav {
+            color:#FFFFFF;
+            margin: 0;
+            position: absolute;
+            left: 80px;
+            top: 17.5px;
+            font-size:16px;
+            font-family: Barlow, Helvetica, sans-serif;
+            color: white;
+            font-weight: 600;
+        }
+
+        a {
+            .nav-chev {
+                position: absolute;
+                left: 8px;
+                top: 18px;
+                background-image: url("./../assets/icons/chev.png");
+                background-size: cover;
+                width: 20px;
+                height: 20px;
+            }
+
+            .nav-verse {
+                position: absolute;
+                left: 28px;
+                top: 10px;
+                background-image: url("./../assets/icons/verse-mob.png");
+                background-size: cover;
+                width: 36px;
+                height: 36px;
+            }
+        }
+
+        @media(min-width: 880px) {
+            display: none;
+        }
+       
+    }
+
+    .navbar {
+        @media(max-width: 879px) {
+            display: none;
+        }
+        display: block;
         width: 100%;
         height: 70px;
         div.logo {
