@@ -29,9 +29,10 @@ const web3 = new Web3(new Web3.providers.HttpProvider('https://eth-mainnet.g.alc
     let giftInputLoad = ref(false)
     let giftAddress = ref("");
     let modalLoading = ref(false)
-    let loadingMessage = ref("loading")
+    let loadingMessage = ref("getting wallet data")
     let buyStep = ref(0) // 0
     let giftTicket = ref(false); // false
+    let showTimer = ref(false)
     
     let ticketInputAddress = ref("")
     let ticketInputValid = ref(true)
@@ -145,20 +146,22 @@ const web3 = new Web3(new Web3.providers.HttpProvider('https://eth-mainnet.g.alc
             })
             loadingMessage.value = "waiting for tx confirmation"
             await waitForTransaction({ hash })
-            let timer = 20; 
+            let timer = 20;  // REVERT THIS TO 20
             // Create an interval to decrement the timer every second
             const countdown = setInterval(() => {
+                showTimer.value = true
                 timer--; // Decrement the timer
                 if(giftTicket.value == true) {
-                    loadingMessage.value = `payment success! issuing gift ticket to chosen wallet and awaiting final confirmation. Expected arrival in ${timer} seconds!`;
+                    loadingMessage.value = `${timer} seconds!`;
                 } else {
-                    loadingMessage.value = `payment success! issuing ticket to your wallet and awaiting final confirmation. Expected arrival in ${timer} seconds!`;
+                    loadingMessage.value = `${timer} seconds!`;
                 }
 
                 if (timer <= 0) {
                     clearInterval(countdown);
                     modalLoading.value = false;
                     buyStep.value = 4;
+                    showTimer.value = false;
                 }
             }, 1000);
 
@@ -311,6 +314,7 @@ const web3 = new Web3(new Web3.providers.HttpProvider('https://eth-mainnet.g.alc
         toggleGift,
         onTicketInputChange,
         ticketInputValid,
+        showTimer,
         ensLoaded,
         giftInputLoad
     }
@@ -342,8 +346,15 @@ const web3 = new Web3(new Web3.providers.HttpProvider('https://eth-mainnet.g.alc
                 <div class="modal-progress p75"></div>
             </div>  
             <div class="modal-body">
+                <div class="img-spinner"></div>
 
-                <p class="loadingText">{{loadingMessage}}</p>
+                <p v-if="!showTimer" class="loadingText">{{loadingMessage}}</p>
+                <h3 v-if="showTimer" class="title">Payment Successful</h3>
+                <p v-if="showTimer" class="subtext short">Issuing ticket to your wallet and awaiting final confirmation</p>
+                
+                <div v-if="showTimer" class="attention-footer">
+                    <p>expected arrival in <strong>{{loadingMessage}}</strong></p>
+                </div>
             </div>
         </div>
         <!-- modal for connecting account -->

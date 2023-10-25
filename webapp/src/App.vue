@@ -150,6 +150,28 @@ i.close-btn {
           padding-bottom: 47px;
         }
 
+        .attention-footer {
+          position: absolute;
+          background: #0085FF;
+          height: 54px;
+          width: 100%;
+          left: 0;
+          bottom: 0;
+          margin: 0;
+          border-bottom-left-radius: 13.5px;
+          border-bottom-right-radius: 13.5px;
+          @media(max-width: 880px) {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            border-radius: 0;
+          }
+          p {
+            margin-top: 18px!important;
+            font-size: 14px;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+          }
+        }
         .modal-footer {
           @media(max-width: 880px) {
             position: fixed;
@@ -262,6 +284,14 @@ i.close-btn {
         height: 540px;
         padding: 40px 32px 24px 32px;
         text-align: center;
+        .img-spinner {
+          background-image: url("./assets/icons/activity.svg");
+          width: 44px;
+          height: 44px;
+          background-size: cover;
+          margin: 0 auto;
+          margin-top: 180px;
+        }
         .img-success {
           background-image: url("./assets/icons/success.png");
           width: 148px;

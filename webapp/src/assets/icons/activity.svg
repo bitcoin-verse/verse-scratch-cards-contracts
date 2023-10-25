@@ -1,0 +1,60 @@
+<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+
+  <style type="text/css">
+
+    @keyframes rotate {
+      0% { transform:rotate(0deg) }
+      100% { transform:rotate(360deg) }
+    }
+
+    .rotate {
+      animation: rotate 1s linear infinite;
+    }
+
+  </style>
+
+  <rect width="300" height="100" fill="#030C14" />
+
+  <circle
+      class="rotate"
+      cx="8"
+      cy="8"
+      r="7"
+      style="stroke: url(#Pattern);"
+      stroke-width="2"
+      transform-origin="8 8"
+  />
+
+  <path
+      class="rotate"
+      transform-origin="8 8"
+      d="M9 15C9 15.5523 8.55228 16 8 16C7.44772 16 7 15.5523 7 15C7 14.4477 7.44772 14 8 14C8.55228 14 9 14.4477 9 15Z"
+      fill="url(#dot)"
+  />
+  
+  <defs>
+
+      <linearGradient id="dot" x1="9" y1="15" x2="8" y2="15" gradientUnits="userSpaceOnUse">
+        <stop stop-color="#8698B1"/>
+        <stop offset="1" stop-color="#8597B0"/>
+      </linearGradient>
+
+      <linearGradient id="Gradient1" gradientTransform="rotate(90)">
+          <stop offset="0%" stop-color="#454E5B"/>
+          <stop offset="100%" stop-color="#030C14"/>
+        </linearGradient>
+         <linearGradient id="Gradient2" gradientTransform="rotate(90)">
+          <stop offset="0%" stop-color="#454E5B"/>
+          <stop offset="100%" stop-color="#8597B0"/>
+      </linearGradient>
+
+      <pattern id="Pattern" x="0" y="0" width="16" height="16" patternUnits="userSpaceOnUse">
+        <g transform="rotate(0, 8, 8)">
+              <rect shape-rendering="crispEdges" x="0" y="0" width="8" height="16" fill="url(#Gradient1)"/>
+              <rect shape-rendering="crispEdges"  x="8" y="0" width="8" height="16" fill="url(#Gradient2)"/>
+         </g>
+      </pattern>
+
+  </defs>
+
+</svg>
