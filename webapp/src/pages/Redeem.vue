@@ -302,9 +302,4 @@ h3.win {
 
 
 
-
-.page {
-    position: absolute;
-    width: 100%;
-}
 </style>

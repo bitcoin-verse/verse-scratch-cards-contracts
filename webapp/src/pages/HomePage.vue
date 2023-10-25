@@ -350,7 +350,8 @@ const web3 = new Web3(new Web3.providers.HttpProvider('https://eth-mainnet.g.alc
 
                 <p v-if="!showTimer" class="loadingText">{{loadingMessage}}</p>
                 <h3 v-if="showTimer" class="title">Payment Successful</h3>
-                <p v-if="showTimer" class="subtext short">Issuing ticket to your wallet and awaiting final confirmation</p>
+                <p v-if="showTimer && !giftTicket" class="subtext short">Issuing ticket to your wallet and awaiting final confirmation</p>
+                <p v-if="showTimer && giftTicket" class="subtext short">Issuing ticket to the chosen wallet and awaiting final confirmation</p>
                 
                 <div v-if="showTimer" class="attention-footer">
                     <p>expected arrival in <strong>{{loadingMessage}}</strong></p>
@@ -795,7 +796,7 @@ iframe {
     padding-top: 80px;
     padding-left: 150px;
     float: left;
-    padding-left: 8%;
+    padding-left: 4%;
     width: 47%;
     color: white;
     padding-right: 0;
