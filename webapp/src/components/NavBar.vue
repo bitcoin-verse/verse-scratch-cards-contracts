@@ -55,12 +55,12 @@ export default {
         <a style="cursor: pointer;" href="/"><div class="logo">
             <h2>Verse Scratch</h2>
         </div></a>
-        <div class="links">
+        <!-- <div class="links">
             <ul>
                 <li><a href="/" >Get Ticket</a></li>
                 <li><a href="/tickets">View Tickets</a></li>
             </ul>
-        </div>
+        </div> -->
         <div class="wallet">
             <button class="btn verse-nav" v-if="!accountActive" @click="openWalletModal(true)">Connect Wallet</button>
             <button class="btn verse-nav connected" v-if="accountActive" @click="openWalletModal(false)">{{truncateEthAddress(getAccount().address || "")}} <div :class="'provider-logo ' + connectedProvider"></div></button>

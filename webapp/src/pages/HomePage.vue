@@ -522,7 +522,7 @@ const web3 = new Web3(new Web3.providers.HttpProvider('https://eth-mainnet.g.alc
                 <div class="clearfix">
                 <div class="bubble"><p>Entry: 3000 Verse</p></div>
                 <div class="bubble"><p>Jackpot 100.000 Verse</p></div>
-                <div class="bubble"><p>100 tickets available</p></div>
+                <div class="bubble"><p>Provably Fair</p></div>
             </div>
 
             <p class="subtitle" style="font-weight: 300; margin-bottom: 20px; padding-left: 0;">
