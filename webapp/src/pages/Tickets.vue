@@ -8,10 +8,12 @@ import ContractABI from '../abi/contract.json'
 import ERC721 from '../abi/ERC721.json'
 import { useRoute } from 'vue-router'
 import GLOBALS from '../globals.js'
+import Footer from '../components/Footer.vue'
 
 export default {
     components: {
-        Redeem
+        Redeem,
+        Footer
     },  
     setup() {
         const route = useRoute()
@@ -372,7 +374,7 @@ export default {
             <button v-if="item.claimed == true" class="btn-action main dis" >{{item.prize}} Verse Claimed</button>
         </div>
     </div>
-
+    <Footer />
 </div>
 </template>
 
@@ -474,9 +476,8 @@ export default {
 div.tickets {
     width: calc(100% - 100px);
     display: inline-block;
-    margin-bottom: 500px;
+    margin-bottom: 100px;
     padding-left: 100px;
-    padding-top: 20px;
     @media(max-width: 880px) {
         width: calc(100% - 10px);
         display: inline-block;
@@ -513,8 +514,9 @@ div.tickets {
     color: white;
 }
 .page {
+    position: relative;
     width: 100%;
-    height: calc(100vh - 100px);
+    height: calc(100vh - 70px);
     padding-left: 0;
     overflow: scroll;
 }

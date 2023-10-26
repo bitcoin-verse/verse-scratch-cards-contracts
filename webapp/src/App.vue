@@ -3,7 +3,6 @@
 import { RouterView } from 'vue-router'
 import { polygon } from '@wagmi/core/chains'
 import NavBar from './components/NavBar.vue'
-import Footer from './components/Footer.vue'
 import Stars from './components/Stars.vue'
 
 import { defaultWagmiConfig, createWeb3Modal } from '@web3modal/wagmi/vue'
@@ -29,7 +28,6 @@ createWeb3Modal({
       <div class="flex-wrap">
         <NavBar />
         <RouterView />
-        <Footer />
       </div>
     </div>
   </body>
