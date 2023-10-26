@@ -8,12 +8,16 @@ import axios from 'axios'
 import Web3 from 'web3'
 import { copyText } from 'vue3-clipboard'
 import GLOBALS from '../globals.js'
+import Footer from '../components/Footer.vue'
 
 const web3 = new Web3(new Web3.providers.HttpProvider('https://eth-mainnet.g.alchemy.com/v2/jOIyWO860V1Ekgvo9-WGdjDgNr2nYxlh'));
 
   const contractAddress = GLOBALS.CONTRACT_ADDRESS
 
   export default {
+    components: {
+        Footer
+    }, 
   setup() {
     let account = getAccount()
     let currentAccountAddress = ref("")
@@ -398,9 +402,9 @@ const web3 = new Web3(new Web3.providers.HttpProvider('https://eth-mainnet.g.alc
                     </div>
     
 
-                    <a class="" target="_blank" @click="openBuy"><button class="btn verse-wide half">Buy Verse</button></a>
-                    <a class="" target="_blank" href="https://wallet.polygon.technology/polygon/bridge"><button class="btn verse-wide half secondary">Bridge Verse</button></a>
-                    <p class="modal-footer">Bought Verse? click <a @click="getBalance()">here</a> to refresh your balance</p>
+                    <a class="" target="_blank" @click="openBuy"><button class="btn verse-wide half">Buy VERSE</button></a>
+                    <a class="" target="_blank" href="https://wallet.polygon.technology/polygon/bridge"><button class="btn verse-wide half secondary">Bridge VERSE</button></a>
+                    <p class="modal-footer">Already bought VERSE? click <a @click="getBalance()">here</a> to refresh your balance</p>
                 </div>
         
             </div>
@@ -417,17 +421,17 @@ const web3 = new Web3(new Web3.providers.HttpProvider('https://eth-mainnet.g.alc
             <div class="modal-body">
                 <div class="img-approve"></div>
                 <h3 class="title">Approve the use of VERSE</h3>
-                <p class="subtext">You need to set approval for <span>3000 verse</span> from your wallet, this approval is used to purchase your ticket. </p>
+                <p class="subtext">You need to approve the use of at least <span>3000 VERSE</span>. This is used to pay for your ticket. </p>
                     
                 <div class="helper">
                     <div class="bulb-icn"></div>
                     <p>Alternatively you can choose to set an unlimited allowance, this way you can skip this step on your next purchase</p>
                 </div>
                 
-                <a class="" target="_blank" @click="approve()"><button class="btn verse-wide half">Approve 3000 Verse</button></a>
-                <a class="" target="_blank" @click="approve(true)"><button class="btn verse-wide half secondary">Set infinite approval</button></a>
+                <a class="" target="_blank" @click="approve()"><button class="btn verse-wide half">Approve 3000 VERSE</button></a>
+                <a class="" target="_blank" @click="approve(true)"><button class="btn verse-wide half secondary">Set Infinite Approval</button></a>
 
-                <p class="modal-footer">Approvals are part of the default contract that Polygon tokens use. Learn more at <a target="blank" href="https://revoke.cash/learn/approvals/what-are-token-approvals">the token approval faq</a></p>
+                <p class="modal-footer">All tokens on the Polygon network require an approval transaction before they can be spent. <a target="blank" href="https://revoke.cash/learn/approvals/what-are-token-approvals">learn more here.</a></p>
             </div>
         </div>
         <!-- purchase modal -->
@@ -442,7 +446,7 @@ const web3 = new Web3(new Web3.providers.HttpProvider('https://eth-mainnet.g.alc
             <div class="modal-body">
                 <div class="img-purchase"></div>
                 <h3 class="title">Buy Ticket</h3>
-                <p class="subtext">It seems you have <span>3000 Verse</span> in your wallet and contract approval has been set!</p>
+                <p class="subtext">It seems you have <span>3000 VERSE</span> in your wallet and contract approval has been set!</p>
                 <div class="gift-toggle-holder" :class="{ opened: giftTicket }">
                     <h3 class="title">Send ticket as gift?</h3>
                     <label class="switch">
@@ -537,7 +541,9 @@ const web3 = new Web3(new Web3.providers.HttpProvider('https://eth-mainnet.g.alc
             <img class="animate__animated animate__rotateInUpLeft"  src="../assets/collection_comp3.png">
         </div>
         </div>
+        <Footer />
     </div>
+
 </template>
 
 
@@ -714,7 +720,11 @@ iframe {
 }
 .float-holder{
     margin: 0 auto;
-    min-height: 100vh; // remove this after
+    min-height: calc(100vh - 188px);
+    @media(max-width: 880px) {
+        min-height: calc(100vh - 170px); 
+    }
+    // min-height: 100vh; // remove this after
 }
 .btn-buy {
     @media(max-width: 880px) {
@@ -826,7 +836,7 @@ iframe {
     }
     left: 40%;
     float: right;
-    width: 42%;
+    width: 43%;
     min-width: 240px;
     margin-right: 2%;
     margin-top: 20px;

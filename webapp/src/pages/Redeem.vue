@@ -2,6 +2,7 @@
 
 import { ref, onMounted, watch } from 'vue';
 import GLOBALS from '../globals.js'
+import Footer from '../components/Footer.vue'
 
 const props = defineProps(['closeDetailScreen', 'detailNFT', 'setScratched', 'toggleModal'])
 
@@ -110,14 +111,14 @@ onMounted(() => {
                 </div>
             </div>
             <div class="ticketholder animate__animated animate__backInDown " v-show="imageLoaded" :style="{'background-image': `url(https://scratchverse.s3.us-west-1.amazonaws.com/${detailNFT.id}/${nftAddress}.jpg)` } ">
-                <canvas id="scratchcanvas1" width="75" height="75"></canvas>
-                <canvas id="scratchcanvas2" width="75" height="75"></canvas>
-                <canvas id="scratchcanvas3" width="75" height="75"></canvas>
-                <canvas id="scratchcanvas4" width="75" height="75"></canvas>
-                <canvas id="scratchcanvas5" width="75" height="75"></canvas>
-                <canvas id="scratchcanvas6" width="75" height="75"></canvas>
-                <canvas id="scratchcanvas7" width="75" height="75"></canvas>
-                <canvas id="scratchcanvas8" width="75" height="75"></canvas>
+                <canvas id="scratchcanvas1" width="69" height="69"></canvas>
+                <canvas id="scratchcanvas2" width="69" height="69"></canvas>
+                <canvas id="scratchcanvas3" width="69" height="69"></canvas>
+                <canvas id="scratchcanvas4" width="69" height="69"></canvas>
+                <canvas id="scratchcanvas5" width="69" height="69"></canvas>
+                <canvas id="scratchcanvas6" width="69" height="69"></canvas>
+                <canvas id="scratchcanvas7" width="69" height="69"></canvas>
+                <canvas id="scratchcanvas8" width="69" height="69"></canvas>
             </div>
         </div>
 
@@ -128,6 +129,7 @@ onMounted(() => {
             <button class="btn btn-redeem" style="cursor: pointer" v-if="detailNFT.claimed == false" @click="toggleModal(detailNFT.id)" >Claim Now</button>
             <button href="/tickets" class="btn btn-redeem" style="cursor: pointer" v-if="detailNFT.claimed == true" @click="closeDetailScreen()">Back to overview</button>
         </div>
+        <Footer />
     </div>
 </template>
 
@@ -240,64 +242,64 @@ h3.win {
     margin: 0 auto;
     background-size: contain;
     background-repeat: no-repeat;
-    width: 383px;
+    width: 356px;
     height: 720px;
 
 }
 #scratchcanvas1 {
     border-radius: 50%;
     position: absolute;
-    bottom: 254px;
-    left: 24px;
+    bottom: 286px;
+    left: 22px;
 }
 
 #scratchcanvas2 {
     border-radius: 50%;
     position: absolute;
-    bottom: 254px;
-    left: 111px;
+    bottom: 286px;
+    left: 103px;
 }
 
 #scratchcanvas3 {
     border-radius: 50%;
     position: absolute;
-    bottom: 254px;
-    left: 197px;
+    bottom: 286px;
+    left: 184px;
 }
 
 #scratchcanvas4 {
     border-radius: 50%;
     position: absolute;
-    bottom: 254px;
-    left: 284.5px;
+    bottom: 286px;
+    left: 264px;
 }
 
 #scratchcanvas5 {
     border-radius: 50%;
     position: absolute;
-    bottom: 169px;
-    left: 24px;
+    bottom: 207px;
+    left: 22px;
 }
 
 #scratchcanvas6 {
     border-radius: 50%;
     position: absolute;
-    bottom: 169px;
-    left: 111px;
+    bottom: 207px;
+    left: 103px;
 }
 
 #scratchcanvas7 {
     border-radius: 50%;
     position: absolute;
-    bottom: 169px;
-    left: 197px;
+    bottom: 207px;
+    left: 184px;
 }
 
 #scratchcanvas8 {
     border-radius: 50%;
     position: absolute;
-    bottom: 169px;
-    left: 284.5px;
+    bottom: 207px;
+    left: 264px;
 }
 
 

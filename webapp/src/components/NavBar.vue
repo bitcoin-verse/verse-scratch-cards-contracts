@@ -8,13 +8,25 @@ export default {
         let account = getAccount()
         let modal = useWeb3Modal()
         let accountActive = ref(false)
+        let connectedProvider = ref("")
 
-        function openWalletModal() {
-            disconnect()
+        function openWalletModal(refresh) {
+            if(refresh) disconnect()
             modal.open()
         }
 
+        const truncateRegex = /^(0x[a-zA-Z0-9]{4})[a-zA-Z0-9]+([a-zA-Z0-9]{4})$/;
+
+        function truncateEthAddress(address) {
+            const match = address.match(truncateRegex);
+            if (!match) return address;
+            return `${match[1]}…${match[2]}`;
+        };
+
         watchAccount(async (account) => {
+        connectedProvider.value = account.connector.name.toLowerCase()
+
+         
         if(account.isConnected == true) {
             accountActive.value = true;
         } else {
@@ -22,7 +34,7 @@ export default {
         }
     })
 
-        return { account, openWalletModal, accountActive} 
+        return { account, openWalletModal, accountActive, truncateEthAddress, getAccount, connectedProvider} 
     }
     
 }
@@ -35,8 +47,9 @@ export default {
             <div class="nav-verse"></div>
         </a>
         <h3 class="title-nav">Verse Scratch Tickets</h3>
-        <button class="btn verse-nav" v-if="!accountActive" @click="openWalletModal">Connect</button>
-        <!-- <w3m-button v-if="accountActive"  /> TODO MOBILE ACCOUNT ACTIVE -->
+        
+        <button class="btn verse-nav" v-if="!accountActive" @click="openWalletModal(true)">Connect</button>
+        <button class="btn verse-nav mobile connected" v-if="accountActive" @click="openWalletModal(false)"><div :class="'provider-logo ' + connectedProvider"></div></button>
     </div>
     <div class="navbar">
         <a style="cursor: pointer;" href="/"><div class="logo">
@@ -49,8 +62,8 @@ export default {
             </ul>
         </div>
         <div class="wallet">
-            <button class="btn verse-nav" v-if="!accountActive" @click="openWalletModal">Connect Wallet</button>
-            <w3m-button v-if="accountActive"  />
+            <button class="btn verse-nav" v-if="!accountActive" @click="openWalletModal(true)">Connect Wallet</button>
+            <button class="btn verse-nav connected" v-if="accountActive" @click="openWalletModal(false)">{{truncateEthAddress(getAccount().address || "")}} <div :class="'provider-logo ' + connectedProvider"></div></button>
         </div>
     </div>
 </template>
@@ -74,6 +87,32 @@ export default {
     font-size: 14px;
     height: 36px;
     padding: 0px 16px;
+    position: relative;
+    &.mobile {
+        padding-right: 21px!important;
+        background: #3f526e!important;
+    }
+    &.connected {
+        padding-right: 40px;
+    }
+
+    .provider-logo {
+        position: absolute; 
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        right: 5.2px;
+        top: 4.5px;
+        background-size: cover;
+
+        &.walletconnect {
+            background-image: url("./../assets/icons/wc-logo.png");
+        }
+
+        &.metamask {
+            background-image: url("./../assets/icons/mm-logo.png");
+        }
+    }
     &:hover {
         background: linear-gradient(rgb(49, 201, 244) 0%, rgb(44, 150, 246) 100%);
     }
