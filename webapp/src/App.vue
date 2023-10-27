@@ -110,16 +110,6 @@ i.close-btn {
             padding: 0;
         }
 
-
-        // @media(max-height: 800px) {
-        //   top: 100px;
-        // }
-
-        // @media(max-height: 600px) {
-        //   top: 55px!important;
-        // }
-
-
       .modal-head {
         width: 100%;
         border-top-left-radius: 13.5px;
