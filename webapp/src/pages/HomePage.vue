@@ -1,5 +1,5 @@
 <script>
-import { getAccount, waitForTransaction, readContract, writeContract, watchAccount, watchNetwork } from '@wagmi/core'
+import { getAccount, waitForTransaction, switchNetwork, readContract, writeContract, watchAccount, watchNetwork } from '@wagmi/core'
 import { useWeb3Modal, createWeb3Modal } from '@web3modal/wagmi/vue'
 import { ref } from 'vue';
 import ERC20ABI from '../abi/ERC20.json'
@@ -45,6 +45,10 @@ const web3 = new Web3(new Web3.providers.HttpProvider('https://eth-mainnet.g.alc
 
 
     let buyModal = ref(false)
+
+    async function requestNetworkChange() {
+        await switchNetwork({ chainId: 137 })
+    }
 
     function closeBuy() {
         buyModal.value = false;
@@ -319,6 +323,7 @@ const web3 = new Web3(new Web3.providers.HttpProvider('https://eth-mainnet.g.alc
         onTicketInputChange,
         ticketInputValid,
         showTimer,
+        requestNetworkChange,
         ensLoaded,
         giftInputLoad
     }
@@ -363,7 +368,23 @@ const web3 = new Web3(new Web3.providers.HttpProvider('https://eth-mainnet.g.alc
             </div>
         </div>
         <!-- modal for connecting account -->
-        <div class="modal" v-if="buyStep == 0 && !modalLoading">
+        <div class="modal" v-if="correctNetwork == false">
+            <div>
+            <div class="modal-head">
+                <h3 class="title">Switch Network</h3>
+                <p class="iholder"><i @click="toggleModal()" class="close-btn" ></i></p>
+            </div>
+            <div class="modal-body">
+                <div class="img-wallet"></div>
+                <h3 class="title">Wrong Network Selected</h3>
+                <p class="subtext">Verse Scratch uses the Polygon network. Please change the network in your connected wallet or click the button below to switch automatically.</p>
+                <a class="" target="_blank" @click="requestNetworkChange()"><button class="btn verse-wide">Switch Wallet to Polygon</button></a>
+            </div>
+            </div>
+        </div>
+
+        <!-- modal for connecting account -->
+        <div class="modal" v-if="buyStep == 0 && !modalLoading && correctNetwork">
             <div>
             <div class="modal-head">
                 <h3 class="title">Buy Ticket</h3>
@@ -382,7 +403,7 @@ const web3 = new Web3(new Web3.providers.HttpProvider('https://eth-mainnet.g.alc
             </div>
         </div>
         <!-- // modal for purchasing verse -->
-        <div class="modal" v-if="buyStep == 1 && !modalLoading">
+        <div class="modal" v-if="buyStep == 1 && !modalLoading && correctNetwork">
             <div>
                 <div class="modal-head">
                     <h3 class="title">Buy Ticket</h3>
@@ -410,7 +431,7 @@ const web3 = new Web3(new Web3.providers.HttpProvider('https://eth-mainnet.g.alc
             </div>
         </div>
         <!-- allowance modal -->
-        <div class="modal" v-if="buyStep == 2 && !modalLoading">
+        <div class="modal" v-if="buyStep == 2 && !modalLoading && correctNetwork">
             <div class="modal-head">
                 <h3 class="title">Buy Ticket</h3>
                 <p class="iholder"><i @click="toggleModal()" class="close-btn" ></i></p>
@@ -435,7 +456,7 @@ const web3 = new Web3(new Web3.providers.HttpProvider('https://eth-mainnet.g.alc
             </div>
         </div>
         <!-- purchase modal -->
-        <div class="modal" v-if="buyStep == 3 && !modalLoading">
+        <div class="modal" v-if="buyStep == 3 && !modalLoading && correctNetwork">
             <div class="modal-head">
                 <h3 class="title">Buy Ticket</h3>
                 <p class="iholder"><i @click="toggleModal()" class="close-btn" ></i></p>
@@ -477,7 +498,7 @@ const web3 = new Web3(new Web3.providers.HttpProvider('https://eth-mainnet.g.alc
             </div>
         </div>
         <!-- normal finish -->
-        <div class="modal" v-if="buyStep == 4 && !modalLoading">
+        <div class="modal" v-if="buyStep == 4 && !modalLoading && correctNetwork">
             <div class="modal-head">
                 <h3 class="title">Buy Ticket</h3>
                 <p class="iholder"><i @click="toggleModal()" class="close-btn" ></i></p>
@@ -511,7 +532,9 @@ const web3 = new Web3(new Web3.providers.HttpProvider('https://eth-mainnet.g.alc
             </div>
         </div>
     </div>
-    <div class="wrongNetworkWarning" v-if="correctNetwork == false"><i class="fa fa-warning" style="margin-right: 10px; margin-left: 5px;"></i>Wallet connected to the wrong network, please switch your wallet to Polygon</div>
+    <div class="wrongNetworkWarning" v-if="correctNetwork == false">
+        <p><i class="fa fa-warning" style="margin-right: 10px; margin-left: 5px;"></i>Wallet connected to the wrong network, please switch your wallet to Polygon</p>
+    </div>
     <div class="page">
 
 
@@ -663,18 +686,27 @@ iframe {
         padding-left: 15px;
         color: white;
         font-weight: 600;
-        padding-bottom: 15px;
-        padding-top: 12px;
+        padding-bottom: 13px;
+        padding-top: 10px;
     }
-    z-index: 5;
-    position: relative;
+    z-index: 1;
+    position: fixed;
     width: 100%;
+    left: 0;
     padding-top: 15px;
     padding-bottom: 15px;
     padding-left: 30px;
-    font-weight: 600;
     background-color: #4a42aa;
-    color: #fff;
+    color: #fff; 
+    p {
+        font-weight: 600;
+        max-width: 80rem;
+        margin: 0px auto;
+        @media(max-width: 880px) {
+            margin-left: 0;
+            max-width: 95%;
+        }
+    }
 }
 .instant {
     @media(max-width: 880px) {
