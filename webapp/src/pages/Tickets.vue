@@ -374,7 +374,7 @@ export default {
             <button v-if="item.claimed == true" class="btn-action main dis" >{{item.prize}} Verse Claimed</button>
         </div>
     </div>
-    <Footer />
+    <Footer v-if="!loading" />
 </div>
 </template>
 
