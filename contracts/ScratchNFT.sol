@@ -2,12 +2,11 @@
 
 pragma solidity =0.8.21;
 
-import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 
 error InvalidTokenId();
 
-contract ScratchNFT is ERC721Enumerable, Ownable {
+contract ScratchNFT is ERC721Enumerable {
 
     using Strings for uint256;
 
@@ -16,7 +15,11 @@ contract ScratchNFT is ERC721Enumerable, Ownable {
     mapping(uint256 => uint256) public editions;
     mapping(uint256 => uint256) public prizes;
 
-    event mintCompleted(
+    event SetClaimed(
+        uint256 tokenId
+    );
+
+    event MintCompleted(
         uint256 indexed tokenId,
         uint256 edition,
         uint256 prize
@@ -48,7 +51,7 @@ contract ScratchNFT is ERC721Enumerable, Ownable {
             _tokenId
         );
 
-        emit mintCompleted(
+        emit MintCompleted(
             _tokenId,
             _editionId,
             _prize
@@ -123,5 +126,9 @@ contract ScratchNFT is ERC721Enumerable, Ownable {
         }
 
         claimed[_tokenId] = true;
+
+        emit SetClaimed(
+            _tokenId
+        );
     }
 }
