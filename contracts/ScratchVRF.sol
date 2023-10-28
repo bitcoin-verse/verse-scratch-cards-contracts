@@ -25,9 +25,8 @@ contract ScratchVRF is ScratchNFT, PrizeTiers, VRFConsumerBaseV2 {
 
     bytes32 constant public GAS_KEYHASH = 0xcc294a196eeeb44da2888d17c0625cc88d70d9760a69d58d853ba6581a9ab0cd;
 
-    IERC20 constant public TOKEN_ADDRESS = IERC20(
-        0xc708D6F2153933DAA50B2D0758955Be0A93A8FEc
-    );
+    // 0xc708D6F2153933DAA50B2D0758955Be0A93A8FEc
+    IERC20 immutable public TOKEN_ADDRESS;
 
     uint256 public ticketCost;
     uint256 public currentTokenId;
@@ -71,7 +70,8 @@ contract ScratchVRF is ScratchNFT, PrizeTiers, VRFConsumerBaseV2 {
         string memory _name,
         string memory _symbol,
         address _vrfCoordinatorV2Address,
-        uint256 _ticketCost
+        uint256 _ticketCost,
+        address _tokenAddress
     )
         ScratchNFT(
             _name,
@@ -81,6 +81,10 @@ contract ScratchVRF is ScratchNFT, PrizeTiers, VRFConsumerBaseV2 {
             _vrfCoordinatorV2Address
         )
     {
+        TOKEN_ADDRESS = IERC20(
+            _tokenAddress
+        );
+
         VRF_COORDINATOR = VRFCoordinatorV2Interface(
             _vrfCoordinatorV2Address
         );
