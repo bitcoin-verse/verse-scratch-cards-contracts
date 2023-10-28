@@ -45,7 +45,7 @@ contract ScratchVRF is Ownable, VRFConsumerBaseV2 {
 
     PrizeTier[] public prizeTiers;
 
-    uint public drawId = 0;
+    uint256 public drawId;
 
     /// @notice initialize contract and set the VRF Coordinator address
     /// @param _vrfCoordinatorV2Address The address of the Chainlink VRF Coordinator v2.
