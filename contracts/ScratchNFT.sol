@@ -4,7 +4,7 @@ pragma solidity =0.8.21;
 
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 
-error InvalidTokenId();
+error InvalidTicketId();
 
 contract ScratchNFT is ERC721Enumerable {
 
@@ -16,11 +16,11 @@ contract ScratchNFT is ERC721Enumerable {
     mapping(uint256 => uint256) public prizes;
 
     event SetClaimed(
-        uint256 tokenId
+        uint256 ticketId
     );
 
     event MintCompleted(
-        uint256 indexed tokenId,
+        uint256 indexed ticketId,
         uint256 edition,
         uint256 prize
     );
@@ -36,57 +36,57 @@ contract ScratchNFT is ERC721Enumerable {
     {}
 
     function _mintTicket(
-        uint256 _tokenId,
+        uint256 _ticketId,
         uint256 _editionId,
         uint256 _prize,
         address _receiver
     )
         internal
     {
-        prizes[_tokenId] = _prize;
-        editions[_tokenId] = _editionId;
+        prizes[_ticketId] = _prize;
+        editions[_ticketId] = _editionId;
 
         _mint(
             _receiver,
-            _tokenId
+            _ticketId
         );
 
         emit MintCompleted(
-            _tokenId,
+            _ticketId,
             _editionId,
             _prize
         );
     }
 
     function tokenURI(
-        uint256 _tokenId
+        uint256 _ticketId
     )
         public
         view
         override
         returns (string memory)
     {
-        if (_exists(_tokenId) == false) {
-            revert InvalidTokenId();
+        if (_exists(_ticketId) == false) {
+            revert InvalidTicketId();
         }
 
         string memory baseURI = _baseURI();
-        string memory claimDone = claimed[_tokenId]
+        string memory claimDone = claimed[_ticketId]
             ? "true"
             : "false";
 
-        uint256 editionIdFromToken = editions[
-            _tokenId
+        uint256 editionIdFromTicket = editions[
+            _ticketId
         ];
 
         return string(
             abi.encodePacked(
                 baseURI,
-                _tokenId.toString(),
+                _ticketId.toString(),
                 "/",
                 claimDone,
                 "&edition=",
-                editionIdFromToken.toString()
+                editionIdFromTicket.toString()
             )
         );
     }
@@ -98,37 +98,37 @@ contract ScratchNFT is ERC721Enumerable {
         view
         returns (uint256[] memory)
     {
-        uint256 ownerTokenCount = balanceOf(
+        uint256 ownerTicketCount = balanceOf(
             _owner
         );
 
-        uint256[] memory tokenIds = new uint256[](
-            ownerTokenCount
+        uint256[] memory ticketIds = new uint256[](
+            ownerTicketCount
         );
 
-        for (uint256 i; i < ownerTokenCount; i++) {
-            tokenIds[i] = tokenOfOwnerByIndex(
+        for (uint256 i; i < ownerTicketCount; i++) {
+            ticketIds[i] = tokenOfOwnerByIndex(
                 _owner,
                 i
             );
         }
 
-        return tokenIds;
+        return ticketIds;
     }
 
     function _setClaimed(
-        uint256 _tokenId
+        uint256 _ticketId
     )
         internal
     {
-        if (_exists(_tokenId) == false) {
-            revert InvalidTokenId();
+        if (_exists(_ticketId) == false) {
+            revert InvalidTicketId();
         }
 
-        claimed[_tokenId] = true;
+        claimed[_ticketId] = true;
 
         emit SetClaimed(
-            _tokenId
+            _ticketId
         );
     }
 }
