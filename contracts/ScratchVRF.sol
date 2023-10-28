@@ -168,7 +168,7 @@ contract ScratchVRF is ScratchNFT, PrizeTiers, VRFConsumerBaseV2 {
         );
     }
 
-    function bulkSend(
+    function giftForFree(
         address[] memory _receivers
     )
         external
