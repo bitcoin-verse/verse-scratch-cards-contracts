@@ -36,7 +36,17 @@ contract ScratchVRF is ScratchNFT, PrizeTiers, VRFConsumerBaseV2 {
         address ticketReceiver;
     }
 
-    uint256 public drawId;
+    event DrawRequest(
+        uint256 indexed drawId,
+        uint256 indexed requestId,
+        address indexed ticketReceiver
+    );
+
+    event requestFulfilled(
+        uint256 indexed drawId,
+        uint256 indexed requestId,
+        uint32 indexed result
+    );
 
     /// @notice initialize contract and set the VRF Coordinator address
     /// @param _vrfCoordinatorV2Address The address of the Chainlink VRF Coordinator v2.
@@ -206,16 +216,6 @@ contract ScratchVRF is ScratchNFT, PrizeTiers, VRFConsumerBaseV2 {
         IERC20(TOKEN_ADDRESS).safeTransfer(owner(), balance);
     }
 
-    event DrawRequest(
-        uint256 indexed drawId,
-        uint256 indexed requestId,
-        address indexed ticketReceiver
-    );
 
-    event requestFulfilled(
-        uint256 indexed drawId,
-        uint256 indexed requestId,
-        uint32 result
-    );
 
 }
