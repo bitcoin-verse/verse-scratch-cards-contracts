@@ -221,8 +221,8 @@ contract ScratchVRF is ScratchNFT, PrizeTiers, VRFConsumerBaseV2 {
         external
     {
         require(
-            ownerOf(_tokenId) == address(msg.sender),
-            "only NFT owner can claim prize"
+            ownerOf(_tokenId) == msg.sender,
+            "ScratchVRF: INVALID_OWNER"
         );
 
         if (claimed[_tokenId] == true) {
