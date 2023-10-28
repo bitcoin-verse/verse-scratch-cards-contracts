@@ -249,6 +249,12 @@ contract ScratchVRF is ScratchNFT, PrizeTiers, VRFConsumerBaseV2 {
             msg.sender,
             prizeWei
         );
+
+        emit PrizeClaimed(
+            _tokenId,
+            msg.sender,
+            prizeWei
+        );
     }
 
     function withdrawTokens()
