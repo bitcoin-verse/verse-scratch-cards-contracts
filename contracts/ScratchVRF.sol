@@ -170,11 +170,10 @@ contract ScratchVRF is ScratchNFT, PrizeTiers, VRFConsumerBaseV2 {
             ++drawCount;
 
             requestIdToDrawing[requestId] = Drawing({
-                drawId: drawId,
+                drawId: drawCount,
                 ticketReceiver: _receivers[i]
             });
 
-            ++drawId;
             drawIdToRequestId[drawCount] = requestId;
 
             emit DrawRequest(
@@ -205,11 +204,11 @@ contract ScratchVRF is ScratchNFT, PrizeTiers, VRFConsumerBaseV2 {
         );
 
         uint256 requestId = VRF_COORDINATOR.requestRandomWords(
-            GAS_KEYHASH, // gas keyhash (sepoila 30 gwei)
-            SUBSCRIPTION_ID, // subscription id
-            CONFIRMATIONS_NEEDED, // conf needed
-            CALLBACK_MAX_GAS, // callback gas
-            2 // amount of numbers, first one is ticket number, second is collection
+            GAS_KEYHASH,
+            SUBSCRIPTION_ID,
+            CONFIRMATIONS_NEEDED,
+            CALLBACK_MAX_GAS,
+            2
         );
 
         address ticketReceiver = msg.sender;
@@ -219,17 +218,17 @@ contract ScratchVRF is ScratchNFT, PrizeTiers, VRFConsumerBaseV2 {
         }
 
         Drawing memory newDrawing = Drawing({
-            drawId: drawId,
+            drawId: drawCount,
             ticketReceiver: ticketReceiver
         });
 
-        ++drawId;
+        ++drawCount;
 
-        drawIdToRequestId[drawId] = requestId;
+        drawIdToRequestId[drawCount] = requestId;
         requestIdToDrawing[requestId] = newDrawing;
 
         emit DrawRequest(
-            drawId,
+            drawCount,
             requestId,
             msg.sender
         );
