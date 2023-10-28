@@ -2,7 +2,9 @@
 
 pragma solidity =0.8.21;
 
+import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
+
 import "@chainlink/contracts/src/v0.8/vrf/VRFConsumerBaseV2.sol";
 import "@chainlink/contracts/src/v0.8/interfaces/VRFCoordinatorV2Interface.sol";
 
@@ -12,8 +14,12 @@ import "./ScratchNFT.sol";
 error AlreadyClaimed();
 error NotEnoughFunds();
 
-contract ScratchVRF is ScratchNFT, PrizeTiers, VRFConsumerBaseV2 {
-
+contract ScratchVRF is
+    ScratchNFT,
+    PrizeTiers,
+    VRFConsumerBaseV2,
+    Ownable
+{
     using SafeERC20 for IERC20;
 
     ScratchNFT public immutable NFT_CONTRACT;

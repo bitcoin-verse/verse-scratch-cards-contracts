@@ -2,12 +2,11 @@
 
 pragma solidity =0.8.21;
 
-import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 
 error InvalidTokenId();
 
-contract ScratchNFT is ERC721Enumerable, Ownable {
+contract ScratchNFT is ERC721Enumerable {
 
     using Strings for uint256;
 
