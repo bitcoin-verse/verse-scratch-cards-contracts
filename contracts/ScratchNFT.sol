@@ -1,59 +1,127 @@
-// SPDX-License-Identifier: MIT
-pragma solidity ^0.8.8;
+// SPDX-License-Identifier: BCOM
 
-import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
+pragma solidity =0.8.21;
+
 import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
+
+error InvalidTokenId();
 
 contract ScratchNFT is ERC721Enumerable, Ownable {
+
     using Strings for uint256;
 
-    // Mapping to store the revealed property for each token ID
     mapping(uint256 => bool) public claimed;
     mapping(uint256 => string) public tokenURIs;
     mapping(uint256 => uint256) public editions;
     mapping(uint256 => uint256) public prizes;
 
-    constructor(string memory name, string memory symbol) ERC721(name, symbol) {}
-
-    // Mint a new NFT with a unique revealed property
-    function mint(uint256 _tokenId, uint256 _editionId, uint256 _prize, address _receiver) public onlyOwner {
-        _mint(_receiver, _tokenId);
-        claimed[_tokenId] = false;
-        prizes[_tokenId] = _prize;
-        editions[_tokenId] = _editionId;
-        emit mintCompleted(_tokenId, uint32(_editionId), _prize);
-    }
-
-
-    // Override the standard tokenURI function to include the revealed property
-    function tokenURI(uint256 tokenId) public view override returns (string memory) {
-        require(_exists(tokenId), "Token does not exist");
-        string memory baseURI = _baseURI();
-        string memory claimDone = claimed[tokenId] ? "true" : "false";
-        uint editionIdFromToken = editions[tokenId];
-
-        return string(abi.encodePacked(baseURI, tokenId.toString(), "/", claimDone, "&edition=", editionIdFromToken.toString()));
-    }
-
-    function ownedByAddress(address _owner) public view returns (uint256[] memory)
-    {
-        uint256 ownerTokenCount = balanceOf(_owner);
-        uint256[] memory tokenIds = new uint256[](ownerTokenCount);
-        for (uint256 i; i < ownerTokenCount; i++) {
-            tokenIds[i] = tokenOfOwnerByIndex(_owner, i);
-        }
-        return tokenIds;
-   }
-
-    function setClaimed(uint256 tokenId) public onlyOwner {
-        require(_exists(tokenId), "Token does not exist");
-        claimed[tokenId] = true;
-    }
-
     event mintCompleted(
         uint256 indexed tokenId,
-        uint32 edition,
+        uint256 edition,
         uint256 prize
     );
 
+    constructor(
+        string memory _name,
+        string memory _symbol
+    )
+        ERC721(
+            _name,
+            _symbol
+        )
+    {}
+
+    function _mintTicket(
+        uint256 _tokenId,
+        uint256 _editionId,
+        uint256 _prize,
+        address _receiver
+    )
+        internal
+    {
+        prizes[_tokenId] = _prize;
+        editions[_tokenId] = _editionId;
+
+        _mint(
+            _receiver,
+            _tokenId
+        );
+
+        emit mintCompleted(
+            _tokenId,
+            _editionId,
+            _prize
+        );
+    }
+
+    function tokenURI(
+        uint256 _tokenId
+    )
+        public
+        view
+        override
+        returns (string memory)
+    {
+        if (_exists(_tokenId) == false) {
+            revert InvalidTokenId();
+        }
+
+        string memory baseURI = _baseURI();
+        string memory claimDone = claimed[_tokenId]
+            ? "true"
+            : "false";
+
+        uint256 editionIdFromToken = editions[
+            _tokenId
+        ];
+
+        return string(
+            abi.encodePacked(
+                baseURI,
+                _tokenId.toString(),
+                "/",
+                claimDone,
+                "&edition=",
+                editionIdFromToken.toString()
+            )
+        );
+    }
+
+    function ownedByAddress(
+        address _owner
+    )
+        external
+        view
+        returns (uint256[] memory)
+    {
+        uint256 ownerTokenCount = balanceOf(
+            _owner
+        );
+
+        uint256[] memory tokenIds = new uint256[](
+            ownerTokenCount
+        );
+
+        for (uint256 i; i < ownerTokenCount; i++) {
+            tokenIds[i] = tokenOfOwnerByIndex(
+                _owner,
+                i
+            );
+        }
+
+        return tokenIds;
+    }
+
+    function _setClaimed(
+        uint256 _tokenId
+    )
+        internal
+    {
+        if (_exists(_tokenId) == false) {
+            revert InvalidTokenId();
+        }
+
+        claimed[_tokenId] = true;
+    }
 }
