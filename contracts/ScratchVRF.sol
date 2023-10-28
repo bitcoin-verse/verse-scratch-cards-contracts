@@ -189,21 +189,11 @@ contract ScratchVRF is ScratchNFT, PrizeTiers, VRFConsumerBaseV2 {
         }
     }
 
-    /**
-     * @notice Request to purchase scratch ticket
-     * @param _receiver address that receives NFT
-     */
-    function buyScratchTicket(
+    function _drawTicketRequest(
         address _receiver
     )
-        external
+        internal
     {
-        TOKEN_ADDRESS.safeTransferFrom(
-            msg.sender,
-            address(this),
-            ticketCost
-        );
-
         uint256 requestId = VRF_COORDINATOR.requestRandomWords(
             GAS_KEYHASH,
             SUBSCRIPTION_ID,
@@ -212,15 +202,9 @@ contract ScratchVRF is ScratchNFT, PrizeTiers, VRFConsumerBaseV2 {
             2
         );
 
-        address ticketReceiver = msg.sender;
-
-        if (_receiver != address(0)) {
-            ticketReceiver = _receiver;
-        }
-
         Drawing memory newDrawing = Drawing({
             drawId: drawCount,
-            ticketReceiver: ticketReceiver
+            ticketReceiver: _receiver
         });
 
         ++drawCount;
