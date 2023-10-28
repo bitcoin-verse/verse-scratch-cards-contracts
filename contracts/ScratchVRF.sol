@@ -11,6 +11,7 @@ import "@chainlink/contracts/src/v0.8/interfaces/VRFCoordinatorV2Interface.sol";
 import "./PrizeTiers.sol";
 import "./ScratchNFT.sol";
 
+error InvalidCost();
 error AlreadyClaimed();
 error NotEnoughFunds();
 
@@ -337,5 +338,22 @@ contract ScratchVRF is
             msg.sender,
             balance
         );
+    }
+
+    function changeTicketCost(
+        uint256 _newTicketCost
+    )
+        external
+        onlyOwner
+    {
+        if (_newTicketCost == 0) {
+            revert InvalidCost();
+        }
+
+        if (_newTicketCost == ticketCost) {
+            revert InvalidCost();
+        }
+
+        ticketCost = _newTicketCost;
     }
 }
