@@ -179,27 +179,8 @@ contract ScratchVRF is ScratchNFT, PrizeTiers, VRFConsumerBaseV2 {
 
         for (i; i < loops;) {
 
-            uint256 requestId = VRF_COORDINATOR.requestRandomWords(
-                GAS_KEYHASH,
-                SUBSCRIPTION_ID,
-                CONFIRMATIONS_NEEDED,
-                CALLBACK_MAX_GAS,
-                2 // unknown number
-            );
-
-            ++drawCount;
-
-            requestIdToDrawing[requestId] = Drawing({
-                drawId: drawCount,
-                ticketReceiver: _receivers[i]
-            });
-
-            drawIdToRequestId[drawCount] = requestId;
-
-            emit DrawRequest(
-                drawCount,
-                requestId,
-                msg.sender
+            _drawTicketRequest(
+                _receivers[i]
             );
 
             unchecked {
