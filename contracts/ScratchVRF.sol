@@ -110,11 +110,18 @@ contract ScratchVRF is ScratchNFT, PrizeTiers, VRFConsumerBaseV2 {
         view
         returns (uint256)
     {
-        uint256 prize = 0;
-        for (uint256 i = 0; i < prizeTiers.length; i++) {
+        uint256 i;
+        uint256 prize;
+        uint256 loops = prizeTiers.length;
+
+        for (i; i < loops;) {
             if (_number >= prizeTiers[i].drawEdgeA && _number <= prizeTiers[i].drawEdgeB) {
                 prize = prizeTiers[i].winAmount;
                 return prize;
+            }
+
+            unchecked {
+                ++i;
             }
         }
         return prize;
