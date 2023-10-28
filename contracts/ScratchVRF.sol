@@ -9,6 +9,9 @@ import "@chainlink/contracts/src/v0.8/interfaces/VRFCoordinatorV2Interface.sol";
 import "./PrizeTiers.sol";
 import "./ScratchNFT.sol";
 
+error AlreadyClaimed();
+error NotEnoughFunds();
+
 contract ScratchVRF is ScratchNFT, PrizeTiers, VRFConsumerBaseV2 {
 
     using SafeERC20 for IERC20;
