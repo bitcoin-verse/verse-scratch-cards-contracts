@@ -195,26 +195,40 @@ contract ScratchVRF is ScratchNFT, PrizeTiers, VRFConsumerBaseV2 {
         );
     }
 
-    function claimPrize(uint tokenId ) public {
+    function claimPrize(
+        uint256 _tokenId
     )
         external
     {
         require(
             ownerOf(_tokenId) == address(msg.sender),
             "only NFT owner can claim prize"
+        );
 
-        require(NFT_CONTRACT.ownerOf(tokenId) == address(msg.sender), "only NFT owner can claim prize");
-        require(NFT_CONTRACT.claimed(tokenId) != true, "prize has been claimed already");
+        if (claimed[_tokenId] == true) {
+            revert AlreadyClaimed();
+        }
 
-        uint256 prize = NFT_CONTRACT.prizes(tokenId);
-        uint256 prizeWei = prize * 1 ether;
-        uint256 balance = IERC20(TOKEN_ADDRESS).balanceOf(address(this));
-        require(balance >= prizeWei, "contract does not have enough funds to payout");
+        _setClaimed(
+            _tokenId
+        );
 
         uint256 prizeWei = prizes[
             _tokenId
         ];
 
+        uint256 balance = TOKEN_ADDRESS.balanceOf(
+            address(this)
+        );
+
+        if (balance < prizeWei) {
+            revert NotEnoughFunds();
+        }
+
+        TOKEN_ADDRESS.safeTransfer(
+            msg.sender,
+            prizeWei
+        );
     }
 
     function withdrawTokens()
