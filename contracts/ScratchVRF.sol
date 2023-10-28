@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: MIT
+// SPDX-License-Identifier: BCOM
 
 pragma solidity =0.8.21;
 
@@ -34,6 +34,8 @@ contract ScratchVRF is ScratchNFT, PrizeTiers, VRFConsumerBaseV2 {
 
     uint256[] private _randomNumbers;
 
+    uint256 public drawCount;
+
     mapping(uint256 => uint256) public drawIdToRequestId;
     mapping(uint256 => Drawing) public requestIdToDrawing;
 
@@ -65,9 +67,6 @@ contract ScratchVRF is ScratchNFT, PrizeTiers, VRFConsumerBaseV2 {
         uint32 indexed result
     );
 
-    /// @notice initialize contract and set the VRF Coordinator address
-    /// @param _vrfCoordinatorV2Address The address of the Chainlink VRF Coordinator v2.
-    /// @param _ticketCost cost of ticket in currency (cost in ethers, not wei)
     constructor(
         string memory _name,
         string memory _symbol,
@@ -89,11 +88,17 @@ contract ScratchVRF is ScratchNFT, PrizeTiers, VRFConsumerBaseV2 {
         ticketCost = _ticketCost;
     }
 
-    function getPrizeTier(uint256 number) internal view returns (uint256) {
+    function getPrizeTier(
+        uint256 _number
+    )
+        internal
+        view
+        returns (uint256)
+    {
         uint256 prize = 0;
         for (uint256 i = 0; i < prizeTiers.length; i++) {
-            if (number >= prizeTiers[i].start && number <= prizeTiers[i].end) {
-                prize = prizeTiers[i].prizeAmount;
+            if (_number >= prizeTiers[i].drawEdgeA && _number <= prizeTiers[i].drawEdgeB) {
+                prize = prizeTiers[i].winAmount;
                 return prize;
             }
         }
@@ -162,7 +167,7 @@ contract ScratchVRF is ScratchNFT, PrizeTiers, VRFConsumerBaseV2 {
                 2 // unknown number
             );
 
-            ++drawId;
+            ++drawCount;
 
             requestIdToDrawing[requestId] = Drawing({
                 drawId: drawId,
@@ -170,12 +175,10 @@ contract ScratchVRF is ScratchNFT, PrizeTiers, VRFConsumerBaseV2 {
             });
 
             ++drawId;
-
-            requestIdToDrawing[requestId] = newDrawing;
-            drawIdToRequestId[drawId] = requestId;
+            drawIdToRequestId[drawCount] = requestId;
 
             emit DrawRequest(
-                drawId,
+                drawCount,
                 requestId,
                 msg.sender
             );
