@@ -2,17 +2,14 @@
 
 pragma solidity =0.8.21;
 
-import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
-import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
-
 import "@chainlink/contracts/src/v0.8/vrf/VRFConsumerBaseV2.sol";
 import "@chainlink/contracts/src/v0.8/interfaces/VRFCoordinatorV2Interface.sol";
 
 import "./PrizeTiers.sol";
 import "./ScratchNFT.sol";
 
-contract ScratchVRF is Ownable, VRFConsumerBaseV2 {
+contract ScratchVRF is ScratchNFT, PrizeTiers, VRFConsumerBaseV2 {
 
     using SafeERC20 for IERC20;
 
@@ -45,18 +42,19 @@ contract ScratchVRF is Ownable, VRFConsumerBaseV2 {
     /// @param _vrfCoordinatorV2Address The address of the Chainlink VRF Coordinator v2.
     /// @param _ticketCost cost of ticket in currency (cost in ethers, not wei)
     constructor(
+        string memory _name,
+        string memory _symbol,
         address _vrfCoordinatorV2Address,
         uint256 _ticketCost
     )
+        ScratchNFT(
+            _name,
+            _symbol
+        )
         VRFConsumerBaseV2(
             _vrfCoordinatorV2Address
         )
     {
-        NFT_CONTRACT = new ScratchNFT(
-            "SKRCH",
-            "ST2"
-        );
-
         VRF_COORDINATOR = VRFCoordinatorV2Interface(
             _vrfCoordinatorV2Address
         );
