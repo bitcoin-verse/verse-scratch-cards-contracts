@@ -36,6 +36,17 @@ contract ScratchVRF is ScratchNFT, PrizeTiers, VRFConsumerBaseV2 {
         address ticketReceiver;
     }
 
+    event PrizeClaimed(
+        uint256 indexed tokenId,
+        address indexed receiver,
+        uint256 amount
+    );
+
+    event WithdrawTokens(
+        address indexed receiver,
+        uint256 amount
+    );
+
     event DrawRequest(
         uint256 indexed drawId,
         uint256 indexed requestId,
