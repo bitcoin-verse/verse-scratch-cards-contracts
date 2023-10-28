@@ -1,20 +1,41 @@
 {
-  "name": "prizegen",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "design": "node designPrizes"
-  },
-  "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "@openzeppelin/merkle-tree": "^1.0.5",
-    "@truffle/hdwallet-provider": "^2.1.15",
-    "aws-sdk": "^2.1467.0",
-    "dotenv": "^16.3.1",
-    "jimp": "^0.22.10",
-    "web3": "^1.8.1"
-  }
+    "name": "prizegen",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "design": "node designPrizes",
+        "foundry-size": "forge build --sizes",
+        "foundry-test": "forge test --fork-url https://eth.llamarpc.com --gas-report -vvv",
+        "foundry-coverage": "forge coverage --report lcov && genhtml lcov.info --branch-coverage --output-dir coverage"
+    },
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "@chainlink/contracts": "^0.8.0",
+        "@ethersproject/address": "^5.7.0",
+        "@openzeppelin/contracts": "^4.8.2",
+        "@openzeppelin/merkle-tree": "^1.0.5",
+        "@openzeppelin/test-helpers": "^0.5.16",
+        "@truffle/hdwallet-provider": "^2.1.15",
+        "@uniswap/v3-periphery": "^1.4.3",
+        "aws-sdk": "^2.1467.0",
+        "dotenv": "^16.3.1",
+        "hardhat": "^2.16.0",
+        "hardhat-gas-reporter": "^1.0.9",
+        "jimp": "^0.22.10",
+        "web3": "^1.8.1"
+    },
+    "devDependencies": {
+        "@nomicfoundation/hardhat-foundry": "^1.0.3",
+        "@nomicfoundation/hardhat-network-helpers": "^1.0.6",
+        "@nomiclabs/hardhat-ethers": "^2.1.1",
+        "@nomiclabs/hardhat-truffle5": "^2.0.7",
+        "@nomiclabs/hardhat-waffle": "^2.0.3",
+        "@nomiclabs/hardhat-web3": "^2.0.0",
+        "chai": "^4.3.6",
+        "custom-error-test-helper": "^1.0.6",
+        "ethers": "^5.7.1"
+    }
 }
