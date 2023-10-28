@@ -38,15 +38,37 @@ contract ScratchNFT is ERC721Enumerable, Ownable {
         );
     }
 
+    function tokenURI(
+        uint256 _tokenId
+    )
+        public
+        view
+        override
+        returns (string memory)
+    {
+        if (_exists(_tokenId) == false) {
+            revert InvalidTokenId();
+        }
 
-    // Override the standard tokenURI function to include the revealed property
-    function tokenURI(uint256 tokenId) public view override returns (string memory) {
-        require(_exists(tokenId), "Token does not exist");
         string memory baseURI = _baseURI();
-        string memory claimDone = claimed[tokenId] ? "true" : "false";
-        uint editionIdFromToken = editions[tokenId];
+        string memory claimDone = claimed[_tokenId]
+            ? "true"
+            : "false";
 
-        return string(abi.encodePacked(baseURI, tokenId.toString(), "/", claimDone, "&edition=", editionIdFromToken.toString()));
+        uint256 editionIdFromToken = editions[
+            _tokenId
+        ];
+
+        return string(
+            abi.encodePacked(
+                baseURI,
+                _tokenId.toString(),
+                "/",
+                claimDone,
+                "&edition=",
+                editionIdFromToken.toString()
+            )
+        );
     }
 
     function ownedByAddress(
