@@ -42,7 +42,7 @@ contract ScratchVRF is ScratchNFT, PrizeTiers, VRFConsumerBaseV2 {
         address indexed ticketReceiver
     );
 
-    event requestFulfilled(
+    event RequestFulfilled(
         uint256 indexed drawId,
         uint256 indexed requestId,
         uint32 indexed result
@@ -119,7 +119,7 @@ contract ScratchVRF is ScratchNFT, PrizeTiers, VRFConsumerBaseV2 {
             currentDraw.ticketReceiver
         );
 
-        emit requestFulfilled(
+        emit RequestFulfilled(
             currentDraw.drawId,
             _requestId,
             randomNumber
