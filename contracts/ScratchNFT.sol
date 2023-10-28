@@ -59,15 +59,18 @@ contract ScratchNFT is ERC721Enumerable, Ownable {
         return tokenIds;
    }
 
-    function setClaimed(uint256 tokenId) public onlyOwner {
-        require(_exists(tokenId), "Token does not exist");
-        claimed[tokenId] = true;
+        return tokenIds;
     }
 
-    event mintCompleted(
-        uint256 indexed tokenId,
-        uint32 edition,
-        uint256 prize
-    );
+    function _setClaimed(
+        uint256 _tokenId
+    )
+        internal
+    {
+        if (_exists(_tokenId) == false) {
+            revert InvalidTokenId();
+        }
 
+        claimed[_tokenId] = true;
+    }
 }
