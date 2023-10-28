@@ -117,12 +117,20 @@ contract ScratchVRF is ScratchNFT, PrizeTiers, VRFConsumerBaseV2 {
         }
     }
 
-    /// @notice request to purchase scratch ticket
-    /// @param receiver address that receives NFT
-
-    function buyScratchTicket(address receiver) public {
-        // DISABLED FOR TESTING
-        // IERC20(TOKEN_ADDRESS).safeTransferFrom( msg.sender, address(this), ticketCost * 1 ether);
+    /**
+     * @notice Request to purchase scratch ticket
+     * @param _receiver address that receives NFT
+     */
+    function buyScratchTicket(
+        address _receiver
+    )
+        external
+    {
+        IERC20(TOKEN_ADDRESS).safeTransferFrom(
+            msg.sender,
+            address(this),
+            ticketCost
+        );
 
         uint256 requestId = VRF_COORDINATOR.requestRandomWords(
             GAS_KEYHASH, // gas keyhash (sepoila 30 gwei)
@@ -133,7 +141,10 @@ contract ScratchVRF is ScratchNFT, PrizeTiers, VRFConsumerBaseV2 {
         );
 
         address _ticketReceiver = msg.sender;
-        if(receiver != address(0)) _ticketReceiver = receiver;
+
+        if (_receiver != address(0)) {
+            _ticketReceiver = _receiver;
+        }
 
         Drawing memory newDrawing = Drawing({
             drawId: drawId,
@@ -144,7 +155,12 @@ contract ScratchVRF is ScratchNFT, PrizeTiers, VRFConsumerBaseV2 {
 
         requestIdToDrawing[requestId] = newDrawing;
         drawIdToRequestId[drawId] = requestId;
-        emit DrawRequest(drawId, requestId, msg.sender);
+
+        emit DrawRequest(
+            drawId,
+            requestId,
+            msg.sender
+        );
     }
 
     function claimPrize(uint tokenId ) public {
