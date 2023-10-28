@@ -102,7 +102,12 @@ contract ScratchVRF is ScratchNFT, PrizeTiers, VRFConsumerBaseV2 {
 
         ++currentTokenId;
 
-        NFT_CONTRACT.mint(currentTokenId, randomEdition, prize, currentDraw.ticketReceiver);
+        _mintTicket(
+            currentTokenId,
+            randomEdition,
+            prize,
+            currentDraw.ticketReceiver
+        );
 
         emit requestFulfilled(
             currentDraw.drawId,
