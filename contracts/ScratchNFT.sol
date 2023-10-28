@@ -15,10 +15,11 @@ contract ScratchNFT is ERC721Enumerable {
     mapping(uint256 => uint256) public editions;
     mapping(uint256 => uint256) public prizes;
 
-    event mintCompleted(
     event SetClaimed(
         uint256 tokenId
     );
+
+    event MintCompleted(
         uint256 indexed tokenId,
         uint256 edition,
         uint256 prize
@@ -50,7 +51,7 @@ contract ScratchNFT is ERC721Enumerable {
             _tokenId
         );
 
-        emit mintCompleted(
+        emit MintCompleted(
             _tokenId,
             _editionId,
             _prize
