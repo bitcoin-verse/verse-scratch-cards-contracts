@@ -12,10 +12,11 @@ import "@chainlink/contracts/src/v0.8/interfaces/VRFCoordinatorV2Interface.sol";
 import "./ScratchNFT.sol";
 
 contract ScratchVRF is Ownable, VRFConsumerBaseV2 {
+
     using SafeERC20 for IERC20;
 
     VRFCoordinatorV2Interface private immutable vrfCoordinator;
-    ScratchNFT nftContract;
+    ScratchNFT public immutable NFT_CONTRACT;
 
     uint64 constant SUBSCRIPTION_ID = 951;
     uint16 constant CONFIRMATIONS_NEEDED = 3;
@@ -57,7 +58,7 @@ contract ScratchVRF is Ownable, VRFConsumerBaseV2 {
         _vrfCoordinatorV2Address
     )
     {
-        nftContract = new ScratchNFT("SKRCH", "ST2");
+        NFT_CONTRACT = new ScratchNFT("SKRCH", "ST2");
         vrfCoordinator = VRFCoordinatorV2Interface(_vrfCoordinatorV2Address);
         ticketCost = _ticketCost;
 
@@ -102,7 +103,7 @@ contract ScratchVRF is Ownable, VRFConsumerBaseV2 {
 
         ++currentTokenId;
 
-        nftContract.mint(currentTokenId, randomEdition, prize, currentDraw.ticketReceiver);
+        NFT_CONTRACT.mint(currentTokenId, randomEdition, prize, currentDraw.ticketReceiver);
 
         emit requestFulfilled(currentDraw.drawId, _requestId, randomNumber);
     }
@@ -162,15 +163,15 @@ contract ScratchVRF is Ownable, VRFConsumerBaseV2 {
 
     function claimPrize(uint tokenId ) public {
 
-        require(nftContract.ownerOf(tokenId) == address(msg.sender), "only NFT owner can claim prize");
-        require(nftContract.claimed(tokenId) != true, "prize has been claimed already");
+        require(NFT_CONTRACT.ownerOf(tokenId) == address(msg.sender), "only NFT owner can claim prize");
+        require(NFT_CONTRACT.claimed(tokenId) != true, "prize has been claimed already");
 
-        uint256 prize = nftContract.prizes(tokenId);
+        uint256 prize = NFT_CONTRACT.prizes(tokenId);
         uint256 prizeWei = prize * 1 ether;
         uint256 balance = IERC20(TOKEN_ADDRESS).balanceOf(address(this));
         require(balance >= prizeWei, "contract does not have enough funds to payout");
 
-        nftContract.setClaimed(tokenId);
+        NFT_CONTRACT.setClaimed(tokenId);
         IERC20(TOKEN_ADDRESS).safeTransfer(msg.sender, prizeWei);
     }
 
