@@ -158,7 +158,7 @@ contract ScratchVRF is ScratchNFT, PrizeTiers, VRFConsumerBaseV2 {
     )
         external
     {
-        IERC20(TOKEN_ADDRESS).safeTransferFrom(
+        TOKEN_ADDRESS.safeTransferFrom(
             msg.sender,
             address(this),
             ticketCost
@@ -196,6 +196,12 @@ contract ScratchVRF is ScratchNFT, PrizeTiers, VRFConsumerBaseV2 {
     }
 
     function claimPrize(uint tokenId ) public {
+    )
+        external
+    {
+        require(
+            ownerOf(_tokenId) == address(msg.sender),
+            "only NFT owner can claim prize"
 
         require(NFT_CONTRACT.ownerOf(tokenId) == address(msg.sender), "only NFT owner can claim prize");
         require(NFT_CONTRACT.claimed(tokenId) != true, "prize has been claimed already");
@@ -205,15 +211,10 @@ contract ScratchVRF is ScratchNFT, PrizeTiers, VRFConsumerBaseV2 {
         uint256 balance = IERC20(TOKEN_ADDRESS).balanceOf(address(this));
         require(balance >= prizeWei, "contract does not have enough funds to payout");
 
-        NFT_CONTRACT.setClaimed(tokenId);
-        IERC20(TOKEN_ADDRESS).safeTransfer(msg.sender, prizeWei);
-    }
+        uint256 prizeWei = prizes[
+            _tokenId
+        ];
 
-    // withdraw tokens from smart contract
-    function withdraw() public onlyOwner {
-        uint256 balance = IERC20(TOKEN_ADDRESS).balanceOf(address(this));
-        require(balance > 0, "No tokens to withdraw");
-        IERC20(TOKEN_ADDRESS).safeTransfer(owner(), balance);
     }
 
 
