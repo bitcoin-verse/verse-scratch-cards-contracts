@@ -15,13 +15,27 @@ contract ScratchNFT is ERC721Enumerable, Ownable {
 
     constructor(string memory name, string memory symbol) ERC721(name, symbol) {}
 
-    // Mint a new NFT with a unique revealed property
-    function mint(uint256 _tokenId, uint256 _editionId, uint256 _prize, address _receiver) public onlyOwner {
-        _mint(_receiver, _tokenId);
-        claimed[_tokenId] = false;
+    function _mintTicket(
+        uint256 _tokenId,
+        uint256 _editionId,
+        uint256 _prize,
+        address _receiver
+    )
+        internal
+    {
         prizes[_tokenId] = _prize;
         editions[_tokenId] = _editionId;
-        emit mintCompleted(_tokenId, uint32(_editionId), _prize);
+
+        _mint(
+            _receiver,
+            _tokenId
+        );
+
+        emit mintCompleted(
+            _tokenId,
+            _editionId,
+            _prize
+        );
     }
 
 
