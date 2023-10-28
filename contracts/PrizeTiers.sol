@@ -12,6 +12,8 @@ contract PrizeTiers {
         uint256 winAmount;
     }
 
+    uint256 constant public PRECISION_FACTOR = 1E18;
+
     /**
      * RNG between 1 and 1000 values
      * RNG = 1 wins Jackpot (1,000,000)
@@ -23,7 +25,7 @@ contract PrizeTiers {
             PrizeTier({
                 drawEdgeA: 1,
                 drawEdgeB: 1,
-                winAmount: 1_000_000
+                winAmount: toWei(1_000_000)
             })
         );
 
@@ -31,7 +33,7 @@ contract PrizeTiers {
             PrizeTier({
                 drawEdgeA: 2,
                 drawEdgeB: 3,
-                winAmount: 100_000
+                winAmount: toWei(100_000)
             })
         );
 
@@ -39,7 +41,7 @@ contract PrizeTiers {
             PrizeTier({
                 drawEdgeA: 4,
                 drawEdgeB: 9,
-                winAmount: 50_000
+                winAmount: toWei(50_000)
             })
         );
 
@@ -47,7 +49,7 @@ contract PrizeTiers {
             PrizeTier({
                 drawEdgeA: 10,
                 drawEdgeB: 49,
-                winAmount: 10_000
+                winAmount: toWei(10_000)
             })
         );
 
@@ -55,7 +57,7 @@ contract PrizeTiers {
             PrizeTier({
                 drawEdgeA: 50,
                 drawEdgeB: 149,
-                winAmount: 5_000
+                winAmount: toWei(5_000)
             })
         );
 
@@ -63,7 +65,7 @@ contract PrizeTiers {
             PrizeTier({
                 drawEdgeA: 150,
                 drawEdgeB: 349,
-                winAmount: 1_000
+                winAmount: toWei(1_000)
             })
         );
 
@@ -71,7 +73,7 @@ contract PrizeTiers {
             PrizeTier({
                 drawEdgeA: 350,
                 drawEdgeB: 649,
-                winAmount: 5_00
+                winAmount: toWei(5_00)
             })
         );
 
@@ -79,8 +81,18 @@ contract PrizeTiers {
             PrizeTier({
                 drawEdgeA: 650,
                 drawEdgeB: 1000,
-                winAmount: 1_00
+                winAmount: toWei(1_00)
             })
         );
+    }
+
+    function toWei(
+        uint256 _amount
+    )
+        public
+        pure
+        returns (uint256)
+    {
+        return _amount * PRECISION_FACTOR;
     }
 }
