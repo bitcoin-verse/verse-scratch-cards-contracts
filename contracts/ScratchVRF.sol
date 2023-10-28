@@ -152,8 +152,19 @@ contract ScratchVRF is ScratchNFT, PrizeTiers, VRFConsumerBaseV2 {
         );
     }
 
+    function _newScratchTicket(
+        address _receiver
+    )
+        internal
+    {
+        VERSE_TOKEN.safeTransferFrom(
+            msg.sender,
+            address(this),
+            ticketCost
         );
 
+        _drawTicketRequest(
+            _receiver
         );
     }
 
