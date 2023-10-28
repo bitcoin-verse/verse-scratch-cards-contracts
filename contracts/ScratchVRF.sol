@@ -9,6 +9,7 @@ import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 import "@chainlink/contracts/src/v0.8/vrf/VRFConsumerBaseV2.sol";
 import "@chainlink/contracts/src/v0.8/interfaces/VRFCoordinatorV2Interface.sol";
 
+import "./PrizeTiers.sol";
 import "./ScratchNFT.sol";
 
 contract ScratchVRF is Ownable, VRFConsumerBaseV2 {
@@ -28,23 +29,15 @@ contract ScratchVRF is Ownable, VRFConsumerBaseV2 {
     uint256 public ticketCost;
     uint256 public currentTokenId;
 
-    struct Drawing {
-        uint256 drawId;
-        address ticketReceiver;
-    }
-
-    struct PrizeTier {
-        uint256 start;
-        uint256 end;
-        uint256 prizeAmount;
-    }
-
     uint256[] private _randomNumbers;
 
     mapping(uint256 => uint256) public drawIdToRequestId;
     mapping(uint256 => Drawing) public requestIdToDrawing;
 
-    PrizeTier[] public prizeTiers;
+    struct Drawing {
+        uint256 drawId;
+        address ticketReceiver;
+    }
 
     uint256 public drawId;
 
@@ -69,19 +62,6 @@ contract ScratchVRF is Ownable, VRFConsumerBaseV2 {
         );
 
         ticketCost = _ticketCost;
-
-        // init prize tiers, VRF supplies rng
-        // rng between 1 and 1000
-        // number 1 wins jackpot
-        // eg if number is either 2 and 3 pay 100k etc
-        prizeTiers.push(PrizeTier(1, 1, 1_000_000));
-        prizeTiers.push(PrizeTier(2, 3, 100_000));
-        prizeTiers.push(PrizeTier(4, 9, 50_000));
-        prizeTiers.push(PrizeTier(10, 49, 10_000));
-        prizeTiers.push(PrizeTier(50, 149, 5_000));
-        prizeTiers.push(PrizeTier(150, 349, 1_000));
-        prizeTiers.push(PrizeTier(350, 649, 5_00));
-        prizeTiers.push(PrizeTier(650, 1000, 1_00));
     }
 
     function getPrizeTier(uint256 number) internal view returns (uint256) {
