@@ -18,14 +18,16 @@ contract ScratchVRF is Ownable, VRFConsumerBaseV2 {
     ScratchNFT public immutable NFT_CONTRACT;
     VRFCoordinatorV2Interface private immutable VRF_COORDINATOR;
 
-    uint64 constant SUBSCRIPTION_ID = 951;
-    uint16 constant CONFIRMATIONS_NEEDED = 3;
-    uint32 constant CALLBACK_MAX_GAS = 2000000;
-    bytes32 constant GAS_KEYHASH = 0xcc294a196eeeb44da2888d17c0625cc88d70d9760a69d58d853ba6581a9ab0cd;
-    address constant TOKEN_ADDRESS = 0xc708D6F2153933DAA50B2D0758955Be0A93A8FEc;
+    uint64 constant public SUBSCRIPTION_ID = 951;
+    uint16 constant public CONFIRMATIONS_NEEDED = 3;
+    uint32 constant public CALLBACK_MAX_GAS = 2000000;
+
+    bytes32 constant public GAS_KEYHASH = 0xcc294a196eeeb44da2888d17c0625cc88d70d9760a69d58d853ba6581a9ab0cd;
+    address constant public TOKEN_ADDRESS = 0xc708D6F2153933DAA50B2D0758955Be0A93A8FEc;
 
     uint256 currentTokenId;
     uint256 public ticketCost;
+    uint256 public currentTokenId;
 
     struct Drawing {
         uint256 drawId;
