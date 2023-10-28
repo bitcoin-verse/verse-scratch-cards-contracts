@@ -24,7 +24,7 @@ contract ScratchVRF is ScratchNFT, PrizeTiers, VRFConsumerBaseV2 {
     uint16 immutable public CONFIRMATIONS_NEEDED; //  = 3;
 
     // Polygon: 0xc708D6F2153933DAA50B2D0758955Be0A93A8FEc
-    IERC20 immutable public TOKEN_ADDRESS;
+    IERC20 immutable public VERSE_TOKEN;
 
     // Polygon: 0xcc294a196eeeb44da2888d17c0625cc88d70d9760a69d58d853ba6581a9ab0cd
     bytes32 immutable public GAS_KEYHASH;
@@ -86,7 +86,7 @@ contract ScratchVRF is ScratchNFT, PrizeTiers, VRFConsumerBaseV2 {
             _vrfCoordinatorV2Address
         )
     {
-        TOKEN_ADDRESS = IERC20(
+        VERSE_TOKEN = IERC20(
             _tokenAddress
         );
 
@@ -278,7 +278,7 @@ contract ScratchVRF is ScratchNFT, PrizeTiers, VRFConsumerBaseV2 {
             _tokenId
         ];
 
-        uint256 balance = TOKEN_ADDRESS.balanceOf(
+        uint256 balance = VERSE_TOKEN.balanceOf(
             address(this)
         );
 
@@ -286,7 +286,7 @@ contract ScratchVRF is ScratchNFT, PrizeTiers, VRFConsumerBaseV2 {
             revert NotEnoughFunds();
         }
 
-        TOKEN_ADDRESS.safeTransfer(
+        VERSE_TOKEN.safeTransfer(
             msg.sender,
             prizeWei
         );
@@ -302,11 +302,11 @@ contract ScratchVRF is ScratchNFT, PrizeTiers, VRFConsumerBaseV2 {
         external
         onlyOwner
     {
-        uint256 balance = TOKEN_ADDRESS.balanceOf(
+        uint256 balance = VERSE_TOKEN.balanceOf(
             address(this)
         );
 
-        TOKEN_ADDRESS.safeTransfer(
+        VERSE_TOKEN.safeTransfer(
             msg.sender,
             balance
         );
