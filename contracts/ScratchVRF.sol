@@ -36,7 +36,7 @@ contract ScratchVRF is
     bytes32 immutable public GAS_KEYHASH;
 
     uint256 public ticketCost;
-    uint256 public currentTokenId;
+    uint256 public latestTicketId;
 
     uint256[] private _randomNumbers;
 
@@ -51,7 +51,7 @@ contract ScratchVRF is
     }
 
     event PrizeClaimed(
-        uint256 indexed tokenId,
+        uint256 indexed ticketId,
         address indexed receiver,
         uint256 amount
     );
@@ -134,7 +134,7 @@ contract ScratchVRF is
     }
 
     /**
-     * @notice Allows to purchase scratch ticket
+     * @notice Allows to purchase scratch ticket as NFT.
      */
     function buyScratchTicket()
         external
@@ -145,8 +145,8 @@ contract ScratchVRF is
     }
 
     /**
-     * @notice Allows to gift scratch ticket
-     * @param _receiver address that receives NFT
+     * @notice Allows to gift scratch ticket.
+     * @param _receiver address for gifted NFT.
      */
     function giftScratchTicket(
         address _receiver
@@ -174,6 +174,11 @@ contract ScratchVRF is
         );
     }
 
+    /**
+     * @notice Allows to gift scratch ticket for free.
+     * @dev Only can be called by the contract owner.
+     * @param _receivers address for gifted NFTs.
+     */
     function giftForFree(
         address[] memory _receivers
     )
@@ -253,10 +258,10 @@ contract ScratchVRF is
             randomNumber
         );
 
-        ++currentTokenId;
+        ++latestTicketId;
 
         _mintTicket(
-            currentTokenId,
+            latestTicketId,
             randomEdition,
             prize,
             currentDraw.ticketReceiver
@@ -269,26 +274,30 @@ contract ScratchVRF is
         );
     }
 
+    /**
+     * @notice Allows claim prize for scratch NFT.
+     * @param _ticketId of the scratch ticket NFT.
+     */
     function claimPrize(
-        uint256 _tokenId
+        uint256 _ticketId
     )
         external
     {
         require(
-            ownerOf(_tokenId) == msg.sender,
-            "ScratchVRF: INVALID_OWNER"
+            ownerOf(_ticketId) == msg.sender,
+            "ScratchVRF: INVALID_NFT_OWNER"
         );
 
-        if (claimed[_tokenId] == true) {
+        if (claimed[_ticketId] == true) {
             revert AlreadyClaimed();
         }
 
         _setClaimed(
-            _tokenId
+            _ticketId
         );
 
         uint256 prizeWei = prizes[
-            _tokenId
+            _ticketId
         ];
 
         uint256 balance = VERSE_TOKEN.balanceOf(
@@ -305,7 +314,7 @@ contract ScratchVRF is
         );
 
         emit PrizeClaimed(
-            _tokenId,
+            _ticketId,
             msg.sender,
             prizeWei
         );
