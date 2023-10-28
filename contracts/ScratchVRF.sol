@@ -172,21 +172,21 @@ contract ScratchVRF is ScratchNFT, PrizeTiers, VRFConsumerBaseV2 {
             2 // amount of numbers, first one is ticket number, second is collection
         );
 
-        address _ticketReceiver = msg.sender;
+        address ticketReceiver = msg.sender;
 
         if (_receiver != address(0)) {
-            _ticketReceiver = _receiver;
+            ticketReceiver = _receiver;
         }
 
         Drawing memory newDrawing = Drawing({
             drawId: drawId,
-            ticketReceiver: _ticketReceiver
+            ticketReceiver: ticketReceiver
         });
 
         ++drawId;
 
-        requestIdToDrawing[requestId] = newDrawing;
         drawIdToRequestId[drawId] = requestId;
+        requestIdToDrawing[requestId] = newDrawing;
 
         emit DrawRequest(
             drawId,
