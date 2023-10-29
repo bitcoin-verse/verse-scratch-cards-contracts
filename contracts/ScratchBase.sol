@@ -33,32 +33,38 @@ abstract contract ScratchBase is
     ScratchNFT,
     PrizeTiers
 {
-    VRFCoordinatorV2Interface public immutable VRF_COORDINATOR;
+    // Verse Token contract.
+    IERC20 public immutable VERSE_TOKEN;
 
-    uint64 immutable public SUBSCRIPTION_ID; // = 951;
+    // Link Token contract.
+    ILinkToken public immutable LINK_TOKEN;
 
-    uint32 constant public MAX_LOOPS = 50;
-    uint32 constant public CALLBACK_MAX_GAS = 2000000;
-    uint16 constant public CONFIRMATIONS_NEEDED = 3;
+    // Chainlink VRF Key Hash for RNG requests.
+    bytes32 public immutable GAS_KEYHASH;
 
-    // Polygon: 0xc708D6F2153933DAA50B2D0758955Be0A93A8FEc
-    IERC20 immutable public VERSE_TOKEN;
+    // Automatically generated on deployment.
+    uint64 public immutable SUBSCRIPTION_ID;
 
-    // Polygon:
-    ILinkToken immutable public LINK_TOKEN;
+    // For free giveaways maximum receivers is 50.
+    uint32 public constant MAX_LOOPS = 50;
 
-    // Polygon: 0xcc294a196eeeb44da2888d17c0625cc88d70d9760a69d58d853ba6581a9ab0cd
-    bytes32 immutable public GAS_KEYHASH;
+    // Higher value means more gas for callback.
+    uint32 public constant CALLBACK_MAX_GAS = 2000000;
 
+    // Number of confirmations needed for RNG request.
+    uint16 public constant CONFIRMATIONS_NEEDED = 3;
+
+    uint256 public drawCount;
     uint256 public ticketCost;
     uint256 public latestTicketId;
 
     uint256[] private _randomNumbers;
 
-    uint256 public drawCount;
-
     mapping(uint256 => uint256) public drawIdToRequestId;
     mapping(uint256 => Drawing) public requestIdToDrawing;
+
+    // Chainlink VRF Coordinator for RNG requests.
+    VRFCoordinatorV2Interface public immutable VRF_COORDINATOR;
 
     struct Drawing {
         uint256 drawId;
