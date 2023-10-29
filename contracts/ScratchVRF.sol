@@ -2,77 +2,12 @@
 
 pragma solidity =0.8.21;
 
-import "@openzeppelin/contracts/access/Ownable.sol";
-import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
+import "./ScratchBase.sol";
 
-import "@chainlink/contracts/src/v0.8/vrf/VRFConsumerBaseV2.sol";
-import "@chainlink/contracts/src/v0.8/interfaces/VRFCoordinatorV2Interface.sol";
+contract ScratchVRF is ScratchBase {
 
-import "./PrizeTiers.sol";
-import "./ScratchNFT.sol";
-
-error InvalidCost();
-error AlreadyClaimed();
-error NotEnoughFunds();
-
-contract ScratchVRF is
-    ScratchNFT,
-    PrizeTiers,
-    VRFConsumerBaseV2,
-    Ownable
-{
     using SafeERC20 for IERC20;
-
-    ScratchNFT public immutable NFT_CONTRACT;
-    VRFCoordinatorV2Interface private immutable VRF_COORDINATOR;
-
-    uint64 immutable public SUBSCRIPTION_ID; // = 951;
-    uint32 immutable public CALLBACK_MAX_GAS; // = 2000000;
-    uint16 immutable public CONFIRMATIONS_NEEDED; //  = 3;
-
-    // Polygon: 0xc708D6F2153933DAA50B2D0758955Be0A93A8FEc
-    IERC20 immutable public VERSE_TOKEN;
-
-    // Polygon: 0xcc294a196eeeb44da2888d17c0625cc88d70d9760a69d58d853ba6581a9ab0cd
-    bytes32 immutable public GAS_KEYHASH;
-
-    uint256 public ticketCost;
-    uint256 public latestTicketId;
-
-    uint256[] private _randomNumbers;
-
-    uint256 public drawCount;
-
-    mapping(uint256 => uint256) public drawIdToRequestId;
-    mapping(uint256 => Drawing) public requestIdToDrawing;
-
-    struct Drawing {
-        uint256 drawId;
-        address ticketReceiver;
-    }
-
-    event PrizeClaimed(
-        uint256 indexed ticketId,
-        address indexed receiver,
-        uint256 amount
-    );
-
-    event WithdrawTokens(
-        address indexed receiver,
-        uint256 amount
-    );
-
-    event DrawRequest(
-        uint256 indexed drawId,
-        uint256 indexed requestId,
-        address indexed ticketReceiver
-    );
-
-    event RequestFulfilled(
-        uint256 indexed drawId,
-        uint256 indexed requestId,
-        uint32 indexed result
-    );
+    using SafeERC20 for ILinkToken;
 
     constructor(
         string memory _name,
