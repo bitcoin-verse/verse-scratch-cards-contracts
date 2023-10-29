@@ -248,6 +248,10 @@ contract ScratchVRF is ScratchBase {
         );
     }
 
+    /**
+     * @notice Allows to withdraw VERSE tokens from the contract.
+     * @dev Only can be called by the contract owner.
+     */
     function withdrawTokens()
         external
         onlyOwner
