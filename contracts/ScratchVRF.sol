@@ -45,29 +45,6 @@ contract ScratchVRF is ScratchBase {
         ticketCost = _ticketCost;
     }
 
-    function getPrizeTier(
-        uint256 _number
-    )
-        internal
-        view
-        returns (uint256)
-    {
-        uint256 i;
-        uint256 prize;
-        uint256 loops = prizeTiers.length;
-
-        for (i; i < loops;) {
-            if (_number >= prizeTiers[i].drawEdgeA && _number <= prizeTiers[i].drawEdgeB) {
-                prize = prizeTiers[i].winAmount;
-                return prize;
-            }
-
-            unchecked {
-                ++i;
-            }
-        }
-        return prize;
-    }
 
     /**
      * @notice Allows to purchase scratch ticket as NFT.
@@ -190,7 +167,7 @@ contract ScratchVRF is ScratchBase {
             (_randomWords[0] % 1000) + 1
         ); // 1 to 1000
 
-        uint256 prize = getPrizeTier(
+        uint256 prize = _getPrizeTier(
             randomNumber
         );
 
@@ -208,6 +185,34 @@ contract ScratchVRF is ScratchBase {
             _requestId,
             randomNumber
         );
+    }
+
+    function _getPrizeTier(
+        uint256 _number
+    )
+        internal
+        view
+        returns (uint256)
+    {
+        uint256 i;
+        uint256 prize;
+        uint256 loops = prizeTiers.length;
+
+        for (i; i < loops;) {
+
+            PrizeTier memory pt = prizeTiers[i];
+
+            if (_number >= pt.drawEdgeA && _number <= pt.drawEdgeB) {
+                prize = pt.winAmount;
+                return prize;
+            }
+
+            unchecked {
+                ++i;
+            }
+        }
+
+        return prize;
     }
 
     /**
