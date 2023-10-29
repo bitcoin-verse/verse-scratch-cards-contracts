@@ -84,6 +84,10 @@ contract ScratchVRF is ScratchBase {
         uint256 i;
         uint256 loops = _receivers.length;
 
+        if (loops > MAX_LOOPS) {
+            revert TooManyReceivers();
+        }
+
         for (i; i < loops;) {
 
             _drawTicketRequest(
