@@ -7,7 +7,7 @@
         "test": "echo \"Error: no test specified\" && exit 1",
         "design": "node designPrizes",
         "foundry-size": "forge build --sizes",
-        "foundry-test": "forge test --fork-url https://eth.llamarpc.com --gas-report -vvv",
+        "foundry-test": "forge test --gas-report -vvv",
         "foundry-coverage": "forge coverage --report lcov && genhtml lcov.info --branch-coverage --output-dir coverage"
     },
     "author": "",

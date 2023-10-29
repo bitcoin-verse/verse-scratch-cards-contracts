@@ -2,137 +2,32 @@
 
 pragma solidity =0.8.21;
 
-import "@openzeppelin/contracts/access/Ownable.sol";
-import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
+import "./ScratchBase.sol";
 
-import "@chainlink/contracts/src/v0.8/vrf/VRFConsumerBaseV2.sol";
-import "@chainlink/contracts/src/v0.8/interfaces/VRFCoordinatorV2Interface.sol";
+contract ScratchVRF is ScratchBase {
 
-import "./PrizeTiers.sol";
-import "./ScratchNFT.sol";
-
-error InvalidCost();
-error AlreadyClaimed();
-error NotEnoughFunds();
-
-contract ScratchVRF is
-    ScratchNFT,
-    PrizeTiers,
-    VRFConsumerBaseV2,
-    Ownable
-{
     using SafeERC20 for IERC20;
-
-    ScratchNFT public immutable NFT_CONTRACT;
-    VRFCoordinatorV2Interface private immutable VRF_COORDINATOR;
-
-    uint64 immutable public SUBSCRIPTION_ID; // = 951;
-    uint32 immutable public CALLBACK_MAX_GAS; // = 2000000;
-    uint16 immutable public CONFIRMATIONS_NEEDED; //  = 3;
-
-    // Polygon: 0xc708D6F2153933DAA50B2D0758955Be0A93A8FEc
-    IERC20 immutable public VERSE_TOKEN;
-
-    // Polygon: 0xcc294a196eeeb44da2888d17c0625cc88d70d9760a69d58d853ba6581a9ab0cd
-    bytes32 immutable public GAS_KEYHASH;
-
-    uint256 public ticketCost;
-    uint256 public latestTicketId;
-
-    uint256[] private _randomNumbers;
-
-    uint256 public drawCount;
-
-    mapping(uint256 => uint256) public drawIdToRequestId;
-    mapping(uint256 => Drawing) public requestIdToDrawing;
-
-    struct Drawing {
-        uint256 drawId;
-        address ticketReceiver;
-    }
-
-    event PrizeClaimed(
-        uint256 indexed ticketId,
-        address indexed receiver,
-        uint256 amount
-    );
-
-    event WithdrawTokens(
-        address indexed receiver,
-        uint256 amount
-    );
-
-    event DrawRequest(
-        uint256 indexed drawId,
-        uint256 indexed requestId,
-        address indexed ticketReceiver
-    );
-
-    event RequestFulfilled(
-        uint256 indexed drawId,
-        uint256 indexed requestId,
-        uint32 indexed result
-    );
+    using SafeERC20 for ILinkToken;
 
     constructor(
         string memory _name,
         string memory _symbol,
         address _vrfCoordinatorV2Address,
         uint256 _ticketCost,
-        address _tokenAddress,
-        bytes32 _gasKeyHash,
-        uint64 _subscribtionId,
-        uint32 _callBackMaxGas,
-        uint16 _confirmationsNeeded
+        address _linkTokenAddress,
+        address _verseTokenAddress,
+        bytes32 _gasKeyHash
     )
-        ScratchNFT(
+        ScratchBase(
             _name,
-            _symbol
+            _symbol,
+            _vrfCoordinatorV2Address,
+            _ticketCost,
+            _linkTokenAddress,
+            _verseTokenAddress,
+            _gasKeyHash
         )
-        VRFConsumerBaseV2(
-            _vrfCoordinatorV2Address
-        )
-    {
-        VERSE_TOKEN = IERC20(
-            _tokenAddress
-        );
-
-        GAS_KEYHASH = _gasKeyHash;
-
-        VRF_COORDINATOR = VRFCoordinatorV2Interface(
-            _vrfCoordinatorV2Address
-        );
-
-        SUBSCRIPTION_ID = _subscribtionId;
-        CALLBACK_MAX_GAS = _callBackMaxGas;
-        CONFIRMATIONS_NEEDED = _confirmationsNeeded;
-
-        ticketCost = _ticketCost;
-    }
-
-    function getPrizeTier(
-        uint256 _number
-    )
-        internal
-        view
-        returns (uint256)
-    {
-        uint256 i;
-        uint256 prize;
-        uint256 loops = prizeTiers.length;
-
-        for (i; i < loops;) {
-            if (_number >= prizeTiers[i].drawEdgeA && _number <= prizeTiers[i].drawEdgeB) {
-                prize = prizeTiers[i].winAmount;
-                return prize;
-            }
-
-            unchecked {
-                ++i;
-            }
-        }
-        return prize;
-    }
+    {}
 
     /**
      * @notice Allows to purchase scratch ticket as NFT.
@@ -188,6 +83,10 @@ contract ScratchVRF is
     {
         uint256 i;
         uint256 loops = _receivers.length;
+
+        if (loops > MAX_LOOPS) {
+            revert TooManyReceivers();
+        }
 
         for (i; i < loops;) {
 
@@ -255,7 +154,7 @@ contract ScratchVRF is
             (_randomWords[0] % 1000) + 1
         ); // 1 to 1000
 
-        uint256 prize = getPrizeTier(
+        uint256 prize = _getPrizeTier(
             randomNumber
         );
 
@@ -275,6 +174,34 @@ contract ScratchVRF is
         );
     }
 
+    function _getPrizeTier(
+        uint256 _number
+    )
+        internal
+        view
+        returns (uint256)
+    {
+        uint256 i;
+        uint256 prize;
+        uint256 loops = prizeTiers.length;
+
+        for (i; i < loops;) {
+
+            PrizeTier memory pt = prizeTiers[i];
+
+            if (_number >= pt.drawEdgeA && _number <= pt.drawEdgeB) {
+                prize = pt.winAmount;
+                return prize;
+            }
+
+            unchecked {
+                ++i;
+            }
+        }
+
+        return prize;
+    }
+
     /**
      * @notice Allows claim prize for scratch NFT.
      * @param _ticketId of the scratch ticket NFT.
@@ -286,7 +213,7 @@ contract ScratchVRF is
     {
         require(
             ownerOf(_ticketId) == msg.sender,
-            "ScratchVRF: INVALID_NFT_OWNER"
+            "ScratchVRF: INVALID_TICKET_OWNER"
         );
 
         if (claimed[_ticketId] == true) {
@@ -340,20 +267,21 @@ contract ScratchVRF is
         );
     }
 
-    function changeTicketCost(
-        uint256 _newTicketCost
+    function loadSubscription(
+        uint256 _linkAmount
     )
         external
-        onlyOwner
     {
-        if (_newTicketCost == 0) {
-            revert InvalidCost();
-        }
+        LINK_TOKEN.safeTransferFrom(
+            msg.sender,
+            address(this),
+            _linkAmount
+        );
 
-        if (_newTicketCost == ticketCost) {
-            revert InvalidCost();
-        }
-
-        ticketCost = _newTicketCost;
+        LINK_TOKEN.transferAndCall(
+            address(VRF_COORDINATOR),
+            _linkAmount,
+            abi.encode(SUBSCRIPTION_ID)
+        );
     }
 }
