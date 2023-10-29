@@ -271,7 +271,6 @@ contract ScratchVRF is ScratchBase {
         uint256 _linkAmount
     )
         external
-        onlyOwner
     {
         LINK_TOKEN.safeTransferFrom(
             msg.sender,
