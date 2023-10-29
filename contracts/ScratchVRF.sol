@@ -14,37 +14,20 @@ contract ScratchVRF is ScratchBase {
         string memory _symbol,
         address _vrfCoordinatorV2Address,
         uint256 _ticketCost,
-        address _tokenAddress,
-        bytes32 _gasKeyHash,
-        uint64 _subscribtionId,
-        uint32 _callBackMaxGas,
-        uint16 _confirmationsNeeded
+        address _linkTokenAddress,
+        address _verseTokenAddress,
+        bytes32 _gasKeyHash
     )
-        ScratchNFT(
+        ScratchBase(
             _name,
-            _symbol
+            _symbol,
+            _vrfCoordinatorV2Address,
+            _ticketCost,
+            _linkTokenAddress,
+            _verseTokenAddress,
+            _gasKeyHash
         )
-        VRFConsumerBaseV2(
-            _vrfCoordinatorV2Address
-        )
-    {
-        VERSE_TOKEN = IERC20(
-            _tokenAddress
-        );
-
-        GAS_KEYHASH = _gasKeyHash;
-
-        VRF_COORDINATOR = VRFCoordinatorV2Interface(
-            _vrfCoordinatorV2Address
-        );
-
-        SUBSCRIPTION_ID = _subscribtionId;
-        CALLBACK_MAX_GAS = _callBackMaxGas;
-        CONFIRMATIONS_NEEDED = _confirmationsNeeded;
-
-        ticketCost = _ticketCost;
-    }
-
+    {}
 
     /**
      * @notice Allows to purchase scratch ticket as NFT.
