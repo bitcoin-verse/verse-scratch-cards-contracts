@@ -213,7 +213,7 @@ contract ScratchVRF is ScratchBase {
     {
         require(
             ownerOf(_ticketId) == msg.sender,
-            "ScratchVRF: INVALID_NFT_OWNER"
+            "ScratchVRF: INVALID_TICKET_OWNER"
         );
 
         if (claimed[_ticketId] == true) {
