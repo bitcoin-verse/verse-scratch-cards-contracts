@@ -54,6 +54,9 @@ abstract contract ScratchBase is
     // Number of confirmations needed for RNG request.
     uint16 public constant CONFIRMATIONS_NEEDED = 3;
 
+    // Number of words in RNG request.
+    uint32 public constant NUM_WORDS = 2;
+
     uint256 public drawCount;
     uint256 public ticketCost;
     uint256 public latestTicketId;

@@ -110,7 +110,7 @@ contract ScratchVRF is ScratchBase {
             SUBSCRIPTION_ID,
             CONFIRMATIONS_NEEDED,
             CALLBACK_MAX_GAS,
-            2
+            NUM_WORDS
         );
 
         Drawing memory newDrawing = Drawing({
