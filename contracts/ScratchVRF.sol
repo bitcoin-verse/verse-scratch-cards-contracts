@@ -280,20 +280,22 @@ contract ScratchVRF is ScratchBase {
         );
     }
 
-    function changeTicketCost(
-        uint256 _newTicketCost
+    function loadSubscription(
+        uint256 _linkAmount
     )
         external
         onlyOwner
     {
-        if (_newTicketCost == 0) {
-            revert InvalidCost();
-        }
+        LINK_TOKEN.safeTransferFrom(
+            msg.sender,
+            address(this),
+            _linkAmount
+        );
 
-        if (_newTicketCost == ticketCost) {
-            revert InvalidCost();
-        }
-
-        ticketCost = _newTicketCost;
+        LINK_TOKEN.transferAndCall(
+            address(VRF_COORDINATOR),
+            _linkAmount,
+            abi.encode(SUBSCRIPTION_ID)
+        );
     }
 }
