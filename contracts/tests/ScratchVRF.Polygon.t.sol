@@ -38,7 +38,7 @@ contract TestScratchVRF_POLYGON is Test {
         );
     }
 
-    function testSomething()
+    function testChangeTicketCost()
         public
     {
         uint256 initialCost = scratcher.ticketCost();
@@ -60,4 +60,6 @@ contract TestScratchVRF_POLYGON is Test {
             newCost
         );
     }
+
+    // @TODO: Add More Tests
 }

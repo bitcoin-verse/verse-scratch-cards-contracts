@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: BCOM
+// SPDX-License-Identifier: -- BCOM --
 
 pragma solidity =0.8.21;
 
@@ -110,7 +110,7 @@ contract ScratchVRF is ScratchBase {
             SUBSCRIPTION_ID,
             CONFIRMATIONS_NEEDED,
             CALLBACK_MAX_GAS,
-            2
+            NUM_WORDS
         );
 
         Drawing memory newDrawing = Drawing({
@@ -248,6 +248,10 @@ contract ScratchVRF is ScratchBase {
         );
     }
 
+    /**
+     * @notice Allows to withdraw VERSE tokens from the contract.
+     * @dev Only can be called by the contract owner.
+     */
     function withdrawTokens()
         external
         onlyOwner
