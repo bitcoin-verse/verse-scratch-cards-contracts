@@ -1,11 +1,10 @@
 {
-    "name": "prizegen",
+    "name": "prizegen-contracts",
     "version": "1.0.0",
     "description": "",
     "main": "index.js",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
-        "design": "node designPrizes",
         "foundry-size": "forge build --sizes",
         "foundry-test": "forge test --gas-report -vvv",
         "foundry-coverage": "forge coverage --report lcov && genhtml lcov.info --branch-coverage --output-dir coverage"
@@ -18,14 +17,9 @@
         "@openzeppelin/contracts": "^4.8.2",
         "@openzeppelin/merkle-tree": "^1.0.5",
         "@openzeppelin/test-helpers": "^0.5.16",
-        "@truffle/hdwallet-provider": "^2.1.15",
         "@uniswap/v3-periphery": "^1.4.3",
-        "aws-sdk": "^2.1467.0",
-        "dotenv": "^16.3.1",
         "hardhat": "^2.16.0",
-        "hardhat-gas-reporter": "^1.0.9",
-        "jimp": "^0.22.10",
-        "web3": "^1.8.1"
+        "hardhat-gas-reporter": "^1.0.9"
     },
     "devDependencies": {
         "@nomicfoundation/hardhat-foundry": "^1.0.3",
