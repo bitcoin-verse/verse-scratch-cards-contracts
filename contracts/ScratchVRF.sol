@@ -142,17 +142,19 @@ contract ScratchVRF is ScratchBase {
         internal
         override
     {
-        Drawing storage currentDraw = requestIdToDrawing[
+        Drawing memory currentDraw = requestIdToDrawing[
             _requestId
         ];
 
-        uint32 randomEdition = uint32(
-            (_randomWords[1] % 10) + 1
-        ); // 1 to 10
+        uint256 randomEdition = uniform(
+            _randomWords[1],
+            10
+        );
 
-        uint32 randomNumber = uint32(
-            (_randomWords[0] % 1000) + 1
-        ); // 1 to 1000
+        uint256 randomNumber = uniform(
+            _randomWords[0],
+            1_000
+        );
 
         uint256 prize = _getPrizeTier(
             randomNumber
