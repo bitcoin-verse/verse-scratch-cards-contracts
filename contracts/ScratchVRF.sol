@@ -277,6 +277,10 @@ contract ScratchVRF is ScratchBase {
         );
     }
 
+    /**
+     * @notice Allows load {$LINK} tokens to subscription.
+     * @param _linkAmount how much to load to subscription.
+     */
     function loadSubscription(
         uint256 _linkAmount
     )
