@@ -142,7 +142,7 @@ contract ScratchVRF is ScratchBase {
         internal
         override
     {
-        Drawing storage currentDraw = requestIdToDrawing[
+        Drawing memory currentDraw = requestIdToDrawing[
             _requestId
         ];
 
