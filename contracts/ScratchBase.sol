@@ -155,7 +155,7 @@ abstract contract ScratchBase is
         ticketCost = _newTicketCost;
     }
 
-        /**
+    /**
      * @notice Allows to avoid modulo bias for RNG.
      * @param _entropy random value passed from VRF.
      * @param _upperBound maximum outcome for {_entropy}.
