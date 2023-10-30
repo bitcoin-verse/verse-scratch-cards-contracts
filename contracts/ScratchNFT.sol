@@ -106,11 +106,17 @@ contract ScratchNFT is ERC721Enumerable {
             ownerTicketCount
         );
 
-        for (uint256 i; i < ownerTicketCount; i++) {
+        uint256 i;
+
+        for (i; i < ownerTicketCount;) {
             ticketIds[i] = tokenOfOwnerByIndex(
                 _owner,
                 i
             );
+
+            unchecked {
+                ++i;
+            }
         }
 
         return ticketIds;

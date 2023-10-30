@@ -118,7 +118,9 @@ contract ScratchVRF is ScratchBase {
             ticketReceiver: _receiver
         });
 
-        ++drawCount;
+        unchecked {
+            ++drawCount;
+        }
 
         drawIdToRequestId[drawCount] = requestId;
         requestIdToDrawing[requestId] = newDrawing;
@@ -160,7 +162,9 @@ contract ScratchVRF is ScratchBase {
             randomNumber
         );
 
-        ++latestTicketId;
+        unchecked {
+            ++latestTicketId;
+        }
 
         _mintTicket(
             latestTicketId,
@@ -273,6 +277,11 @@ contract ScratchVRF is ScratchBase {
         );
     }
 
+    /**
+     * @notice Allows load {$LINK} tokens to subscription.
+     * @dev Can be called with anyone, who wants to donate.
+     * @param _linkAmount how much to load to subscription.
+     */
     function loadSubscription(
         uint256 _linkAmount
     )
