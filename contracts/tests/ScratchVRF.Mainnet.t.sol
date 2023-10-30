@@ -159,6 +159,8 @@ contract TestScratchVRF_MAINNET is Test {
         scratcher.giftScratchTicket(
             WISE_DEPLOYER
         );
+
+        // operator.fulfillOracleRequest2()
     }
 
     // @TODO: Add More Tests
