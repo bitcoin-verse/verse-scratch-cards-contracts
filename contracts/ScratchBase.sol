@@ -94,7 +94,7 @@ abstract contract ScratchBase is
     event RequestFulfilled(
         uint256 indexed drawId,
         uint256 indexed requestId,
-        uint32 indexed result
+        uint256 indexed result
     );
 
     constructor(
