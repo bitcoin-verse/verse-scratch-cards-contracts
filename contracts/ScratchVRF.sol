@@ -118,7 +118,9 @@ contract ScratchVRF is ScratchBase {
             ticketReceiver: _receiver
         });
 
-        ++drawCount;
+        unchecked {
+            ++drawCount;
+        }
 
         drawIdToRequestId[drawCount] = requestId;
         requestIdToDrawing[requestId] = newDrawing;
@@ -160,7 +162,9 @@ contract ScratchVRF is ScratchBase {
             randomNumber
         );
 
-        ++latestTicketId;
+        unchecked {
+            ++latestTicketId;
+        }
 
         _mintTicket(
             latestTicketId,
