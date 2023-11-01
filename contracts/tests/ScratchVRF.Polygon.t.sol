@@ -21,6 +21,8 @@ contract TestScratchVRF_POLYGON is Test {
 
     address constant WISE_DEPLOYER = 0x641AD78BAca220C5BD28b51Ce8e0F495e85Fe689;
 
+    uint64 constant NEW_SUBSCRIPTON = 0;
+
     function setUp()
         public
     {
@@ -36,7 +38,8 @@ contract TestScratchVRF_POLYGON is Test {
             TICKET_COST,
             LINK_TOKEN,
             VERSE_TOKEN,
-            GAS_KEY_HASH
+            GAS_KEY_HASH,
+            NEW_SUBSCRIPTON
         );
     }
 
