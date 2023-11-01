@@ -104,7 +104,8 @@ abstract contract ScratchBase is
         uint256 _ticketCost,
         address _linkTokenAddress,
         address _verseTokenAddress,
-        bytes32 _gasKeyHash
+        bytes32 _gasKeyHash,
+        uint64 _subscriptionId
     )
         ScratchNFT(
             _name,
@@ -126,16 +127,25 @@ abstract contract ScratchBase is
             _vrfCoordinatorV2Address
         );
 
+        SUBSCRIPTION_ID = _subscriptionId > 0
+            ? _subscriptionId
+            : _createNewSubscription();
+
         GAS_KEYHASH = _gasKeyHash;
 
-        SUBSCRIPTION_ID = VRF_COORDINATOR.createSubscription();
+        ticketCost = _ticketCost;
+    }
+
+    function _createNewSubscription()
+        internal
+        returns (uint64 newSubscriptionId)
+    {
+        newSubscriptionId = VRF_COORDINATOR.createSubscription();
 
         VRF_COORDINATOR.addConsumer(
-            SUBSCRIPTION_ID,
+            newSubscriptionId,
             address(this)
         );
-
-        ticketCost = _ticketCost;
     }
 
     function changeTicketCost(
