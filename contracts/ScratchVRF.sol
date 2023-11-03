@@ -16,7 +16,8 @@ contract ScratchVRF is ScratchBase {
         uint256 _ticketCost,
         address _linkTokenAddress,
         address _verseTokenAddress,
-        bytes32 _gasKeyHash
+        bytes32 _gasKeyHash,
+        uint64 _subscriptionId
     )
         ScratchBase(
             _name,
@@ -25,7 +26,8 @@ contract ScratchVRF is ScratchBase {
             _ticketCost,
             _linkTokenAddress,
             _verseTokenAddress,
-            _gasKeyHash
+            _gasKeyHash,
+            _subscriptionId
         )
     {}
 
