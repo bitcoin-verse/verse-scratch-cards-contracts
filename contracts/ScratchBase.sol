@@ -188,6 +188,7 @@ abstract contract ScratchBase is
         }
 
         return random
-            % _upperBound;
+            % _upperBound
+            + 1;
     }
 }
