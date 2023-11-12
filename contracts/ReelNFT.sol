@@ -3,22 +3,12 @@
 pragma solidity =0.8.21;
 
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
 
-import "@chainlink/contracts/src/v0.8/interfaces/VRFCoordinatorV2Interface.sol";
-import "@chainlink/contracts/src/v0.8/vrf/VRFConsumerBaseV2.sol";
-
-contract ReelNFT is ERC721Enumerable, Ownable, VRFConsumerBaseV2 {
+abstract contract ReelNFT is ERC721Enumerable {
 
     using Strings for uint256;
 
-    VRFCoordinatorV2Interface internal immutable vrfCoordinator;
-
     uint8 constant MAX_TRAITS = 6;
-    uint64 constant SUBSCRIPTION_ID = 951;
-    uint16 constant CONFIRMATIONS_NEEDED = 3;
-    uint32 constant CALLBACK_MAX_GAS = 2000000;
-    bytes32 constant GAS_KEYHASH = 0xcc294a196eeeb44da2888d17c0625cc88d70d9760a69d58d853ba6581a9ab0cd;
 
     uint256 public tokenId;
     uint256 public drawId;
