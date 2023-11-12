@@ -83,18 +83,6 @@ abstract contract ScratchBase is CommonVRF, ScratchNFT, PrizeTiers {
         ticketCost = _ticketCost;
     }
 
-    function _createNewSubscription()
-        internal
-        returns (uint64 newSubscriptionId)
-    {
-        newSubscriptionId = VRF_COORDINATOR.createSubscription();
-
-        VRF_COORDINATOR.addConsumer(
-            newSubscriptionId,
-            address(this)
-        );
-    }
-
     function changeTicketCost(
         uint256 _newTicketCost
     )
