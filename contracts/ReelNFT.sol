@@ -30,63 +30,14 @@ abstract contract ReelNFT is ERC721Enumerable {
     mapping(uint256 => Drawing) public requestIdToDrawing;
 
     constructor(
-        address _vrfCoordinatorV2Address,
-        string memory name,
-        string memory symbol
+        string memory _name,
+        string memory _symbol
     )
         ERC721(
-            name,
-            symbol
+            _name,
+            _symbol
         )
-        VRFConsumerBaseV2(
-            _vrfCoordinatorV2Address
-        )
-    {
-        vrfCoordinator = VRFCoordinatorV2Interface(
-            _vrfCoordinatorV2Address
-        );
-    }
-
-    // Mint a new NFT with a unique revealed property
-    function _mintCharacter(
-        address _receiver
-    )
-        internal
-    {
-        ++tokenId;
-
-        _mint(
-            _receiver,
-            tokenId
-        );
-
-        // create a request to VRF
-        uint256 requestId = vrfCoordinator.requestRandomWords(
-            GAS_KEYHASH, // gas keyhash (sepoila 30 gwei)
-            SUBSCRIPTION_ID, // subscription id
-            CONFIRMATIONS_NEEDED, // conf needed
-            CALLBACK_MAX_GAS, // callback gas
-            6 // amount of numbers, first one is trait one etc
-        );
-
-        ++drawId;
-
-        Drawing memory newDrawing = Drawing({
-            drawId: drawId,
-            tokenId: tokenId,
-            reroll: false,
-            rerollNumber: 0
-        });
-
-        requestIdToDrawing[requestId] = newDrawing;
-        drawIdToRequestId[drawId] = requestId;
-
-        emit DrawRequest(
-            drawId,
-            requestId,
-            msg.sender
-        );
-    }
+    {}
 
     function tokenURI(
         uint256 _tokenId
