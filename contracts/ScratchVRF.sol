@@ -278,27 +278,4 @@ contract ScratchVRF is ScratchBase {
             balance
         );
     }
-
-    /**
-     * @notice Allows load {$LINK} tokens to subscription.
-     * @dev Can be called with anyone, who wants to donate.
-     * @param _linkAmount how much to load to subscription.
-     */
-    function loadSubscription(
-        uint256 _linkAmount
-    )
-        external
-    {
-        LINK_TOKEN.safeTransferFrom(
-            msg.sender,
-            address(this),
-            _linkAmount
-        );
-
-        LINK_TOKEN.transferAndCall(
-            address(VRF_COORDINATOR),
-            _linkAmount,
-            abi.encode(SUBSCRIPTION_ID)
-        );
-    }
 }
