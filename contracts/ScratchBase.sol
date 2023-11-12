@@ -111,41 +111,4 @@ abstract contract ScratchBase is CommonVRF, ScratchNFT, PrizeTiers {
 
         ticketCost = _newTicketCost;
     }
-
-    /**
-     * @notice Allows to avoid modulo bias for RNG.
-     * @param _entropy random value passed from VRF.
-     * @param _upperBound maximum outcome for {_entropy}.
-    */
-    function uniform(
-        uint256 _entropy,
-        uint256 _upperBound
-    )
-        public
-        pure
-        returns (uint256)
-    {
-        uint256 min = (type(uint256).max - _upperBound + 1)
-            % _upperBound;
-
-        uint256 random = _entropy;
-
-        while (true) {
-            if (random >= min) {
-                break;
-            }
-
-            random = uint256(
-                keccak256(
-                    abi.encodePacked(
-                        random
-                    )
-                )
-            );
-        }
-
-        return random
-            % _upperBound
-            + 1;
-    }
 }
