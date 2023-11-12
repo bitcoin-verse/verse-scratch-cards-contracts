@@ -109,29 +109,6 @@ abstract contract ReelNFT is ERC721Enumerable {
         ));
     }
 
-    function fulfillRandomWords(
-        uint256 _requestId,
-        uint256[] memory _randomWords
-    )
-        internal
-        override
-    {
-        Drawing memory currentDraw = requestIdToDrawing[
-            _requestId
-        ];
-
-        currentDraw.reroll == false
-            ? _initialMint(
-                currentDraw,
-                _randomWords,
-                _requestId
-            )
-            : _rerollTrait(
-                currentDraw,
-                _randomWords
-            );
-    }
-
     function _initialMint(
         Drawing memory currentDraw,
         uint256[] memory _randomWords,
