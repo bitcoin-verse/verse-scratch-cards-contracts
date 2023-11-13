@@ -41,8 +41,16 @@ contract ReelVRF is ReelNFT {
         external
         onlyOwner
     {
-        for (uint i; i < receivers.length; i++) {
-            _mintCharacter(receivers[i]);
+        uint256 i;
+        uint256 total = receivers.length;
+
+        for (i; i < total;) {
+            _mintCharacter(
+                receivers[i]
+            );
+            unchecked {
+                ++i;
+            }
         }
     }
 
