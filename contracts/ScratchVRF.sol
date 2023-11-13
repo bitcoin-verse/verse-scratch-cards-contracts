@@ -2,9 +2,8 @@
 
 pragma solidity =0.8.21;
 
-import "./ScratchBase.sol";
 
-contract ScratchVRF is ScratchBase {
+contract ScratchVRF is ScratchNFT {
 
     using SafeERC20 for IERC20;
     using SafeERC20 for ILinkToken;
@@ -19,7 +18,7 @@ contract ScratchVRF is ScratchBase {
         bytes32 _gasKeyHash,
         uint64 _subscriptionId
     )
-        ScratchBase(
+        ScratchNFT(
             _name,
             _symbol,
             _vrfCoordinatorV2Address,
