@@ -9,7 +9,6 @@ import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 import "@chainlink/contracts/src/v0.8/interfaces/VRFCoordinatorV2Interface.sol";
 import "@chainlink/contracts/src/v0.8/vrf/VRFConsumerBaseV2.sol";
 
-
 error InvalidCost();
 error TooManyReceivers();
 
@@ -174,6 +173,30 @@ abstract contract CommonBase is Ownable, VRFConsumerBaseV2, ERC721Enumerable {
         emit WithdrawTokens(
             msg.sender,
             balance
+        );
+    }
+
+    function _giveTokens(
+        address _receiver,
+        uint256 _amount
+    )
+        internal
+    {
+        VERSE_TOKEN.safeTransfer(
+            _receiver,
+            _amount
+        );
+    }
+
+    function _takeTokens(
+        uint256 _transferValue
+    )
+        internal
+    {
+        VERSE_TOKEN.safeTransferFrom(
+            msg.sender,
+            address(this),
+            _transferValue
         );
     }
 

@@ -6,8 +6,6 @@ import "./ReelNFT.sol";
 
 contract ReelVRF is ReelNFT {
 
-    using SafeERC20 for IERC20;
-
     uint256 public characterCost;
 
     constructor(
@@ -68,10 +66,8 @@ contract ReelVRF is ReelNFT {
     function buyCharacter()
         external
     {
-        VERSE_TOKEN.safeTransferFrom(
-            msg.sender,
-            address(this),
-            characterCost * 1 ether
+        _takeTokens(
+            characterCost
         );
 
         _mintCharacter(

@@ -6,9 +6,6 @@ import "./ScratchNFT.sol";
 
 contract ScratchVRF is ScratchNFT {
 
-    using SafeERC20 for IERC20;
-    using SafeERC20 for ILinkToken;
-
     constructor(
         string memory _name,
         string memory _symbol,
@@ -61,9 +58,7 @@ contract ScratchVRF is ScratchNFT {
     )
         internal
     {
-        VERSE_TOKEN.safeTransferFrom(
-            msg.sender,
-            address(this),
+        _takeTokens(
             ticketCost
         );
 
@@ -241,7 +236,7 @@ contract ScratchVRF is ScratchNFT {
             revert NotEnoughFunds();
         }
 
-        VERSE_TOKEN.safeTransfer(
+        _giveTokens(
             msg.sender,
             prizeWei
         );
@@ -253,20 +248,20 @@ contract ScratchVRF is ScratchNFT {
         );
     }
 
-    function changeTicketCost(
-        uint256 _newTicketCost
+    function changeCost(
+        uint256 _newCost
     )
         external
         onlyOwner
     {
-        if (_newTicketCost == 0) {
+        if (_newCost == 0) {
             revert InvalidCost();
         }
 
-        if (_newTicketCost == ticketCost) {
+        if (_newCost == ticketCost) {
             revert InvalidCost();
         }
 
-        ticketCost = _newTicketCost;
+        ticketCost = _newCost;
     }
 }
