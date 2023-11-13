@@ -95,7 +95,12 @@ contract ReelVRF is ReelNFT {
 
         requestIdToDrawing[requestId] = newDrawing;
         drawIdToRequestId[drawId] = requestId;
-        emit DrawRequest(drawId, requestId, msg.sender);
+
+        emit DrawRequest(
+            drawId,
+            requestId,
+            msg.sender
+        );
     }
 
     function getTraits(
@@ -104,6 +109,7 @@ contract ReelVRF is ReelNFT {
         external
         view
         returns (uint256[] memory)
+        // returns (TraitType[] memory)
     {
         return traits[_tokenId];
     }
