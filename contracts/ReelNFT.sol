@@ -30,8 +30,7 @@ abstract contract ReelNFT is ERC721Enumerable, CommonVRF {
     struct Drawing {
         uint256 drawId;
         uint256 tokenId;
-        bool reroll;
-        uint8 rerollNumber;
+        uint256 traitId;
     }
 
     mapping(uint256 => string) public tokenURIs;
@@ -128,16 +127,29 @@ abstract contract ReelNFT is ERC721Enumerable, CommonVRF {
         // @TODO: use uniform function here and avoid index[0]
         uint32 rolledNumber = uint32((_randomWords[0] % 15 + 1));
 
-        currentTraits[_currentDraw.rerollNumber] = rolledNumber;
-        traits[_currentDraw.tokenId] = currentTraits;
+        _updateTrait(
+            _currentDraw.tokenId,
+            _currentDraw.traitId,
+            rolledNumber
+        );
         rerollInProgress[tokenId] = false;
 
         emit rerollFulfilled(
             _currentDraw.drawId,
             _currentDraw.tokenId,
-            _currentDraw.rerollNumber,
+            _currentDraw.traitId,
             rolledNumber
         );
+    }
+
+    function _updateTrait(
+        uint256 _tokenId,
+        uint256 _traitId,
+        uint256 _rolledNumber
+    )
+        internal
+    {
+        traits[_tokenId][_traitId] = _rolledNumber;
     }
 
     function ownedByAddress(
