@@ -35,7 +35,7 @@ contract ReelVRF is ReelNFT {
         characterCost = _characterCost;
     }
 
-    function bulkSend(
+    function giftCharactersForFree(
         address[] memory receivers
     )
         external
