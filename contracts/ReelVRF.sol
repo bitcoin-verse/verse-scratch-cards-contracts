@@ -9,7 +9,6 @@ contract ReelVRF is ReelNFT {
     using SafeERC20 for IERC20;
 
     uint256 public characterCost;
-    address constant TOKEN_ADDRESS = 0xc708D6F2153933DAA50B2D0758955Be0A93A8FEc;
 
     constructor(
         string memory _name,
