@@ -4,6 +4,9 @@ pragma solidity =0.8.21;
 
 import "./ScratchNFT.sol";
 
+error AlreadyClaimed();
+error NotEnoughFunds();
+
 contract ScratchVRF is ScratchNFT {
 
     constructor(
@@ -62,7 +65,7 @@ contract ScratchVRF is ScratchNFT {
         internal
     {
         _takeTokens(
-            ticketCost
+            baseCost
         );
 
         _drawTicketRequest(
@@ -215,11 +218,6 @@ contract ScratchVRF is ScratchNFT {
         external
         onlyTokenOwner(_ticketId)
     {
-        require(
-            ownerOf(_ticketId) == msg.sender,
-            "ScratchVRF: INVALID_TICKET_OWNER"
-        );
-
         if (claimed[_ticketId] == true) {
             revert AlreadyClaimed();
         }

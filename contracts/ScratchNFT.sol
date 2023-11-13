@@ -5,15 +5,10 @@ pragma solidity =0.8.21;
 import "./CommonBase.sol";
 import "./PrizeTiers.sol";
 
-error AlreadyClaimed();
-error NotEnoughFunds();
-error InvalidTicketId();
-
 abstract contract ScratchNFT is PrizeTiers, CommonBase {
 
     using Strings for uint256;
 
-    uint256 public ticketCost;
     uint256 public latestTicketId;
 
     mapping(uint256 => bool) public claimed;
@@ -75,7 +70,7 @@ abstract contract ScratchNFT is PrizeTiers, CommonBase {
         returns (string memory)
     {
         if (_exists(_ticketId) == false) {
-            revert InvalidTicketId();
+            revert InvalidId();
         }
 
         string memory baseURI = _baseURI();
@@ -105,7 +100,7 @@ abstract contract ScratchNFT is PrizeTiers, CommonBase {
         internal
     {
         if (_exists(_ticketId) == false) {
-            revert InvalidTicketId();
+            revert InvalidId();
         }
 
         claimed[_ticketId] = true;

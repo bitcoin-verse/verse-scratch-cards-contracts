@@ -16,7 +16,7 @@ contract ReelVRF is ReelNFT {
         bytes32 _gasKeyHash,
         uint64 _subscriptionId
     )
-        ReelNFT(
+        ERC721(
             _name,
             _symbol
         )
@@ -114,7 +114,7 @@ contract ReelVRF is ReelNFT {
         returns (uint256[] memory)
         // returns (TraitType[] memory)
     {
-        return traits[_tokenId];
+        return traits[_astroId];
     }
 
     // Mint a new NFT with a unique revealed property
