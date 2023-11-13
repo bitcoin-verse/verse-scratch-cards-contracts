@@ -2,7 +2,7 @@
 
 pragma solidity =0.8.21;
 
-import "./CommonVRF.sol";
+import "./CommonBase.sol";
 
 abstract contract ReelNFT is ERC721Enumerable, CommonBase {
 
@@ -32,13 +32,11 @@ abstract contract ReelNFT is ERC721Enumerable, CommonBase {
         uint256 traitId;
     }
 
-    mapping(uint256 => string) public tokenURIs;
     mapping(uint256 => uint256[]) public traits;
 
     mapping(uint256 => bool) public completed;
     mapping(uint256 => bool) public rerollInProgress;
 
-    mapping(uint256 => uint256) public drawIdToRequestId;
     mapping(uint256 => Drawing) public requestIdToDrawing;
 
     constructor(
