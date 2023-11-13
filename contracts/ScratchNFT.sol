@@ -43,31 +43,6 @@ abstract contract ScratchNFT is PrizeTiers, CommonBase {
         uint256 amount
     );
 
-    constructor(
-        string memory _name,
-        string memory _symbol,
-        address _vrfCoordinatorV2Address,
-        uint256 _ticketCost,
-        address _linkTokenAddress,
-        address _verseTokenAddress,
-        bytes32 _gasKeyHash,
-        uint64 _subscriptionId
-    )
-        ERC721(
-            _name,
-            _symbol
-        )
-        CommonBase(
-            _linkTokenAddress,
-            _verseTokenAddress,
-            _gasKeyHash,
-            _subscriptionId,
-            _vrfCoordinatorV2Address
-        )
-    {
-        ticketCost = _ticketCost;
-    }
-
     function _mintTicket(
         uint256 _ticketId,
         uint256 _editionId,
