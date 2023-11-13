@@ -90,8 +90,7 @@ contract ReelVRF is ReelNFT {
         Drawing memory newDrawing = Drawing({
             drawId: drawId,
             tokenId: _tokenId,
-            reroll: true,
-            rerollNumber: _traitNumber
+            traitId: _traitId
         });
 
         requestIdToDrawing[requestId] = newDrawing;
