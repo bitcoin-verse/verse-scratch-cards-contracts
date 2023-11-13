@@ -73,13 +73,10 @@ contract ReelVRF is ReelNFT, CommonVRF {
         require(ownerOf(_tokenId) == address(msg.sender), "only owner of NFT can reroll");
         rerollInProgress[tokenId] = true;
 
-        uint256 requestId = VRF_COORDINATOR.requestRandomWords(
-            GAS_KEYHASH, // gas keyhash (sepoila 30 gwei)
-            SUBSCRIPTION_ID, // subscription id
-            CONFIRMATIONS_NEEDED, // conf needed
-            CALLBACK_MAX_GAS, // callback gas
-            1
-        );
+        uint256 requestId = _requestRandomWords({
+            _wordCount: 1
+        });
+
         ++drawId;
 
         Drawing memory newDrawing = Drawing({
@@ -127,14 +124,9 @@ contract ReelVRF is ReelNFT, CommonVRF {
             tokenId
         );
 
-        // create a request to VRF
-        uint256 requestId = VRF_COORDINATOR.requestRandomWords(
-            GAS_KEYHASH, // gas keyhash (sepoila 30 gwei)
-            SUBSCRIPTION_ID, // subscription id
-            CONFIRMATIONS_NEEDED, // conf needed
-            CALLBACK_MAX_GAS, // callback gas
-            6 // amount of numbers, first one is trait one etc
-        );
+        uint256 requestId = _requestRandomWords({
+            _wordCount: 6
+        });
 
         ++drawId;
 

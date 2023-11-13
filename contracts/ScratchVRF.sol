@@ -107,11 +107,7 @@ contract ScratchVRF is ScratchBase {
     )
         internal
     {
-        uint256 requestId = VRF_COORDINATOR.requestRandomWords(
-            GAS_KEYHASH,
-            SUBSCRIPTION_ID,
-            CONFIRMATIONS_NEEDED,
-            CALLBACK_MAX_GAS,
+        uint256 requestId = _requestRandomWords(
             NUM_WORDS
         );
 
