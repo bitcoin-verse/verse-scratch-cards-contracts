@@ -9,7 +9,20 @@ abstract contract ReelNFT is ERC721Enumerable, CommonVRF {
 
     using Strings for uint256;
 
-    uint8 constant MAX_TRAITS = 6;
+    enum TraitType {
+        Background,
+        Reel,
+        Symbol,
+        SymbolColor,
+        SymbolBackground,
+        SymbolOverlay
+    }
+
+    uint256 constant MAX_TYPES = uint256(
+        type(TraitType).max
+    );
+
+    uint256 constant MAX_TRAITS = 15;
 
     uint256 public tokenId;
     uint256 public drawId;
@@ -80,6 +93,17 @@ abstract contract ReelNFT is ERC721Enumerable, CommonVRF {
                 ++i;
             }
         }
+
+        /*
+        for (uint8 i; i < MAX_TYPES;) {
+            traits[currentDraw.tokenId][TraitType(i)] = uniform(
+                _randomWords[i],
+                MAX_TRAITS
+            );
+            unchecked {
+                ++i;
+            }
+        }*/
 
         traits[currentDraw.tokenId] = numbers;
         completed[currentDraw.tokenId] = true;
