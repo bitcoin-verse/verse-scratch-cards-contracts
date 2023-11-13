@@ -114,16 +114,6 @@ contract ReelVRF is ReelNFT {
         return traits[_tokenId];
     }
 
-
-    function withdraw()
-        public
-        onlyOwner
-    {
-        uint256 balance = IERC20(TOKEN_ADDRESS).balanceOf(address(this));
-        require(balance > 0, "No tokens to withdraw");
-        IERC20(TOKEN_ADDRESS).safeTransfer(owner(), balance);
-    }
-
     // Mint a new NFT with a unique revealed property
     function _mintCharacter(
         address _receiver
