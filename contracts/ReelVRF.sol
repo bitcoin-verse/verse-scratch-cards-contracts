@@ -28,7 +28,7 @@ contract ReelVRF is ReelNFT {
             _vrfCoordinatorV2Address
         )
     {
-        characterCost = _characterCost;
+        baseCost = _characterCost;
     }
 
     /**
@@ -65,7 +65,7 @@ contract ReelVRF is ReelNFT {
         external
     {
         _takeTokens(
-            characterCost
+            baseCost
         );
 
         _mintCharacter(
@@ -74,18 +74,13 @@ contract ReelVRF is ReelNFT {
     }
 
     function rerollTrait(
-        uint256 _tokenId,
+        uint256 _astroId,
         uint256 _traitId
     )
         external
         onlyTokenOwner(_astroId)
     {
-        require(
-            ownerOf(_tokenId) == msg.sender,
-            "only owner of NFT can reroll"
-        );
-
-        rerollInProgress[_tokenId] = true;
+        rerollInProgress[_astroId] = true;
 
         uint256 requestId = _requestRandomWords({
             _wordCount: 1
@@ -97,7 +92,7 @@ contract ReelVRF is ReelNFT {
 
         Drawing memory newDrawing = Drawing({
             drawId: latestDrawId,
-            tokenId: _tokenId,
+            astroId: _astroId,
             traitId: _traitId
         });
 
@@ -112,7 +107,7 @@ contract ReelVRF is ReelNFT {
     }
 
     function getTraits(
-        uint256 _tokenId
+        uint256 _astroId
     )
         external
         view
@@ -147,7 +142,7 @@ contract ReelVRF is ReelNFT {
 
         Drawing memory newDrawing = Drawing({
             drawId: latestDrawId,
-            tokenId: latestCharacterId,
+            astroId: latestCharacterId,
             traitId: 0
         });
 
