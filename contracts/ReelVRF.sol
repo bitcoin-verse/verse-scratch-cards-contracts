@@ -49,7 +49,7 @@ contract ReelVRF is ReelNFT {
     function buyCharacter()
         external
     {
-        IERC20(TOKEN_ADDRESS).safeTransferFrom(
+        VERSE_TOKEN.safeTransferFrom(
             msg.sender,
             address(this),
             characterCost * 1 ether
