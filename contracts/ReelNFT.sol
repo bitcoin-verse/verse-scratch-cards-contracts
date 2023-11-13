@@ -80,14 +80,15 @@ abstract contract ReelNFT is ERC721Enumerable, CommonVRF {
     )
         internal
     {
-        // handle normal minting of NFT
         uint256[] memory numbers = new uint256[](
             MAX_TRAITS
         );
 
         for (uint256 i; i < MAX_TRAITS;) {
-            // @TODO: use uniform function
-            numbers[i] = uint32((_randomWords[i] % 15 + 1));
+            numbers[i] = uniform(
+                _randomWords[i],
+                MAX_TRAITS
+            );
             unchecked {
                 ++i;
             }
@@ -120,19 +121,18 @@ abstract contract ReelNFT is ERC721Enumerable, CommonVRF {
     )
         internal
     {
-        uint256[] memory currentTraits = traits[
-            _currentDraw.tokenId
-        ];
-
-        // @TODO: use uniform function here and avoid index[0]
-        uint32 rolledNumber = uint32((_randomWords[0] % 15 + 1));
+        uint32 rolledNumber = uniform(
+            _randomWords[0],
+            MAX_TRAITS
+        );
 
         _updateTrait(
             _currentDraw.tokenId,
             _currentDraw.traitId,
             rolledNumber
         );
-        rerollInProgress[tokenId] = false;
+
+        rerollInProgress[_currentDraw.tokenId] = false;
 
         emit rerollFulfilled(
             _currentDraw.drawId,
