@@ -45,10 +45,10 @@ contract TestScratchVRF_MAINNET is Test {
         );
     }
 
-    function testChangeTicketCost()
+    function testChangeBaseCost()
         public
     {
-        uint256 initialCost = scratcher.ticketCost();
+        uint256 initialCost = scratcher.baseCost();
         uint256 newCost = 1_000 * 1E18;
 
         assertEq(
@@ -56,11 +56,11 @@ contract TestScratchVRF_MAINNET is Test {
             TICKET_COST
         );
 
-        scratcher.changeTicketCost(
+        scratcher.changeBaseCost(
             newCost
         );
 
-        uint256 updatedCost = scratcher.ticketCost();
+        uint256 updatedCost = scratcher.baseCost();
 
         assertEq(
             updatedCost,
@@ -68,10 +68,10 @@ contract TestScratchVRF_MAINNET is Test {
         );
     }
 
-    function testChangeTicketCostExceptions()
+    function testchangeBaseCostExceptions()
         public
     {
-        uint256 initialCost = scratcher.ticketCost();
+        uint256 initialCost = scratcher.baseCost();
         uint256 newCost = 1_000 * 1E18;
 
         vm.startPrank(
@@ -82,7 +82,7 @@ contract TestScratchVRF_MAINNET is Test {
             "Ownable: caller is not the owner"
         );
 
-        scratcher.changeTicketCost(
+        scratcher.changeBaseCost(
             newCost
         );
 
@@ -92,7 +92,7 @@ contract TestScratchVRF_MAINNET is Test {
             InvalidCost.selector
         );
 
-        scratcher.changeTicketCost(
+        scratcher.changeBaseCost(
             initialCost
         );
 
@@ -100,11 +100,11 @@ contract TestScratchVRF_MAINNET is Test {
             InvalidCost.selector
         );
 
-        scratcher.changeTicketCost(
+        scratcher.changeBaseCost(
             0
         );
 
-        scratcher.changeTicketCost(
+        scratcher.changeBaseCost(
             newCost
         );
 
@@ -112,7 +112,7 @@ contract TestScratchVRF_MAINNET is Test {
             InvalidCost.selector
         );
 
-        scratcher.changeTicketCost(
+        scratcher.changeBaseCost(
             newCost
         );
     }
@@ -131,7 +131,7 @@ contract TestScratchVRF_MAINNET is Test {
     function testBuyTickets()
         public
     {
-        uint256 ticketCost = scratcher.ticketCost();
+        uint256 baseCost = scratcher.baseCost();
         uint256 topUp = 10 * 1E18;
 
         vm.startPrank(
@@ -149,14 +149,14 @@ contract TestScratchVRF_MAINNET is Test {
 
         IERC20(VERSE_TOKEN).approve(
             address(scratcher),
-            ticketCost
+            baseCost
         );
 
         scratcher.buyScratchTicket();
 
         IERC20(VERSE_TOKEN).approve(
             address(scratcher),
-            ticketCost
+            baseCost
         );
 
         scratcher.giftScratchTicket(
