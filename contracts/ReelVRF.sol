@@ -136,8 +136,7 @@ contract ReelVRF is ReelNFT {
         Drawing memory newDrawing = Drawing({
             drawId: drawId,
             tokenId: tokenId,
-            reroll: false,
-            rerollNumber: 0
+            traitId: 0
         });
 
         requestIdToDrawing[requestId] = newDrawing;
@@ -149,7 +148,6 @@ contract ReelVRF is ReelNFT {
             msg.sender
         );
     }
-
 
     function fulfillRandomWords(
         uint256 _requestId,
