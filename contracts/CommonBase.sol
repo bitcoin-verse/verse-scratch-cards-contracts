@@ -4,9 +4,14 @@ pragma solidity =0.8.21;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
+import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 
 import "@chainlink/contracts/src/v0.8/interfaces/VRFCoordinatorV2Interface.sol";
 import "@chainlink/contracts/src/v0.8/vrf/VRFConsumerBaseV2.sol";
+
+
+error InvalidCost();
+error TooManyReceivers();
 
 interface ILinkToken is IERC20 {
 
@@ -19,7 +24,7 @@ interface ILinkToken is IERC20 {
         returns (bool success);
 }
 
-abstract contract CommonVRF is Ownable, VRFConsumerBaseV2 {
+abstract contract CommonBase is Ownable, VRFConsumerBaseV2, ERC721Enumerable {
 
     using SafeERC20 for IERC20;
     using SafeERC20 for ILinkToken;
@@ -38,11 +43,31 @@ abstract contract CommonVRF is Ownable, VRFConsumerBaseV2 {
     // Chainlink VRF Key Hash for RNG requests.
     bytes32 public immutable GAS_KEYHASH;
 
+    // For free giveaways maximum receivers is 50.
+    uint32 public constant MAX_LOOPS = 50;
+
     // Number of confirmations needed for RNG request.
     uint16 public constant CONFIRMATIONS_NEEDED = 3;
 
     // Higher value means more gas for callback.
     uint32 public constant CALLBACK_MAX_GAS = 2000000;
+
+    uint256 public latestDrawId;
+
+    mapping(uint256 => string) public tokenURIs;
+    mapping(uint256 => uint256) public drawIdToRequestId;
+
+    event DrawRequest(
+        uint256 indexed drawId,
+        uint256 indexed requestId,
+        address indexed requestAddress
+    );
+
+    event RequestFulfilled(
+        uint256 indexed drawId,
+        uint256 indexed requestId,
+        uint256[] indexed resultValue
+    );
 
     event WithdrawTokens(
         address indexed receiver,
