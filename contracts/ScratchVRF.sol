@@ -16,17 +16,20 @@ contract ScratchVRF is ScratchNFT {
         bytes32 _gasKeyHash,
         uint64 _subscriptionId
     )
-        ScratchNFT(
+        ERC721(
             _name,
-            _symbol,
-            _vrfCoordinatorV2Address,
-            _ticketCost,
+            _symbol
+        )
+        CommonBase(
             _linkTokenAddress,
             _verseTokenAddress,
             _gasKeyHash,
-            _subscriptionId
+            _subscriptionId,
+            _vrfCoordinatorV2Address
         )
-    {}
+    {
+        baseCost = _ticketCost;
+    }
 
     /**
      * @notice Allows to purchase scratch ticket as NFT.
