@@ -124,37 +124,6 @@ abstract contract ScratchNFT is PrizeTiers, CommonBase {
         );
     }
 
-    function ownedByAddress(
-        address _owner
-    )
-        external
-        view
-        returns (uint256[] memory)
-    {
-        uint256 ownerTicketCount = balanceOf(
-            _owner
-        );
-
-        uint256[] memory ticketIds = new uint256[](
-            ownerTicketCount
-        );
-
-        uint256 i;
-
-        for (i; i < ownerTicketCount;) {
-            ticketIds[i] = tokenOfOwnerByIndex(
-                _owner,
-                i
-            );
-
-            unchecked {
-                ++i;
-            }
-        }
-
-        return ticketIds;
-    }
-
     function _setClaimed(
         uint256 _ticketId
     )

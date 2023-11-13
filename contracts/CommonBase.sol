@@ -232,6 +232,38 @@ abstract contract CommonBase is Ownable, VRFConsumerBaseV2, ERC721Enumerable {
         );
     }
 
+    function ownedByAddress(
+        address _owner
+    )
+        external
+        view
+        returns (uint256[] memory)
+    {
+        uint256 ownerNFTCount = balanceOf(
+            _owner
+        );
+
+        uint256[] memory nftIds = new uint256[](
+            ownerNFTCount
+        );
+
+        uint256 i;
+
+        for (i; i < ownerNFTCount;) {
+
+            nftIds[i] = tokenOfOwnerByIndex(
+                _owner,
+                i
+            );
+
+            unchecked {
+                ++i;
+            }
+        }
+
+        return nftIds;
+    }
+
     /**
      * @notice Allows to avoid modulo bias for RNG.
      * @param _entropy random value passed from VRF.
