@@ -60,15 +60,17 @@ contract ReelVRF is ReelNFT {
         );
     }
 
-    function reRollTrait(
-        uint8 _traitNumber,
-        uint256 _tokenId
+    function rerollTrait(
+        uint256 _tokenId,
+        uint256 _traitId
     )
-        public
+        external
     {
-        // check if user owns the nft before rerolling
-        // currently rerolling is free, can either charge verse or use credit syste
-        require(ownerOf(_tokenId) == address(msg.sender), "only owner of NFT can reroll");
+        require(
+            ownerOf(_tokenId) == msg.sender,
+            "only owner of NFT can reroll"
+        );
+
         rerollInProgress[tokenId] = true;
 
         uint256 requestId = _requestRandomWords({
