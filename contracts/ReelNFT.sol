@@ -2,9 +2,10 @@
 
 pragma solidity =0.8.21;
 
+import "./CommonVRF.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 
-abstract contract ReelNFT is ERC721Enumerable {
+abstract contract ReelNFT is ERC721Enumerable, CommonVRF {
 
     using Strings for uint256;
 
