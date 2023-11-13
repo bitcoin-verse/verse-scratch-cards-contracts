@@ -162,7 +162,7 @@ contract ReelVRF is ReelNFT {
             _requestId
         ];
 
-        currentDraw.reroll == false
+        currentDraw.traitId == 0
             ? _initialMint(
                 currentDraw,
                 _randomWords,
