@@ -44,6 +44,11 @@ abstract contract CommonVRF is Ownable, VRFConsumerBaseV2 {
     // Higher value means more gas for callback.
     uint32 public constant CALLBACK_MAX_GAS = 2000000;
 
+    event WithdrawTokens(
+        address indexed receiver,
+        uint256 amount
+    );
+
     constructor(
         address _linkTokenAddress,
         address _verseTokenAddress,
@@ -121,6 +126,29 @@ abstract contract CommonVRF is Ownable, VRFConsumerBaseV2 {
             address(VRF_COORDINATOR),
             _linkAmount,
             abi.encode(SUBSCRIPTION_ID)
+        );
+    }
+
+    /**
+     * @notice Allows to withdraw VERSE tokens from the contract.
+     * @dev Only can be called by the contract owner.
+     */
+    function withdrawTokens()
+        external
+        onlyOwner
+    {
+        uint256 balance = VERSE_TOKEN.balanceOf(
+            address(this)
+        );
+
+        VERSE_TOKEN.safeTransfer(
+            msg.sender,
+            balance
+        );
+
+        emit WithdrawTokens(
+            msg.sender,
+            balance
         );
     }
 
