@@ -168,6 +168,7 @@ abstract contract CommonBase is Ownable, VRFConsumerBaseV2, ERC721Enumerable {
             abi.encode(SUBSCRIPTION_ID)
         );
     }
+
     function changeBaseCost(
         uint256 _newBaseCost
     )

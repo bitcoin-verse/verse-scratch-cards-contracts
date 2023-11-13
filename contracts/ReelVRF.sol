@@ -31,6 +31,18 @@ contract ReelVRF is ReelNFT {
         baseCost = _characterCost;
     }
 
+    function buyCharacter()
+        external
+    {
+        _takeTokens(
+            baseCost
+        );
+
+        _mintCharacter(
+            msg.sender
+        );
+    }
+
     /**
      * @notice Allows to gift NFT Character for free.
      * @dev Only can be called by the contract owner.
@@ -59,18 +71,6 @@ contract ReelVRF is ReelNFT {
                 ++i;
             }
         }
-    }
-
-    function buyCharacter()
-        external
-    {
-        _takeTokens(
-            baseCost
-        );
-
-        _mintCharacter(
-            msg.sender
-        );
     }
 
     function rerollTrait(
@@ -106,18 +106,6 @@ contract ReelVRF is ReelNFT {
         );
     }
 
-    function getTraits(
-        uint256 _astroId
-    )
-        external
-        view
-        returns (uint256[] memory)
-        // returns (TraitType[] memory)
-    {
-        return traits[_astroId];
-    }
-
-    // Mint a new NFT with a unique revealed property
     function _mintCharacter(
         address _receiver
     )
@@ -177,5 +165,84 @@ contract ReelVRF is ReelNFT {
                 currentDraw,
                 _randomWords
             );
+    }
+
+    function _initialMint(
+        Drawing memory currentDraw,
+        uint256[] memory _randomWords,
+        uint256 _requestId
+    )
+        internal
+    {
+        uint256[] memory numbers = new uint256[](
+            MAX_TRAITS
+        );
+
+        for (uint256 i; i < MAX_TRAITS;) {
+            numbers[i] = uniform(
+                _randomWords[i],
+                MAX_TRAITS
+            );
+            unchecked {
+                ++i;
+            }
+        }
+
+        /*
+        for (uint8 i; i < MAX_TYPES;) {
+            traits[currentDraw.astroId][TraitType(i)] = uniform(
+                _randomWords[i],
+                MAX_TRAITS
+            );
+            unchecked {
+                ++i;
+            }
+        }*/
+
+        traits[currentDraw.astroId] = numbers;
+        completed[currentDraw.astroId] = true;
+
+        emit RequestFulfilled(
+            currentDraw.drawId,
+            _requestId,
+            numbers
+        );
+    }
+
+    function _rerollTrait(
+        Drawing memory _currentDraw,
+        uint256[] memory _randomWords
+    )
+        internal
+    {
+        uint256 rolledNumber = uniform(
+            _randomWords[0],
+            MAX_TRAITS
+        );
+
+        _updateTrait(
+            _currentDraw.astroId,
+            _currentDraw.traitId,
+            rolledNumber
+        );
+
+        rerollInProgress[_currentDraw.astroId] = false;
+
+        emit RerollFulfilled(
+            _currentDraw.drawId,
+            _currentDraw.astroId,
+            _currentDraw.traitId,
+            rolledNumber
+        );
+    }
+
+    function _updateTrait(
+        uint256 _astroId,
+        uint256 _traitId,
+        uint256 _rolledNumber
+    )
+        internal
+    {
+        traits[_astroId][_traitId] = _rolledNumber;
     }
 }
