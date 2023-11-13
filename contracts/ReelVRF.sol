@@ -35,19 +35,30 @@ contract ReelVRF is ReelNFT {
         characterCost = _characterCost;
     }
 
-    function giftCharactersForFree(
-        address[] memory receivers
+    /**
+     * @notice Allows to gift NFT Character for free.
+     * @dev Only can be called by the contract owner.
+     * @param _receivers address for gifted NFTs.
+     */
+    function giftForFree(
+        address[] memory _receivers
     )
         external
         onlyOwner
     {
         uint256 i;
-        uint256 total = receivers.length;
+        uint256 loops = _receivers.length;
 
-        for (i; i < total;) {
+        if (loops > MAX_LOOPS) {
+            revert TooManyReceivers();
+        }
+
+        for (i; i < loops;) {
+
             _mintCharacter(
-                receivers[i]
+                _receivers[i]
             );
+
             unchecked {
                 ++i;
             }
@@ -79,25 +90,27 @@ contract ReelVRF is ReelNFT {
             "only owner of NFT can reroll"
         );
 
-        rerollInProgress[tokenId] = true;
+        rerollInProgress[_tokenId] = true;
 
         uint256 requestId = _requestRandomWords({
             _wordCount: 1
         });
 
-        ++drawId;
+        unchecked {
+            ++latestDrawId;
+        }
 
         Drawing memory newDrawing = Drawing({
-            drawId: drawId,
+            drawId: latestDrawId,
             tokenId: _tokenId,
             traitId: _traitId
         });
 
         requestIdToDrawing[requestId] = newDrawing;
-        drawIdToRequestId[drawId] = requestId;
+        drawIdToRequestId[latestDrawId] = requestId;
 
         emit DrawRequest(
-            drawId,
+            latestDrawId,
             requestId,
             msg.sender
         );
@@ -120,30 +133,34 @@ contract ReelVRF is ReelNFT {
     )
         internal
     {
-        ++tokenId;
+        unchecked {
+            ++latestCharacterId;
+        }
 
         _mint(
             _receiver,
-            tokenId
+            latestCharacterId
         );
 
         uint256 requestId = _requestRandomWords({
             _wordCount: 6
         });
 
-        ++drawId;
+        unchecked {
+            ++latestDrawId;
+        }
 
         Drawing memory newDrawing = Drawing({
-            drawId: drawId,
-            tokenId: tokenId,
+            drawId: latestDrawId,
+            tokenId: latestCharacterId,
             traitId: 0
         });
 
         requestIdToDrawing[requestId] = newDrawing;
-        drawIdToRequestId[drawId] = requestId;
+        drawIdToRequestId[latestDrawId] = requestId;
 
         emit DrawRequest(
-            drawId,
+            latestDrawId,
             requestId,
             msg.sender
         );

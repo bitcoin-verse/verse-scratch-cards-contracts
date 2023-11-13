@@ -22,9 +22,7 @@ abstract contract ReelNFT is ERC721Enumerable, CommonBase {
     );
 
     uint256 constant MAX_TRAITS = 15;
-
-    uint256 public tokenId;
-    uint256 public drawId;
+    uint256 public latestCharacterId;
 
     struct Drawing {
         uint256 drawId;
