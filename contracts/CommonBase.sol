@@ -51,6 +51,10 @@ abstract contract CommonBase is Ownable, VRFConsumerBaseV2, ERC721Enumerable {
     // Higher value means more gas for callback.
     uint32 public constant CALLBACK_MAX_GAS = 2000000;
 
+    // How much to charge for base service.
+    uint256 public baseCost;
+
+    // Keeps track of latest drawId to VRF.
     uint256 public latestDrawId;
 
     mapping(uint256 => string) public tokenURIs;
@@ -163,6 +167,23 @@ abstract contract CommonBase is Ownable, VRFConsumerBaseV2, ERC721Enumerable {
             abi.encode(SUBSCRIPTION_ID)
         );
     }
+    function changeBaseCost(
+        uint256 _newBaseCost
+    )
+        external
+        onlyOwner
+    {
+        if (_newBaseCost == 0) {
+            revert InvalidCost();
+        }
+
+        if (_newBaseCost == baseCost) {
+            revert InvalidCost();
+        }
+
+        baseCost = _newBaseCost;
+    }
+
 
     /**
      * @notice Allows to withdraw VERSE tokens from the contract.

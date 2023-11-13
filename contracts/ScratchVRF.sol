@@ -248,21 +248,4 @@ contract ScratchVRF is ScratchNFT {
             prizeWei
         );
     }
-
-    function changeCost(
-        uint256 _newCost
-    )
-        external
-        onlyOwner
-    {
-        if (_newCost == 0) {
-            revert InvalidCost();
-        }
-
-        if (_newCost == ticketCost) {
-            revert InvalidCost();
-        }
-
-        ticketCost = _newCost;
-    }
 }

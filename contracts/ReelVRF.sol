@@ -6,8 +6,6 @@ import "./ReelNFT.sol";
 
 contract ReelVRF is ReelNFT {
 
-    uint256 public characterCost;
-
     constructor(
         string memory _name,
         string memory _symbol,
