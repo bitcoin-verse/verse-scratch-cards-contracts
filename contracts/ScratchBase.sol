@@ -39,11 +39,6 @@ abstract contract ScratchBase is ScratchNFT, PrizeTiers, CommonVRF {
         uint256 amount
     );
 
-    event WithdrawTokens(
-        address indexed receiver,
-        uint256 amount
-    );
-
     event DrawRequest(
         uint256 indexed drawId,
         uint256 indexed requestId,
