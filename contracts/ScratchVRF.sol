@@ -2,6 +2,7 @@
 
 pragma solidity =0.8.21;
 
+import "./ScratchNFT.sol";
 
 contract ScratchVRF is ScratchNFT {
 
@@ -106,24 +107,24 @@ contract ScratchVRF is ScratchNFT {
     )
         internal
     {
-        uint256 requestId = _requestRandomWords(
-            NUM_WORDS
-        );
+        uint256 requestId = _requestRandomWords({
+            _wordCount: 2
+        });
 
         Drawing memory newDrawing = Drawing({
-            drawId: drawCount,
+            drawId: latestDrawId,
             ticketReceiver: _receiver
         });
 
         unchecked {
-            ++drawCount;
+            ++latestDrawId;
         }
 
-        drawIdToRequestId[drawCount] = requestId;
+        drawIdToRequestId[latestDrawId] = requestId;
         requestIdToDrawing[requestId] = newDrawing;
 
         emit DrawRequest(
-            drawCount,
+            latestDrawId,
             requestId,
             msg.sender
         );
@@ -173,7 +174,8 @@ contract ScratchVRF is ScratchNFT {
         emit RequestFulfilled(
             currentDraw.drawId,
             _requestId,
-            randomNumber
+            // @TODO: replace with randomEdition and randomNumber
+            _randomWords
         );
     }
 

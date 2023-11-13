@@ -2,18 +2,30 @@
 
 pragma solidity =0.8.21;
 
-import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
+import "./CommonBase.sol";
+import "./PrizeTiers.sol";
 
+error AlreadyClaimed();
+error NotEnoughFunds();
 error InvalidTicketId();
 
-contract ScratchNFT is ERC721Enumerable {
+abstract contract ScratchNFT is PrizeTiers, CommonBase {
 
     using Strings for uint256;
 
+    uint256 public ticketCost;
+    uint256 public latestTicketId;
+
     mapping(uint256 => bool) public claimed;
-    mapping(uint256 => string) public tokenURIs;
-    mapping(uint256 => uint256) public editions;
     mapping(uint256 => uint256) public prizes;
+    mapping(uint256 => uint256) public editions;
+
+    struct Drawing {
+        uint256 drawId;
+        address ticketReceiver;
+    }
+
+    mapping(uint256 => Drawing) public requestIdToDrawing;
 
     event SetClaimed(
         uint256 indexed ticketId
@@ -21,19 +33,40 @@ contract ScratchNFT is ERC721Enumerable {
 
     event MintCompleted(
         uint256 indexed ticketId,
-        uint256 edition,
+        uint256 indexed edition,
         uint256 prize
+    );
+
+    event PrizeClaimed(
+        uint256 indexed ticketId,
+        address indexed receiver,
+        uint256 amount
     );
 
     constructor(
         string memory _name,
-        string memory _symbol
+        string memory _symbol,
+        address _vrfCoordinatorV2Address,
+        uint256 _ticketCost,
+        address _linkTokenAddress,
+        address _verseTokenAddress,
+        bytes32 _gasKeyHash,
+        uint64 _subscriptionId
     )
         ERC721(
             _name,
             _symbol
         )
-    {}
+        CommonBase(
+            _linkTokenAddress,
+            _verseTokenAddress,
+            _gasKeyHash,
+            _subscriptionId,
+            _vrfCoordinatorV2Address
+        )
+    {
+        ticketCost = _ticketCost;
+    }
 
     function _mintTicket(
         uint256 _ticketId,
