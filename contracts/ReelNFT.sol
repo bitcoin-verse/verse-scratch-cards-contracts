@@ -26,7 +26,7 @@ abstract contract ReelNFT is ERC721Enumerable, CommonBase {
 
     struct Drawing {
         uint256 drawId;
-        uint256 tokenId;
+        uint256 astroId;
         uint256 traitId;
     }
 
@@ -37,34 +37,23 @@ abstract contract ReelNFT is ERC721Enumerable, CommonBase {
 
     mapping(uint256 => Drawing) public requestIdToDrawing;
 
-    constructor(
-        string memory _name,
-        string memory _symbol
-    )
-        ERC721(
-            _name,
-            _symbol
-        )
-    {}
-
     function tokenURI(
-        uint256 _tokenId
+        uint256 _astroId
     )
         public
         view
         override
         returns (string memory)
     {
-        require(
-            _exists(_tokenId),
-            "Token does not exist"
-        );
+        if (_exists(_astroId) == false) {
+            revert InvalidId();
+        }
 
         string memory baseURI = _baseURI();
 
         return string(abi.encodePacked(
             baseURI,
-            _tokenId.toString()
+            _astroId.toString()
         ));
     }
 
@@ -91,7 +80,7 @@ abstract contract ReelNFT is ERC721Enumerable, CommonBase {
 
         /*
         for (uint8 i; i < MAX_TYPES;) {
-            traits[currentDraw.tokenId][TraitType(i)] = uniform(
+            traits[currentDraw.astroId][TraitType(i)] = uniform(
                 _randomWords[i],
                 MAX_TRAITS
             );
@@ -100,8 +89,8 @@ abstract contract ReelNFT is ERC721Enumerable, CommonBase {
             }
         }*/
 
-        traits[currentDraw.tokenId] = numbers;
-        completed[currentDraw.tokenId] = true;
+        traits[currentDraw.astroId] = numbers;
+        completed[currentDraw.astroId] = true;
 
         emit RequestFulfilled(
             currentDraw.drawId,
@@ -122,23 +111,23 @@ abstract contract ReelNFT is ERC721Enumerable, CommonBase {
         );
 
         _updateTrait(
-            _currentDraw.tokenId,
+            _currentDraw.astroId,
             _currentDraw.traitId,
             rolledNumber
         );
 
-        rerollInProgress[_currentDraw.tokenId] = false;
+        rerollInProgress[_currentDraw.astroId] = false;
 
         emit RerollFulfilled(
             _currentDraw.drawId,
-            _currentDraw.tokenId,
+            _currentDraw.astroId,
             _currentDraw.traitId,
             rolledNumber
         );
     }
 
     function _updateTrait(
-        uint256 _tokenId,
+        uint256 _astroId,
         uint256 _traitId,
         uint256 _rolledNumber
     )
@@ -149,7 +138,7 @@ abstract contract ReelNFT is ERC721Enumerable, CommonBase {
 
     event RerollFulfilled(
         uint256 indexed drawId,
-        uint256 indexed tokenId,
+        uint256 indexed astroId,
         uint256 traitNumber,
         uint256 rolledNumber
     );
