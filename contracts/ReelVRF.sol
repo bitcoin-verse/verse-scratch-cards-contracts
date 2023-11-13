@@ -24,7 +24,7 @@ contract ReelVRF is ReelNFT {
             _name,
             _symbol
         )
-        CommonVRF(
+        CommonBase(
             _linkTokenAddress,
             _verseTokenAddress,
             _gasKeyHash,

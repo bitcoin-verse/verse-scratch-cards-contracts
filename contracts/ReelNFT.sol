@@ -3,9 +3,8 @@
 pragma solidity =0.8.21;
 
 import "./CommonVRF.sol";
-import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 
-abstract contract ReelNFT is ERC721Enumerable, CommonVRF {
+abstract contract ReelNFT is ERC721Enumerable, CommonBase {
 
     using Strings for uint256;
 
@@ -167,18 +166,6 @@ abstract contract ReelNFT is ERC721Enumerable, CommonVRF {
 
         return tokenIds;
     }
-
-    event DrawRequest(
-        uint256 indexed drawId,
-        uint256 indexed requestId,
-        address indexed ticketReceiver
-    );
-
-    event RequestFulfilled(
-        uint256 indexed drawId,
-        uint256 indexed requestId,
-        uint256[] numbers
-    );
 
     event RerollFulfilled(
         uint256 indexed drawId,
