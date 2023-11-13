@@ -80,6 +80,7 @@ contract ReelVRF is ReelNFT {
         uint256 _traitId
     )
         external
+        onlyTokenOwner(_astroId)
     {
         require(
             ownerOf(_tokenId) == msg.sender,

@@ -210,6 +210,7 @@ contract ScratchVRF is ScratchNFT {
         uint256 _ticketId
     )
         external
+        onlyTokenOwner(_ticketId)
     {
         require(
             ownerOf(_ticketId) == msg.sender,

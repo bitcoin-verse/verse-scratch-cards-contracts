@@ -73,6 +73,17 @@ abstract contract CommonBase is Ownable, VRFConsumerBaseV2, ERC721Enumerable {
         uint256 amount
     );
 
+    modifier onlyTokenOwner(
+        uint256 _tokenId
+    )
+    {
+        require(
+            ownerOf(_tokenId) == msg.sender,
+            "CommonBase: INVALID_OWNER"
+        );
+        _;
+    }
+
     constructor(
         address _linkTokenAddress,
         address _verseTokenAddress,
