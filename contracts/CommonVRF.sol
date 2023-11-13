@@ -86,6 +86,21 @@ abstract contract CommonVRF is Ownable, VRFConsumerBaseV2 {
         );
     }
 
+    function _requestRandomWords(
+        uint32 _wordCount
+    )
+        internal
+        returns (uint256 requestId)
+    {
+        requestId = VRF_COORDINATOR.requestRandomWords(
+            GAS_KEYHASH,
+            SUBSCRIPTION_ID,
+            CONFIRMATIONS_NEEDED,
+            CALLBACK_MAX_GAS,
+            _wordCount
+        );
+    }
+
     /**
      * @notice Allows load {$LINK} tokens to subscription.
      * @dev Can be called with anyone, who wants to donate.
