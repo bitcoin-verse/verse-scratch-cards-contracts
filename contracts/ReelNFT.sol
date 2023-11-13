@@ -108,7 +108,7 @@ abstract contract ReelNFT is ERC721Enumerable, CommonVRF {
         traits[currentDraw.tokenId] = numbers;
         completed[currentDraw.tokenId] = true;
 
-        emit requestFulfilled(
+        emit RequestFulfilled(
             currentDraw.drawId,
             _requestId,
             numbers
@@ -121,7 +121,7 @@ abstract contract ReelNFT is ERC721Enumerable, CommonVRF {
     )
         internal
     {
-        uint32 rolledNumber = uniform(
+        uint256 rolledNumber = uniform(
             _randomWords[0],
             MAX_TRAITS
         );
@@ -134,7 +134,7 @@ abstract contract ReelNFT is ERC721Enumerable, CommonVRF {
 
         rerollInProgress[_currentDraw.tokenId] = false;
 
-        emit rerollFulfilled(
+        emit RerollFulfilled(
             _currentDraw.drawId,
             _currentDraw.tokenId,
             _currentDraw.traitId,
@@ -174,13 +174,13 @@ abstract contract ReelNFT is ERC721Enumerable, CommonVRF {
         address indexed ticketReceiver
     );
 
-    event requestFulfilled(
+    event RequestFulfilled(
         uint256 indexed drawId,
         uint256 indexed requestId,
         uint256[] numbers
     );
 
-    event rerollFulfilled(
+    event RerollFulfilled(
         uint256 indexed drawId,
         uint256 indexed tokenId,
         uint256 traitNumber,
