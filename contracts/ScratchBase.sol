@@ -11,7 +11,7 @@ error AlreadyClaimed();
 error NotEnoughFunds();
 error TooManyReceivers();
 
-abstract contract ScratchBase is CommonVRF, ScratchNFT, PrizeTiers {
+abstract contract ScratchBase is ScratchNFT, PrizeTiers, CommonVRF {
 
     // For free giveaways maximum receivers is 50.
     uint32 public constant MAX_LOOPS = 50;
@@ -79,22 +79,5 @@ abstract contract ScratchBase is CommonVRF, ScratchNFT, PrizeTiers {
         )
     {
         ticketCost = _ticketCost;
-    }
-
-    function changeTicketCost(
-        uint256 _newTicketCost
-    )
-        external
-        onlyOwner
-    {
-        if (_newTicketCost == 0) {
-            revert InvalidCost();
-        }
-
-        if (_newTicketCost == ticketCost) {
-            revert InvalidCost();
-        }
-
-        ticketCost = _newTicketCost;
     }
 }

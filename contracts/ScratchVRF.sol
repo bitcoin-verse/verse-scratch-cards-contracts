@@ -252,26 +252,20 @@ contract ScratchVRF is ScratchBase {
         );
     }
 
-    /**
-     * @notice Allows to withdraw VERSE tokens from the contract.
-     * @dev Only can be called by the contract owner.
-     */
-    function withdrawTokens()
+    function changeTicketCost(
+        uint256 _newTicketCost
+    )
         external
         onlyOwner
     {
-        uint256 balance = VERSE_TOKEN.balanceOf(
-            address(this)
-        );
+        if (_newTicketCost == 0) {
+            revert InvalidCost();
+        }
 
-        VERSE_TOKEN.safeTransfer(
-            msg.sender,
-            balance
-        );
+        if (_newTicketCost == ticketCost) {
+            revert InvalidCost();
+        }
 
-        emit WithdrawTokens(
-            msg.sender,
-            balance
-        );
+        ticketCost = _newTicketCost;
     }
 }
