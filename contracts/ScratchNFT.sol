@@ -2,38 +2,41 @@
 
 pragma solidity =0.8.21;
 
-import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
+import "./CommonBase.sol";
+import "./PrizeTiers.sol";
 
-error InvalidTicketId();
-
-contract ScratchNFT is ERC721Enumerable {
+abstract contract ScratchNFT is PrizeTiers, CommonBase {
 
     using Strings for uint256;
 
+    uint256 public latestTicketId;
+
     mapping(uint256 => bool) public claimed;
-    mapping(uint256 => string) public tokenURIs;
-    mapping(uint256 => uint256) public editions;
     mapping(uint256 => uint256) public prizes;
+    mapping(uint256 => uint256) public editions;
+
+    struct Drawing {
+        uint256 drawId;
+        address ticketReceiver;
+    }
+
+    mapping(uint256 => Drawing) public requestIdToDrawing;
 
     event SetClaimed(
-        uint256 ticketId
+        uint256 indexed ticketId
     );
 
     event MintCompleted(
         uint256 indexed ticketId,
-        uint256 edition,
+        uint256 indexed edition,
         uint256 prize
     );
 
-    constructor(
-        string memory _name,
-        string memory _symbol
-    )
-        ERC721(
-            _name,
-            _symbol
-        )
-    {}
+    event PrizeClaimed(
+        uint256 indexed ticketId,
+        address indexed receiver,
+        uint256 amount
+    );
 
     function _mintTicket(
         uint256 _ticketId,
@@ -67,7 +70,7 @@ contract ScratchNFT is ERC721Enumerable {
         returns (string memory)
     {
         if (_exists(_ticketId) == false) {
-            revert InvalidTicketId();
+            revert InvalidId();
         }
 
         string memory baseURI = _baseURI();
@@ -91,44 +94,13 @@ contract ScratchNFT is ERC721Enumerable {
         );
     }
 
-    function ownedByAddress(
-        address _owner
-    )
-        external
-        view
-        returns (uint256[] memory)
-    {
-        uint256 ownerTicketCount = balanceOf(
-            _owner
-        );
-
-        uint256[] memory ticketIds = new uint256[](
-            ownerTicketCount
-        );
-
-        uint256 i;
-
-        for (i; i < ownerTicketCount;) {
-            ticketIds[i] = tokenOfOwnerByIndex(
-                _owner,
-                i
-            );
-
-            unchecked {
-                ++i;
-            }
-        }
-
-        return ticketIds;
-    }
-
     function _setClaimed(
         uint256 _ticketId
     )
         internal
     {
         if (_exists(_ticketId) == false) {
-            revert InvalidTicketId();
+            revert InvalidId();
         }
 
         claimed[_ticketId] = true;

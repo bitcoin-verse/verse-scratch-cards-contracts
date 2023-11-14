@@ -1,68 +1,248 @@
-// SPDX-License-Identifier: MIT
-pragma solidity =0.8.21;
+// SPDX-License-Identifier: -- BCOM --
 
-import "@openzeppelin/contracts/access/Ownable.sol";
-import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
-import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
+pragma solidity =0.8.21;
 
 import "./ReelNFT.sol";
 
-contract VerseReel is Ownable
-{
-    using SafeERC20 for IERC20;
-
-    VerseReelNFT nftContract;
-
-    uint256 public characterCost;
-    address constant TOKEN_ADDRESS = 0xc708D6F2153933DAA50B2D0758955Be0A93A8FEc;
+contract ReelVRF is ReelNFT {
 
     constructor(
+        string memory _name,
+        string memory _symbol,
         uint256 _characterCost,
-        address _vrfCoordinatorV2Address
+        address _vrfCoordinatorV2Address,
+        address _linkTokenAddress,
+        address _verseTokenAddress,
+        bytes32 _gasKeyHash,
+        uint64 _subscriptionId
     )
+        ERC721(
+            _name,
+            _symbol
+        )
+        CommonBase(
+            _linkTokenAddress,
+            _verseTokenAddress,
+            _gasKeyHash,
+            _subscriptionId,
+            _vrfCoordinatorV2Address
+        )
     {
-        nftContract = new VerseReelNFT(
-            _vrfCoordinatorV2Address,
-            "CHAR",
-            "CHR"
-        );
-
-        characterCost = _characterCost;
+        baseCost = _characterCost;
     }
 
-    function bulkSend(
-        address[] memory receivers
+    function buyCharacter()
+        external
+    {
+        _takeTokens(
+            baseCost
+        );
+
+        _mintCharacter(
+            msg.sender
+        );
+    }
+
+    /**
+     * @notice Allows to gift NFT Character for free.
+     * @dev Only can be called by the contract owner.
+     * @param _receivers address for gifted NFTs.
+     */
+    function giftForFree(
+        address[] memory _receivers
     )
-        public
+        external
         onlyOwner
     {
-        for(uint i; i < receivers.length; i++) {
-            nftContract.mint(receivers[i]);
+        uint256 i;
+        uint256 loops = _receivers.length;
+
+        if (loops > MAX_LOOPS) {
+            revert TooManyReceivers();
+        }
+
+        for (i; i < loops;) {
+
+            _mintCharacter(
+                _receivers[i]
+            );
+
+            unchecked {
+                ++i;
+            }
         }
     }
 
-    function buyCharacter(
-        address receiver
+    function rerollTrait(
+        uint256 _astroId,
+        uint256 _traitId
     )
-        public
+        external
+        onlyTokenOwner(_astroId)
     {
-        // DISABLED FOR TESTING
-        // IERC20(TOKEN_ADDRESS).safeTransferFrom( msg.sender, address(this), characterCost * 1 ether);
+        rerollInProgress[_astroId] = true;
 
-        address _ticketReceiver = msg.sender;
-        if (receiver != address(0)) _ticketReceiver = receiver;
+        uint256 requestId = _requestRandomWords({
+            _wordCount: 1
+        });
 
-        nftContract.mint(
-            _ticketReceiver
+        unchecked {
+            ++latestDrawId;
+        }
+
+        Drawing memory newDrawing = Drawing({
+            drawId: latestDrawId,
+            astroId: _astroId,
+            traitId: _traitId
+        });
+
+        requestIdToDrawing[requestId] = newDrawing;
+        drawIdToRequestId[latestDrawId] = requestId;
+
+        emit DrawRequest(
+            latestDrawId,
+            requestId,
+            msg.sender
         );
     }
 
-    function withdraw()
-        public
-        onlyOwner
+    function _mintCharacter(
+        address _receiver
+    )
+        internal
     {
-        uint256 balance = IERC20(TOKEN_ADDRESS).balanceOf(address(this));
-        require(balance > 0, "No tokens to withdraw");
-        IERC20(TOKEN_ADDRESS).safeTransfer(owner(), balance);
+        unchecked {
+            ++latestCharacterId;
+        }
+
+        _mint(
+            _receiver,
+            latestCharacterId
+        );
+
+        uint256 requestId = _requestRandomWords({
+            _wordCount: 6
+        });
+
+        unchecked {
+            ++latestDrawId;
+        }
+
+        Drawing memory newDrawing = Drawing({
+            drawId: latestDrawId,
+            astroId: latestCharacterId,
+            traitId: 0
+        });
+
+        requestIdToDrawing[requestId] = newDrawing;
+        drawIdToRequestId[latestDrawId] = requestId;
+
+        emit DrawRequest(
+            latestDrawId,
+            requestId,
+            msg.sender
+        );
+    }
+
+    function fulfillRandomWords(
+        uint256 _requestId,
+        uint256[] memory _randomWords
+    )
+        internal
+        override
+    {
+        Drawing memory currentDraw = requestIdToDrawing[
+            _requestId
+        ];
+
+        currentDraw.traitId == 0
+            ? _initialMint(
+                currentDraw,
+                _randomWords,
+                _requestId
+            )
+            : _rerollTrait(
+                currentDraw,
+                _randomWords
+            );
+    }
+
+    function _initialMint(
+        Drawing memory currentDraw,
+        uint256[] memory _randomWords,
+        uint256 _requestId
+    )
+        internal
+    {
+        uint256[] memory numbers = new uint256[](
+            MAX_TRAITS
+        );
+
+        for (uint256 i; i < MAX_TRAITS;) {
+            numbers[i] = uniform(
+                _randomWords[i],
+                MAX_TRAITS
+            );
+            unchecked {
+                ++i;
+            }
+        }
+
+        /*
+        for (uint8 i; i < MAX_TYPES;) {
+            traits[currentDraw.astroId][TraitType(i)] = uniform(
+                _randomWords[i],
+                MAX_TRAITS
+            );
+            unchecked {
+                ++i;
+            }
+        }*/
+
+        traits[currentDraw.astroId] = numbers;
+        completed[currentDraw.astroId] = true;
+
+        emit RequestFulfilled(
+            currentDraw.drawId,
+            _requestId,
+            numbers
+        );
+    }
+
+    function _rerollTrait(
+        Drawing memory _currentDraw,
+        uint256[] memory _randomWords
+    )
+        internal
+    {
+        uint256 rolledNumber = uniform(
+            _randomWords[0],
+            MAX_TRAITS
+        );
+
+        _updateTrait(
+            _currentDraw.astroId,
+            _currentDraw.traitId,
+            rolledNumber
+        );
+
+        rerollInProgress[_currentDraw.astroId] = false;
+
+        emit RerollFulfilled(
+            _currentDraw.drawId,
+            _currentDraw.astroId,
+            _currentDraw.traitId,
+            rolledNumber
+        );
+    }
+
+    function _updateTrait(
+        uint256 _astroId,
+        uint256 _traitId,
+        uint256 _rolledNumber
+    )
+        internal
+    {
+        traits[_astroId][_traitId] = _rolledNumber;
     }
 }

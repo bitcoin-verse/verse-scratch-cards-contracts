@@ -2,12 +2,12 @@
 
 pragma solidity =0.8.21;
 
-import "./ScratchBase.sol";
+import "./ScratchNFT.sol";
 
-contract ScratchVRF is ScratchBase {
+error AlreadyClaimed();
+error NotEnoughFunds();
 
-    using SafeERC20 for IERC20;
-    using SafeERC20 for ILinkToken;
+contract ScratchVRF is ScratchNFT {
 
     constructor(
         string memory _name,
@@ -19,17 +19,20 @@ contract ScratchVRF is ScratchBase {
         bytes32 _gasKeyHash,
         uint64 _subscriptionId
     )
-        ScratchBase(
+        ERC721(
             _name,
-            _symbol,
-            _vrfCoordinatorV2Address,
-            _ticketCost,
+            _symbol
+        )
+        CommonBase(
             _linkTokenAddress,
             _verseTokenAddress,
             _gasKeyHash,
-            _subscriptionId
+            _subscriptionId,
+            _vrfCoordinatorV2Address
         )
-    {}
+    {
+        baseCost = _ticketCost;
+    }
 
     /**
      * @notice Allows to purchase scratch ticket as NFT.
@@ -61,10 +64,8 @@ contract ScratchVRF is ScratchBase {
     )
         internal
     {
-        VERSE_TOKEN.safeTransferFrom(
-            msg.sender,
-            address(this),
-            ticketCost
+        _takeTokens(
+            baseCost
         );
 
         _drawTicketRequest(
@@ -107,28 +108,24 @@ contract ScratchVRF is ScratchBase {
     )
         internal
     {
-        uint256 requestId = VRF_COORDINATOR.requestRandomWords(
-            GAS_KEYHASH,
-            SUBSCRIPTION_ID,
-            CONFIRMATIONS_NEEDED,
-            CALLBACK_MAX_GAS,
-            NUM_WORDS
-        );
+        uint256 requestId = _requestRandomWords({
+            _wordCount: 2
+        });
 
         Drawing memory newDrawing = Drawing({
-            drawId: drawCount,
+            drawId: latestDrawId,
             ticketReceiver: _receiver
         });
 
         unchecked {
-            ++drawCount;
+            ++latestDrawId;
         }
 
-        drawIdToRequestId[drawCount] = requestId;
+        drawIdToRequestId[latestDrawId] = requestId;
         requestIdToDrawing[requestId] = newDrawing;
 
         emit DrawRequest(
-            drawCount,
+            latestDrawId,
             requestId,
             msg.sender
         );
@@ -178,7 +175,8 @@ contract ScratchVRF is ScratchBase {
         emit RequestFulfilled(
             currentDraw.drawId,
             _requestId,
-            randomNumber
+            // @TODO: replace with randomEdition and randomNumber
+            _randomWords
         );
     }
 
@@ -218,12 +216,8 @@ contract ScratchVRF is ScratchBase {
         uint256 _ticketId
     )
         external
+        onlyTokenOwner(_ticketId)
     {
-        require(
-            ownerOf(_ticketId) == msg.sender,
-            "ScratchVRF: INVALID_TICKET_OWNER"
-        );
-
         if (claimed[_ticketId] == true) {
             revert AlreadyClaimed();
         }
@@ -244,7 +238,7 @@ contract ScratchVRF is ScratchBase {
             revert NotEnoughFunds();
         }
 
-        VERSE_TOKEN.safeTransfer(
+        _giveTokens(
             msg.sender,
             prizeWei
         );
@@ -253,52 +247,6 @@ contract ScratchVRF is ScratchBase {
             _ticketId,
             msg.sender,
             prizeWei
-        );
-    }
-
-    /**
-     * @notice Allows to withdraw VERSE tokens from the contract.
-     * @dev Only can be called by the contract owner.
-     */
-    function withdrawTokens()
-        external
-        onlyOwner
-    {
-        uint256 balance = VERSE_TOKEN.balanceOf(
-            address(this)
-        );
-
-        VERSE_TOKEN.safeTransfer(
-            msg.sender,
-            balance
-        );
-
-        emit WithdrawTokens(
-            msg.sender,
-            balance
-        );
-    }
-
-    /**
-     * @notice Allows load {$LINK} tokens to subscription.
-     * @dev Can be called with anyone, who wants to donate.
-     * @param _linkAmount how much to load to subscription.
-     */
-    function loadSubscription(
-        uint256 _linkAmount
-    )
-        external
-    {
-        LINK_TOKEN.safeTransferFrom(
-            msg.sender,
-            address(this),
-            _linkAmount
-        );
-
-        LINK_TOKEN.transferAndCall(
-            address(VRF_COORDINATOR),
-            _linkAmount,
-            abi.encode(SUBSCRIPTION_ID)
         );
     }
 }
