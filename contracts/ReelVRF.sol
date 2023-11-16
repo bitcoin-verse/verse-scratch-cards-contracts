@@ -263,4 +263,12 @@ contract ReelVRF is ReelNFT, CommonVRF {
     {
         traits[_astroId][_traitId] = _rolledNumber;
     }
+
+    function _increaseDrawId()
+        internal
+    {
+        unchecked {
+            ++latestDrawId;
+        }
+    }
 }
