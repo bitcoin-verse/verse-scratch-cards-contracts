@@ -2,6 +2,7 @@
 
 pragma solidity =0.8.21;
 
+import "./CommonVRF.sol";
 import "./ReelNFT.sol";
 
 contract ReelVRF is ReelNFT, CommonVRF {
