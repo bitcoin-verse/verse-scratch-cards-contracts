@@ -34,6 +34,9 @@ abstract contract ReelNFT is CommonNFT {
         uint256 astroId;
         uint256 traitId;
     }
+    // @TODO: ex.completed mapping, can delete this mapping
+    // this mapping is not needed, can use checkIfTokenExists
+    // or can rely on traits mapping to determine if token exists.
 
     mapping(uint256 => Drawing) public requestIdToDrawing;
 

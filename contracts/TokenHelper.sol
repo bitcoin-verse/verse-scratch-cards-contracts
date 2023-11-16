@@ -21,7 +21,8 @@ contract TokenHelper {
     using SafeERC20 for IERC20;
 
     /**
-     * @notice Allows to transfer tokens to receiver.
+     * @notice Allows to transfer tokens
+     * from this contract to a receiver.
      */
     function _giveTokens(
         IERC20 _token,
@@ -37,7 +38,8 @@ contract TokenHelper {
     }
 
     /**
-     * @notice Allows to transfer tokens from caller.
+     * @notice Allows to transfer tokens
+     * from the caller to this contract.
      */
     function _takeTokens(
         IERC20 _token,
