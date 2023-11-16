@@ -100,17 +100,44 @@ contract ReelVRF is ReelNFT, CommonVRF {
     {
         rerollInProgress[_astroId] = true;
 
-        uint256 requestId = _requestRandomWords({
+        _makeRequest({
+            _traitId: _traitId,
             _wordCount: 1
         });
+    }
 
-        unchecked {
-            ++latestDrawId;
-        }
+    function _mintCharacter(
+        address _receiver
+    )
+        internal
+    {
+        _mint(
+            _receiver,
+            _increaseCharacterId()
+        );
+
+        _makeRequest({
+            _traitId: 0,
+            _wordCount: 6
+        });
+    }
+
+
+    function _makeRequest(
+        uint32 _wordCount,
+        uint256 _traitId
+    )
+        internal
+    {
+        uint256 requestId = _requestRandomWords(
+            _wordCount
+        );
+
+        _increaseDrawId();
 
         Drawing memory newDrawing = Drawing({
             drawId: latestDrawId,
-            astroId: _astroId,
+            astroId: latestCharacterId,
             traitId: _traitId
         });
 
@@ -124,43 +151,6 @@ contract ReelVRF is ReelNFT, CommonVRF {
         );
     }
 
-    function _mintCharacter(
-        address _receiver
-    )
-        internal
-    {
-        unchecked {
-            ++latestCharacterId;
-        }
-
-        _mint(
-            _receiver,
-            latestCharacterId
-        );
-
-        uint256 requestId = _requestRandomWords({
-            _wordCount: 6
-        });
-
-        unchecked {
-            ++latestDrawId;
-        }
-
-        Drawing memory newDrawing = Drawing({
-            drawId: latestDrawId,
-            astroId: latestCharacterId,
-            traitId: 0
-        });
-
-        requestIdToDrawing[requestId] = newDrawing;
-        drawIdToRequestId[latestDrawId] = requestId;
-
-        emit DrawRequest(
-            latestDrawId,
-            requestId,
-            msg.sender
-        );
-    }
 
     function fulfillRandomWords(
         uint256 _requestId,
