@@ -22,23 +22,14 @@ abstract contract ReelNFT is CommonNFT {
     );
 
     uint256 constant MAX_TRAITS = 15;
-
     uint256 public latestCharacterId;
 
-    mapping(uint256 => bool) public completed;
-    mapping(uint256 => bool) public rerollInProgress;
-    mapping(uint256 => uint256[]) public traits;
-
-    struct Drawing {
-        uint256 drawId;
-        uint256 astroId;
-        uint256 traitId;
-    }
     // @TODO: ex.completed mapping, can delete this mapping
     // this mapping is not needed, can use checkIfTokenExists
     // or can rely on traits mapping to determine if token exists.
 
-    mapping(uint256 => Drawing) public requestIdToDrawing;
+    mapping(uint256 => bool) public minted;
+    mapping(uint256 => uint256[]) public traits;
 
     function tokenURI(
         uint256 _astroId

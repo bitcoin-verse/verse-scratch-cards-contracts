@@ -7,12 +7,22 @@ import "./ReelNFT.sol";
 
 contract ReelVRF is ReelNFT, CommonVRF {
 
+    struct Drawing {
+        uint256 drawId;
+        uint256 astroId;
+        uint256 traitId;
+    }
+
+    mapping(uint256 => bool) public rerollInProgress;
+    mapping(uint256 => Drawing) public requestIdToDrawing;
+
     event RerollFulfilled(
         uint256 indexed drawId,
         uint256 indexed astroId,
         uint256 traitNumber,
         uint256 rolledNumber
     );
+
     constructor(
         string memory _name,
         string memory _symbol,
@@ -207,8 +217,8 @@ contract ReelVRF is ReelNFT, CommonVRF {
             }
         }*/
 
+        minted[currentDraw.astroId] = true;
         traits[currentDraw.astroId] = numbers;
-        completed[currentDraw.astroId] = true;
 
         emit RequestFulfilled(
             currentDraw.drawId,
