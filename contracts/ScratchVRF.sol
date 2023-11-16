@@ -2,12 +2,13 @@
 
 pragma solidity =0.8.21;
 
+import "./CommonVRF.sol";
 import "./ScratchNFT.sol";
 
 error AlreadyClaimed();
 error NotEnoughFunds();
 
-contract ScratchVRF is ScratchNFT {
+contract ScratchVRF is ScratchNFT, CommonVRF {
 
     constructor(
         string memory _name,
@@ -23,7 +24,7 @@ contract ScratchVRF is ScratchNFT {
             _name,
             _symbol
         )
-        CommonBase(
+        CommonVRF(
             _linkTokenAddress,
             _verseTokenAddress,
             _gasKeyHash,
@@ -65,6 +66,7 @@ contract ScratchVRF is ScratchNFT {
         internal
     {
         _takeTokens(
+            VERSE_TOKEN,
             baseCost
         );
 
@@ -239,6 +241,7 @@ contract ScratchVRF is ScratchNFT {
         }
 
         _giveTokens(
+            VERSE_TOKEN,
             msg.sender,
             prizeWei
         );

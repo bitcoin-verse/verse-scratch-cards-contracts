@@ -4,7 +4,7 @@ pragma solidity =0.8.21;
 
 import "./ReelNFT.sol";
 
-contract ReelVRF is ReelNFT {
+contract ReelVRF is ReelNFT, CommonVRF {
 
     constructor(
         string memory _name,
@@ -20,7 +20,7 @@ contract ReelVRF is ReelNFT {
             _name,
             _symbol
         )
-        CommonBase(
+        CommonVRF(
             _linkTokenAddress,
             _verseTokenAddress,
             _gasKeyHash,
@@ -35,6 +35,7 @@ contract ReelVRF is ReelNFT {
         external
     {
         _takeTokens(
+            VERSE_TOKEN,
             baseCost
         );
 

@@ -2,10 +2,10 @@
 
 pragma solidity =0.8.21;
 
-import "./CommonBase.sol";
+import "./CommonNFT.sol";
 import "./PrizeTiers.sol";
 
-abstract contract ScratchNFT is PrizeTiers, CommonBase {
+abstract contract ScratchNFT is CommonNFT, PrizeTiers  {
 
     using Strings for uint256;
 

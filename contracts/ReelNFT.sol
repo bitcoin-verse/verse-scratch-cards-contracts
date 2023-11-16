@@ -2,9 +2,9 @@
 
 pragma solidity =0.8.21;
 
-import "./CommonBase.sol";
+import "./CommonNFT.sol";
 
-abstract contract ReelNFT is CommonBase {
+abstract contract ReelNFT is CommonNFT {
 
     using Strings for uint256;
 
@@ -69,7 +69,6 @@ abstract contract ReelNFT is CommonBase {
     {
         return traits[_astroId];
     }
-
 
     event RerollFulfilled(
         uint256 indexed drawId,
