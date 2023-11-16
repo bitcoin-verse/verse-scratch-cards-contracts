@@ -121,7 +121,7 @@ contract ReelVRF is ReelNFT, CommonVRF {
 
         _startRequest({
             _traitId: 0,
-            _wordCount: 6,
+            _wordCount: MAX_TRAIT_TYPES,
             _astroId: latestCharacterId
         });
     }
