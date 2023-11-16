@@ -3,31 +3,15 @@
 pragma solidity =0.8.21;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
-import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
-import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
-
 import "@chainlink/contracts/src/v0.8/interfaces/VRFCoordinatorV2Interface.sol";
 import "@chainlink/contracts/src/v0.8/vrf/VRFConsumerBaseV2.sol";
 
-error InvalidId();
+import "./TokenHelper.sol";
+
 error InvalidCost();
 error TooManyReceivers();
 
-interface ILinkToken is IERC20 {
-
-    function transferAndCall(
-        address _to,
-        uint256 _value,
-        bytes calldata _data
-    )
-        external
-        returns (bool success);
-}
-
-abstract contract CommonBase is Ownable, VRFConsumerBaseV2, ERC721Enumerable {
-
-    using SafeERC20 for IERC20;
-    using SafeERC20 for ILinkToken;
+abstract contract CommonVRF is Ownable, TokenHelper, VRFConsumerBaseV2 {
 
     VRFCoordinatorV2Interface public immutable VRF_COORDINATOR;
 
@@ -58,7 +42,6 @@ abstract contract CommonBase is Ownable, VRFConsumerBaseV2, ERC721Enumerable {
     // Keeps track of latest drawId to VRF.
     uint256 public latestDrawId;
 
-    mapping(uint256 => string) public tokenURIs;
     mapping(uint256 => uint256) public drawIdToRequestId;
 
     event DrawRequest(
@@ -77,17 +60,6 @@ abstract contract CommonBase is Ownable, VRFConsumerBaseV2, ERC721Enumerable {
         address indexed receiver,
         uint256 amount
     );
-
-    modifier onlyTokenOwner(
-        uint256 _tokenId
-    )
-    {
-        require(
-            ownerOf(_tokenId) == msg.sender,
-            "CommonBase: INVALID_OWNER"
-        );
-        _;
-    }
 
     constructor(
         address _linkTokenAddress,
@@ -156,9 +128,8 @@ abstract contract CommonBase is Ownable, VRFConsumerBaseV2, ERC721Enumerable {
     )
         external
     {
-        LINK_TOKEN.safeTransferFrom(
-            msg.sender,
-            address(this),
+        _takeTokens(
+            LINK_TOKEN,
             _linkAmount
         );
 
@@ -186,7 +157,6 @@ abstract contract CommonBase is Ownable, VRFConsumerBaseV2, ERC721Enumerable {
         baseCost = _newBaseCost;
     }
 
-
     /**
      * @notice Allows to withdraw VERSE tokens from the contract.
      * @dev Only can be called by the contract owner.
@@ -199,7 +169,8 @@ abstract contract CommonBase is Ownable, VRFConsumerBaseV2, ERC721Enumerable {
             address(this)
         );
 
-        VERSE_TOKEN.safeTransfer(
+        _giveTokens(
+            VERSE_TOKEN,
             msg.sender,
             balance
         );
@@ -208,62 +179,6 @@ abstract contract CommonBase is Ownable, VRFConsumerBaseV2, ERC721Enumerable {
             msg.sender,
             balance
         );
-    }
-
-    function _giveTokens(
-        address _receiver,
-        uint256 _amount
-    )
-        internal
-    {
-        VERSE_TOKEN.safeTransfer(
-            _receiver,
-            _amount
-        );
-    }
-
-    function _takeTokens(
-        uint256 _transferValue
-    )
-        internal
-    {
-        VERSE_TOKEN.safeTransferFrom(
-            msg.sender,
-            address(this),
-            _transferValue
-        );
-    }
-
-    function ownedByAddress(
-        address _owner
-    )
-        external
-        view
-        returns (uint256[] memory)
-    {
-        uint256 ownerNFTCount = balanceOf(
-            _owner
-        );
-
-        uint256[] memory nftIds = new uint256[](
-            ownerNFTCount
-        );
-
-        uint256 i;
-
-        for (i; i < ownerNFTCount;) {
-
-            nftIds[i] = tokenOfOwnerByIndex(
-                _owner,
-                i
-            );
-
-            unchecked {
-                ++i;
-            }
-        }
-
-        return nftIds;
     }
 
     /**
