@@ -21,6 +21,16 @@ abstract contract CommonNFT is ERC721Enumerable {
         _;
     }
 
+    function checkIfTokenExists(
+        uint256 _tokenId
+    )
+        external
+        view
+        returns(bool)
+    {
+        return _exists(_tokenId);
+    }
+
     function ownedByAddress(
         address _owner
     )
