@@ -7,6 +7,12 @@ import "./ReelNFT.sol";
 
 contract ReelVRF is ReelNFT, CommonVRF {
 
+    event RerollFulfilled(
+        uint256 indexed drawId,
+        uint256 indexed astroId,
+        uint256 traitNumber,
+        uint256 rolledNumber
+    );
     constructor(
         string memory _name,
         string memory _symbol,

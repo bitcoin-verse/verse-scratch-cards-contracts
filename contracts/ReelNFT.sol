@@ -72,11 +72,4 @@ abstract contract ReelNFT is CommonNFT {
     {
         return traits[_astroId];
     }
-
-    event RerollFulfilled(
-        uint256 indexed drawId,
-        uint256 indexed astroId,
-        uint256 traitNumber,
-        uint256 rolledNumber
-    );
 }
