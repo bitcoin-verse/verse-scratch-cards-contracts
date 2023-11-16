@@ -262,9 +262,10 @@ contract ReelVRF is ReelNFT, CommonVRF {
 
     function _increaseDrawId()
         internal
+        returns (uint256)
     {
         unchecked {
-            ++latestDrawId;
+            return ++latestDrawId;
         }
     }
 }

@@ -69,9 +69,7 @@ abstract contract ReelNFT is CommonNFT {
         returns (uint256)
     {
         unchecked {
-            ++latestCharacterId;
+            return ++latestCharacterId;
         }
-
-        return latestCharacterId;
     }
 }
