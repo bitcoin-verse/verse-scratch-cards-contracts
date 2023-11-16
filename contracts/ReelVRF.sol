@@ -100,9 +100,10 @@ contract ReelVRF is ReelNFT, CommonVRF {
     {
         rerollInProgress[_astroId] = true;
 
-        _makeRequest({
-            _traitId: _traitId,
-            _wordCount: 1
+        _startRequest({
+            _wordCount: 1,
+            _astroId: _astroId,
+            _traitId: _traitId
         });
     }
 
@@ -111,21 +112,25 @@ contract ReelVRF is ReelNFT, CommonVRF {
     )
         internal
     {
+        uint256 latestCharacterId = _increaseCharacterId();
+
         _mint(
             _receiver,
-            _increaseCharacterId()
+            latestCharacterId
         );
 
-        _makeRequest({
+        _startRequest({
             _traitId: 0,
-            _wordCount: 6
+            _wordCount: 6,
+            _astroId: latestCharacterId
         });
     }
 
 
-    function _makeRequest(
+    function _startRequest(
         uint32 _wordCount,
-        uint256 _traitId
+        uint256 _traitId,
+        uint256 _astroId
     )
         internal
     {
@@ -137,7 +142,7 @@ contract ReelVRF is ReelNFT, CommonVRF {
 
         Drawing memory newDrawing = Drawing({
             drawId: latestDrawId,
-            astroId: latestCharacterId,
+            astroId: _astroId,
             traitId: _traitId
         });
 
@@ -207,6 +212,7 @@ contract ReelVRF is ReelNFT, CommonVRF {
             }
         }*/
 
+        // this mapping can be omited
         minted[currentDraw.astroId] = true;
         traits[currentDraw.astroId] = numbers;
 
