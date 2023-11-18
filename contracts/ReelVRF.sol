@@ -100,13 +100,45 @@ contract ReelVRF is ReelNFT, CommonVRF {
     {
         rerollInProgress[_astroId] = true;
 
-        uint256 requestId = _requestRandomWords({
-            _wordCount: 1
+        _startRequest({
+            _wordCount: 1,
+            _astroId: _astroId,
+            _traitId: _traitId
         });
+    }
 
-        unchecked {
-            ++latestDrawId;
-        }
+    function _mintCharacter(
+        address _receiver
+    )
+        internal
+    {
+        uint256 latestCharacterId = _increaseCharacterId();
+
+        _mint(
+            _receiver,
+            latestCharacterId
+        );
+
+        _startRequest({
+            _traitId: 0,
+            _wordCount: MAX_TRAIT_TYPES,
+            _astroId: latestCharacterId
+        });
+    }
+
+
+    function _startRequest(
+        uint32 _wordCount,
+        uint256 _traitId,
+        uint256 _astroId
+    )
+        internal
+    {
+        uint256 requestId = _requestRandomWords(
+            _wordCount
+        );
+
+        _increaseDrawId();
 
         Drawing memory newDrawing = Drawing({
             drawId: latestDrawId,
@@ -124,43 +156,6 @@ contract ReelVRF is ReelNFT, CommonVRF {
         );
     }
 
-    function _mintCharacter(
-        address _receiver
-    )
-        internal
-    {
-        unchecked {
-            ++latestCharacterId;
-        }
-
-        _mint(
-            _receiver,
-            latestCharacterId
-        );
-
-        uint256 requestId = _requestRandomWords({
-            _wordCount: 6
-        });
-
-        unchecked {
-            ++latestDrawId;
-        }
-
-        Drawing memory newDrawing = Drawing({
-            drawId: latestDrawId,
-            astroId: latestCharacterId,
-            traitId: 0
-        });
-
-        requestIdToDrawing[requestId] = newDrawing;
-        drawIdToRequestId[latestDrawId] = requestId;
-
-        emit DrawRequest(
-            latestDrawId,
-            requestId,
-            msg.sender
-        );
-    }
 
     function fulfillRandomWords(
         uint256 _requestId,
@@ -217,6 +212,7 @@ contract ReelVRF is ReelNFT, CommonVRF {
             }
         }*/
 
+        // this mapping can be omited
         minted[currentDraw.astroId] = true;
         traits[currentDraw.astroId] = numbers;
 
@@ -262,5 +258,14 @@ contract ReelVRF is ReelNFT, CommonVRF {
         internal
     {
         traits[_astroId][_traitId] = _rolledNumber;
+    }
+
+    function _increaseDrawId()
+        internal
+        returns (uint256)
+    {
+        unchecked {
+            return ++latestDrawId;
+        }
     }
 }

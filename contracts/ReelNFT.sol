@@ -22,6 +22,8 @@ abstract contract ReelNFT is CommonNFT {
     );
 
     uint256 constant MAX_TRAITS = 15;
+    uint32 constant MAX_TRAIT_TYPES = 6;
+
     uint256 public latestCharacterId;
 
     // @TODO: ex.completed mapping, can delete this mapping
@@ -62,5 +64,14 @@ abstract contract ReelNFT is CommonNFT {
         // returns (TraitType[] memory)
     {
         return traits[_astroId];
+    }
+
+    function _increaseCharacterId()
+        internal
+        returns (uint256)
+    {
+        unchecked {
+            return ++latestCharacterId;
+        }
     }
 }
