@@ -9,19 +9,6 @@ abstract contract ReelNFT is CommonNFT, TraitTiers {
 
     using Strings for uint256;
 
-    enum TraitType {
-        Background,
-        Reel,
-        Symbol,
-        SymbolColor,
-        SymbolBackground,
-        SymbolOverlay
-    }
-
-    uint256 constant MAX_TYPES = uint256(
-        type(TraitType).max
-    );
-
     uint32 public constant MAX_TRAIT_TYPES = 6;
     uint256 public constant MAX_TRAITS_INDEX = 1000;
 
