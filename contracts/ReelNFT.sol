@@ -21,8 +21,8 @@ abstract contract ReelNFT is CommonNFT {
         type(TraitType).max
     );
 
-    uint32 constant MAX_TRAIT_TYPES = 6;
-    uint256 constant MAX_TRAITS_INDEX = 1000;
+    uint32 public constant MAX_TRAIT_TYPES = 6;
+    uint256 public constant MAX_TRAITS_INDEX = 1000;
 
     uint256 public latestCharacterId;
     mapping(uint256 => uint256[]) public traits;
