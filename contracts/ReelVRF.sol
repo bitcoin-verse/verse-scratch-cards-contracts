@@ -138,6 +138,19 @@ contract ReelVRF is ReelNFT, CommonVRF {
         });
     }
 
+    function setRerollCost(
+        uint256 _newRerollCost
+    )
+        external
+        onlyOwner
+    {
+        rerollCost = _newRerollCost;
+
+        emit RerollCostUpdated(
+            _newRerollCost
+        );
+    }
+
     function _mintCharacter(
         address _receiver
     )
