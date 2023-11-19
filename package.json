@@ -6,9 +6,9 @@
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
         "foundry-size": "forge build --sizes",
-        "foundry-test-test": "forge test --match-path contracts/tests/ScratchVRF.Mainnet.t.sol --gas-report -vvv",
-        "foundry-test-mainnet": "forge test --match-path contracts/tests/ScratchVRF.Mainnet.t.sol --gas-report -vvv",
-        "foundry-test-polygon": "forge test --match-path contracts/tests/ScratchVRF.Polygon.t.sol --gas-report -vvv",
+        "foundry-test-default": "forge test --gas-report -vvv",
+        "foundry-test-mainnet": "forge test --match-path contracts/tests/Mainnet/*.sol --gas-report -vvv",
+        "foundry-test-polygon": "forge test --match-path contracts/tests/Polygon/*.sol --gas-report -vvv",
         "foundry-coverage": "forge coverage --report lcov && genhtml lcov.info --branch-coverage --output-dir coverage"
     },
     "author": "",

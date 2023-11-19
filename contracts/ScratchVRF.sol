@@ -80,7 +80,7 @@ contract ScratchVRF is ScratchNFT, CommonVRF {
      * @param _receivers address for gifted NFTs.
      */
     function giftForFree(
-        address[] memory _receivers
+        address[] calldata _receivers
     )
         external
         onlyOwner
@@ -113,14 +113,12 @@ contract ScratchVRF is ScratchNFT, CommonVRF {
             _wordCount: 2
         });
 
+        uint256 latestDrawId = _increaseLatestDrawId();
+
         Drawing memory newDrawing = Drawing({
             drawId: latestDrawId,
             ticketReceiver: _receiver
         });
-
-        unchecked {
-            ++latestDrawId;
-        }
 
         drawIdToRequestId[latestDrawId] = requestId;
         requestIdToDrawing[requestId] = newDrawing;
@@ -162,9 +160,7 @@ contract ScratchVRF is ScratchNFT, CommonVRF {
             randomNumber
         );
 
-        unchecked {
-            ++latestTicketId;
-        }
+        uint256 latestTicketId = _increaseLatestTicketId();
 
         _mintTicket(
             latestTicketId,
@@ -179,6 +175,24 @@ contract ScratchVRF is ScratchNFT, CommonVRF {
             // @TODO: replace with randomEdition and randomNumber
             _randomWords
         );
+    }
+
+    function _increaseLatestTicketId()
+        internal
+        returns (uint256)
+    {
+        unchecked {
+            return ++latestTicketId;
+        }
+    }
+
+    function _increaseLatestDrawId()
+        internal
+        returns (uint256)
+    {
+        unchecked {
+            return ++latestDrawId;
+        }
     }
 
     function _getPrizeTier(

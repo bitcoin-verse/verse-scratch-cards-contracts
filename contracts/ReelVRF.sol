@@ -5,13 +5,19 @@ pragma solidity =0.8.21;
 import "./CommonVRF.sol";
 import "./ReelNFT.sol";
 
+struct Drawing {
+    uint256 drawId;
+    uint256 astroId;
+    uint256 traitId;
+}
+
+error InvalidTraitId();
+error RerollInProgress();
+error TraitNotYetDefined();
+
 contract ReelVRF is ReelNFT, CommonVRF {
 
-    struct Drawing {
-        uint256 drawId;
-        uint256 astroId;
-        uint256 traitId;
-    }
+    uint256 public rerollCost;
 
     mapping(uint256 => bool) public rerollInProgress;
     mapping(uint256 => Drawing) public requestIdToDrawing;
@@ -23,11 +29,15 @@ contract ReelVRF is ReelNFT, CommonVRF {
         uint256 rolledNumber
     );
 
+    event RerollCostUpdated(
+        uint256 newRerollCost
+    );
+
     constructor(
         string memory _name,
         string memory _symbol,
-        uint256 _characterCost,
         address _vrfCoordinatorV2Address,
+        uint256 _characterCost,
         address _linkTokenAddress,
         address _verseTokenAddress,
         bytes32 _gasKeyHash,
@@ -46,6 +56,7 @@ contract ReelVRF is ReelNFT, CommonVRF {
         )
     {
         baseCost = _characterCost;
+        rerollCost = _characterCost / 10;
     }
 
     function buyCharacter()
@@ -61,13 +72,28 @@ contract ReelVRF is ReelNFT, CommonVRF {
         );
     }
 
+    function giftCharacter(
+        address _receiver
+    )
+        external
+    {
+        _takeTokens(
+            VERSE_TOKEN,
+            baseCost
+        );
+
+        _mintCharacter(
+            _receiver
+        );
+    }
+
     /**
      * @notice Allows to gift NFT Character for free.
      * @dev Only can be called by the contract owner.
      * @param _receivers address for gifted NFTs.
      */
     function giftForFree(
-        address[] memory _receivers
+        address[] calldata _receivers
     )
         external
         onlyOwner
@@ -98,13 +124,43 @@ contract ReelVRF is ReelNFT, CommonVRF {
         external
         onlyTokenOwner(_astroId)
     {
+        if (_traitId > MAX_TRAIT_TYPES) {
+            revert InvalidTraitId();
+        }
+
+        if (results[_astroId][_traitId] == 0) {
+            revert TraitNotYetDefined();
+        }
+
+        if (rerollInProgress[_astroId] == true) {
+            revert RerollInProgress();
+        }
+
         rerollInProgress[_astroId] = true;
+
+        _takeTokens(
+            VERSE_TOKEN,
+            rerollCost
+        );
 
         _startRequest({
             _wordCount: 1,
             _astroId: _astroId,
             _traitId: _traitId
         });
+    }
+
+    function setRerollCost(
+        uint256 _newRerollCost
+    )
+        external
+        onlyOwner
+    {
+        rerollCost = _newRerollCost;
+
+        emit RerollCostUpdated(
+            _newRerollCost
+        );
     }
 
     function _mintCharacter(
@@ -125,7 +181,6 @@ contract ReelVRF is ReelNFT, CommonVRF {
             _astroId: latestCharacterId
         });
     }
-
 
     function _startRequest(
         uint32 _wordCount,
@@ -155,7 +210,6 @@ contract ReelVRF is ReelNFT, CommonVRF {
             msg.sender
         );
     }
-
 
     function fulfillRandomWords(
         uint256 _requestId,
@@ -187,34 +241,24 @@ contract ReelVRF is ReelNFT, CommonVRF {
     )
         internal
     {
+        uint256 i;
         uint256[] memory numbers = new uint256[](
-            MAX_TRAITS
+            MAX_TRAIT_TYPES
         );
 
-        for (uint256 i; i < MAX_TRAITS;) {
+        for (i; i < MAX_TRAIT_TYPES;) {
             numbers[i] = uniform(
                 _randomWords[i],
-                MAX_TRAITS
+                MAX_RESULT_INDEX
             );
             unchecked {
                 ++i;
             }
         }
 
-        /*
-        for (uint8 i; i < MAX_TYPES;) {
-            traits[currentDraw.astroId][TraitType(i)] = uniform(
-                _randomWords[i],
-                MAX_TRAITS
-            );
-            unchecked {
-                ++i;
-            }
-        }*/
-
-        // this mapping can be omited
-        minted[currentDraw.astroId] = true;
-        traits[currentDraw.astroId] = numbers;
+        results[
+            currentDraw.astroId
+        ] = numbers;
 
         emit RequestFulfilled(
             currentDraw.drawId,
@@ -231,7 +275,7 @@ contract ReelVRF is ReelNFT, CommonVRF {
     {
         uint256 rolledNumber = uniform(
             _randomWords[0],
-            MAX_TRAITS
+            MAX_RESULT_INDEX
         );
 
         _updateTrait(
@@ -240,7 +284,9 @@ contract ReelVRF is ReelNFT, CommonVRF {
             rolledNumber
         );
 
-        rerollInProgress[_currentDraw.astroId] = false;
+        rerollInProgress[
+            _currentDraw.astroId
+        ] = false;
 
         emit RerollFulfilled(
             _currentDraw.drawId,
@@ -257,7 +303,7 @@ contract ReelVRF is ReelNFT, CommonVRF {
     )
         internal
     {
-        traits[_astroId][_traitId] = _rolledNumber;
+        results[_astroId][_traitId] = _rolledNumber;
     }
 
     function _increaseDrawId()

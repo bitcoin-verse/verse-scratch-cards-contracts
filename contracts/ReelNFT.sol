@@ -3,35 +3,19 @@
 pragma solidity =0.8.21;
 
 import "./CommonNFT.sol";
+import "./helpers/TraitTiers.sol";
 
-abstract contract ReelNFT is CommonNFT {
+abstract contract ReelNFT is CommonNFT, TraitTiers {
 
     using Strings for uint256;
 
-    enum TraitType {
-        Background,
-        Reel,
-        Symbol,
-        SymbolColor,
-        SymbolBackground,
-        SymbolOverlay
-    }
-
-    uint256 constant MAX_TYPES = uint256(
-        type(TraitType).max
-    );
-
-    uint256 constant MAX_TRAITS = 15;
-    uint32 constant MAX_TRAIT_TYPES = 6;
+    uint32 public constant MAX_TRAIT_TYPES = 6;
+    uint256 public constant MAX_RESULT_INDEX = 1000;
 
     uint256 public latestCharacterId;
 
-    // @TODO: ex.completed mapping, can delete this mapping
-    // this mapping is not needed, can use checkIfTokenExists
-    // or can rely on traits mapping to determine if token exists.
-
-    mapping(uint256 => bool) public minted;
-    mapping(uint256 => uint256[]) public traits;
+    // stores results from VRF calls ceiled by MAX_RESULT_INDEX
+    mapping(uint256 => uint256[]) public results;
 
     function tokenURI(
         uint256 _astroId
@@ -55,6 +39,45 @@ abstract contract ReelNFT is CommonNFT {
         );
     }
 
+    /*
+    function getTrait(
+        uint256 _astroId,
+        uint256 _traitType
+    )
+        external
+        view
+        returns (uint256)
+        // returns (TraitType[] memory)
+    {
+        return traits[_astroId][_traitType];
+    }
+    */
+
+    function _getTraitTier(
+        uint256 _number
+    )
+        internal
+        view
+        returns (uint256 trait)
+    {
+        uint256 i;
+        uint256 loops = traitTiers.length;
+
+        for (i; i < loops;) {
+
+            TraitTier memory tt = traitTiers[i];
+
+            if (_number >= tt.drawEdgeA && _number <= tt.drawEdgeB) {
+                trait = tt.traitIndex;
+                return trait;
+            }
+
+            unchecked {
+                ++i;
+            }
+        }
+    }
+
     function getTraits(
         uint256 _astroId
     )
@@ -63,7 +86,27 @@ abstract contract ReelNFT is CommonNFT {
         returns (uint256[] memory)
         // returns (TraitType[] memory)
     {
-        return traits[_astroId];
+        uint256[] memory traits = new uint256[](
+            MAX_TRAIT_TYPES
+        );
+
+        traits = results[
+            _astroId
+        ];
+
+        uint256 i;
+        uint256 loops = traits.length;
+
+        for (i; i < loops;) {
+            traits[i] = _getTraitTier(
+                traits[i]
+            );
+            unchecked {
+                ++i;
+            }
+        }
+
+        return traits;
     }
 
     function _increaseCharacterId()

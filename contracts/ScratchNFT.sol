@@ -3,7 +3,7 @@
 pragma solidity =0.8.21;
 
 import "./CommonNFT.sol";
-import "./PrizeTiers.sol";
+import "./helpers/PrizeTiers.sol";
 
 error AlreadyClaimed();
 
