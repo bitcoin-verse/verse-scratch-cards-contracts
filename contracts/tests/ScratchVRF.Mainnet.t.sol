@@ -371,6 +371,47 @@ contract TestScratchVRF_MAINNET is Test {
     }
 
     /**
+     * @notice it should be possible test ownedByAddress function
+     */
+    function testOwnerByAddress()
+        public
+    {
+        uint256 baseCost = scratcher.baseCost();
+
+        vm.startPrank(
+            WISE_DEPLOYER
+        );
+
+        IERC20(VERSE_TOKEN).approve(
+            address(scratcher),
+            baseCost
+        );
+
+        scratcher.buyScratchTicket();
+
+        vm.stopPrank();
+
+        coordinanotor.fulfillRandomWords(
+            1,
+            address(scratcher)
+        );
+
+        uint256[] memory tokens = scratcher.ownedByAddress(
+            WISE_DEPLOYER
+        );
+
+        assertEq(
+            tokens.length,
+            1
+        );
+
+        assertEq(
+            tokens[0],
+            1
+        );
+    }
+
+    /**
      * @notice it should be possible test checkIfTokenExists
      */
     function testCheckIfTokenExists()
