@@ -256,17 +256,6 @@ contract ReelVRF is ReelNFT, CommonVRF {
             }
         }
 
-        /*
-        for (uint8 i; i < MAX_TYPES;) {
-            traits[currentDraw.astroId][TraitType(i)] = uniform(
-                _randomWords[i],
-                MAX_TRAITS
-            );
-            unchecked {
-                ++i;
-            }
-        }*/
-
         traits[currentDraw.astroId] = numbers;
 
         emit RequestFulfilled(
