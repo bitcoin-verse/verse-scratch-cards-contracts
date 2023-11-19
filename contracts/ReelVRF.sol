@@ -157,7 +157,6 @@ contract ReelVRF is ReelNFT, CommonVRF {
         });
     }
 
-
     function _startRequest(
         uint32 _wordCount,
         uint256 _traitId,
@@ -186,7 +185,6 @@ contract ReelVRF is ReelNFT, CommonVRF {
             msg.sender
         );
     }
-
 
     function fulfillRandomWords(
         uint256 _requestId,
@@ -218,14 +216,15 @@ contract ReelVRF is ReelNFT, CommonVRF {
     )
         internal
     {
+        uint256 i;
         uint256[] memory numbers = new uint256[](
-            MAX_TRAITS
+            MAX_TRAIT_TYPES
         );
 
-        for (uint256 i; i < MAX_TRAITS;) {
+        for (i; i < MAX_TRAIT_TYPES;) {
             numbers[i] = uniform(
                 _randomWords[i],
-                MAX_TRAITS
+                MAX_TRAITS_INDEX
             );
             unchecked {
                 ++i;
@@ -243,8 +242,6 @@ contract ReelVRF is ReelNFT, CommonVRF {
             }
         }*/
 
-        // this mapping can be omited
-        minted[currentDraw.astroId] = true;
         traits[currentDraw.astroId] = numbers;
 
         emit RequestFulfilled(
@@ -262,7 +259,7 @@ contract ReelVRF is ReelNFT, CommonVRF {
     {
         uint256 rolledNumber = uniform(
             _randomWords[0],
-            MAX_TRAITS
+            MAX_TRAITS_INDEX
         );
 
         _updateTrait(
@@ -271,7 +268,9 @@ contract ReelVRF is ReelNFT, CommonVRF {
             rolledNumber
         );
 
-        rerollInProgress[_currentDraw.astroId] = false;
+        rerollInProgress[
+            _currentDraw.astroId
+        ] = false;
 
         emit RerollFulfilled(
             _currentDraw.drawId,
