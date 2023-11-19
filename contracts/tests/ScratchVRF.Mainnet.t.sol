@@ -370,6 +370,42 @@ contract TestScratchVRF_MAINNET is Test {
         );
     }
 
+    /**
+     * @notice it should be possible test tokenURI
+     */
+    function testTokenURI()
+        public
+    {
+        uint256 baseCost = scratcher.baseCost();
+
+        vm.startPrank(
+            WISE_DEPLOYER
+        );
+
+        IERC20(VERSE_TOKEN).approve(
+            address(scratcher),
+            baseCost
+        );
+
+        scratcher.buyScratchTicket();
+
+        vm.stopPrank();
+
+        coordinanotor.fulfillRandomWords(
+            1,
+            address(scratcher)
+        );
+
+        string memory tokenURI = scratcher.tokenURI(
+            1
+        );
+
+        assertEq(
+            tokenURI,
+            "https://api.verses.io/scratch/1"
+        );
+    }
+
     function _getVerseBalance(
         address _address
     )
