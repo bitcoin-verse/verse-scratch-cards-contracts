@@ -21,16 +21,10 @@ abstract contract ReelNFT is CommonNFT {
         type(TraitType).max
     );
 
-    uint256 constant MAX_TRAITS = 15;
     uint32 constant MAX_TRAIT_TYPES = 6;
+    uint256 constant MAX_TRAITS_INDEX = 1000;
 
     uint256 public latestCharacterId;
-
-    // @TODO: ex.completed mapping, can delete this mapping
-    // this mapping is not needed, can use checkIfTokenExists
-    // or can rely on traits mapping to determine if token exists.
-
-    mapping(uint256 => bool) public minted;
     mapping(uint256 => uint256[]) public traits;
 
     function tokenURI(
