@@ -17,6 +17,8 @@ error TraitNotYetDefined();
 
 contract ReelVRF is ReelNFT, CommonVRF {
 
+    uint256 public rerollCost;
+
     mapping(uint256 => bool) public rerollInProgress;
     mapping(uint256 => Drawing) public requestIdToDrawing;
 
