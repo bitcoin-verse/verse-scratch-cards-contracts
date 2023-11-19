@@ -5,7 +5,7 @@ pragma solidity =0.8.21;
 import "./CommonNFT.sol";
 import "./helpers/TraitTiers.sol";
 
-abstract contract ReelNFT is CommonNFT {
+abstract contract ReelNFT is CommonNFT, TraitTiers {
 
     using Strings for uint256;
 
