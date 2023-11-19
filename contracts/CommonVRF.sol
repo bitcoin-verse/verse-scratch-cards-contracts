@@ -161,23 +161,22 @@ abstract contract CommonVRF is Ownable, TokenHelper, VRFConsumerBaseV2 {
      * @notice Allows to withdraw VERSE tokens from the contract.
      * @dev Only can be called by the contract owner.
      */
-    function withdrawTokens()
+    function withdrawTokens(
+        IERC20 _token,
+        uint256 _amount
+    )
         external
         onlyOwner
     {
-        uint256 balance = VERSE_TOKEN.balanceOf(
-            address(this)
-        );
-
         _giveTokens(
-            VERSE_TOKEN,
+            _token,
             msg.sender,
             balance
         );
 
         emit WithdrawTokens(
             msg.sender,
-            balance
+            _amount
         );
     }
 
