@@ -4,7 +4,7 @@ pragma solidity =0.8.21;
 
 import "forge-std/Test.sol";
 
-import "../ScratchVRF.sol";
+import "../../ScratchVRF.sol";
 
 contract TestScratchVRF_POLYGON is Test {
 

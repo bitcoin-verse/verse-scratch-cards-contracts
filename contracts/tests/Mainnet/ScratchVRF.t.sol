@@ -4,7 +4,7 @@ pragma solidity =0.8.21;
 
 import "forge-std/Test.sol";
 
-import "../ScratchVRF.sol";
+import "../../ScratchVRF.sol";
 import "@chainlink/contracts/src/v0.8/mocks/VRFCoordinatorV2Mock.sol";
 
 contract TestScratchVRF_MAINNET is Test {
@@ -428,9 +428,9 @@ contract TestScratchVRF_MAINNET is Test {
     }
 
     /**
-     * @notice it should be possible test checkIfTokenExists
+     * @notice it should be possible test isMinted
      */
-    function testCheckIfTokenExists()
+    function testIsMinted()
         public
     {
         uint256 baseCost = scratcher.baseCost();
@@ -453,7 +453,7 @@ contract TestScratchVRF_MAINNET is Test {
             address(scratcher)
         );
 
-        bool token1Exists = scratcher.checkIfTokenExists(
+        bool token1Exists = scratcher.isMinted(
             1
         );
 
@@ -462,7 +462,7 @@ contract TestScratchVRF_MAINNET is Test {
             true
         );
 
-        bool token2Exists = scratcher.checkIfTokenExists(
+        bool token2Exists = scratcher.isMinted(
             2
         );
 
