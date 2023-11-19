@@ -37,6 +37,45 @@ abstract contract ReelNFT is CommonNFT, TraitTiers {
         );
     }
 
+    /*
+    function getTrait(
+        uint256 _astroId,
+        uint256 _traitType
+    )
+        external
+        view
+        returns (uint256)
+        // returns (TraitType[] memory)
+    {
+        return traits[_astroId][_traitType];
+    }
+    */
+
+    function _getTraitTier(
+        uint256 _number
+    )
+        internal
+        view
+        returns (uint256 trait)
+    {
+        uint256 i;
+        uint256 loops = traitTiers.length;
+
+        for (i; i < loops;) {
+
+            TraitTier memory tt = traitTiers[i];
+
+            if (_number >= tt.drawEdgeA && _number <= tt.drawEdgeB) {
+                trait = tt.traitIndex;
+                return trait;
+            }
+
+            unchecked {
+                ++i;
+            }
+        }
+    }
+
     function getTraits(
         uint256 _astroId
     )
