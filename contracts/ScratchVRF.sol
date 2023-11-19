@@ -187,10 +187,9 @@ contract ScratchVRF is ScratchNFT, CommonVRF {
     )
         internal
         view
-        returns (uint256)
+        returns (uint256 prize)
     {
         uint256 i;
-        uint256 prize;
         uint256 loops = prizeTiers.length;
 
         for (i; i < loops;) {
@@ -206,8 +205,6 @@ contract ScratchVRF is ScratchNFT, CommonVRF {
                 ++i;
             }
         }
-
-        return prize;
     }
 
     /**
