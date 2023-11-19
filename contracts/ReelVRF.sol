@@ -5,13 +5,17 @@ pragma solidity =0.8.21;
 import "./CommonVRF.sol";
 import "./ReelNFT.sol";
 
-contract ReelVRF is ReelNFT, CommonVRF {
+struct Drawing {
+    uint256 drawId;
+    uint256 astroId;
+    uint256 traitId;
+}
 
-    struct Drawing {
-        uint256 drawId;
-        uint256 astroId;
-        uint256 traitId;
-    }
+error InvalidTraitId();
+error RerollInProgress();
+error TraitNotYetDefined();
+
+contract ReelVRF is ReelNFT, CommonVRF {
 
     mapping(uint256 => bool) public rerollInProgress;
     mapping(uint256 => Drawing) public requestIdToDrawing;
