@@ -5,7 +5,6 @@ pragma solidity =0.8.21;
 import "./CommonVRF.sol";
 import "./ScratchNFT.sol";
 
-error AlreadyClaimed();
 error NotEnoughFunds();
 
 contract ScratchVRF is ScratchNFT, CommonVRF {
@@ -217,10 +216,6 @@ contract ScratchVRF is ScratchNFT, CommonVRF {
         external
         onlyTokenOwner(_ticketId)
     {
-        if (claimed[_ticketId] == true) {
-            revert AlreadyClaimed();
-        }
-
         _setClaimed(
             _ticketId
         );

@@ -5,6 +5,8 @@ pragma solidity =0.8.21;
 import "./CommonNFT.sol";
 import "./PrizeTiers.sol";
 
+error AlreadyClaimed();
+
 abstract contract ScratchNFT is CommonNFT, PrizeTiers  {
 
     using Strings for uint256;
@@ -99,8 +101,8 @@ abstract contract ScratchNFT is CommonNFT, PrizeTiers  {
     )
         internal
     {
-        if (_exists(_ticketId) == false) {
-            revert InvalidId();
+        if (claimed[_ticketId] == true) {
+            revert AlreadyClaimed();
         }
 
         claimed[_ticketId] = true;

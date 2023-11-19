@@ -295,6 +295,22 @@ contract TestScratchVRF_MAINNET is Test {
         scratcher.claimPrize(
             1
         );
+
+        vm.expectRevert(
+            "ERC721: invalid token ID"
+        );
+
+        scratcher.claimPrize(
+            2
+        );
+
+        vm.expectRevert(
+            "ERC721: invalid token ID"
+        );
+
+        scratcher.claimPrize(
+            0
+        );
     }
 
     /**
@@ -497,6 +513,28 @@ contract TestScratchVRF_MAINNET is Test {
 
         scratcher.tokenURI(
             0
+        );
+    }
+
+    /**
+     * @notice it should be possible to test toWei()
+     * @param _value value in ether
+     */
+    function testToWei(
+        uint256 _value
+    )
+        public
+    {
+        uint256 etherValue = _value;
+        uint256 expectedWeiValue = etherValue * 1 ether;
+
+        uint256 actualWeiValue = scratcher.toWei(
+            etherValue
+        );
+
+        assertEq(
+            actualWeiValue,
+            expectedWeiValue
         );
     }
 
