@@ -2,3 +2,4 @@ node_modules
 forge-cache/solidity-files-cache.json
 out/
 coverage/
+lcov.info
