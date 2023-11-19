@@ -86,7 +86,7 @@ contract ReelVRF is ReelNFT, CommonVRF {
      * @param _receivers address for gifted NFTs.
      */
     function giftForFree(
-        address[] memory _receivers
+        address[] calldata _receivers
     )
         external
         onlyOwner
