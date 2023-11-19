@@ -30,8 +30,8 @@ contract ReelVRF is ReelNFT, CommonVRF {
     constructor(
         string memory _name,
         string memory _symbol,
-        uint256 _characterCost,
         address _vrfCoordinatorV2Address,
+        uint256 _characterCost,
         address _linkTokenAddress,
         address _verseTokenAddress,
         bytes32 _gasKeyHash,
