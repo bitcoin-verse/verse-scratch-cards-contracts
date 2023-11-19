@@ -10,10 +10,12 @@ abstract contract ReelNFT is CommonNFT, TraitTiers {
     using Strings for uint256;
 
     uint32 public constant MAX_TRAIT_TYPES = 6;
-    uint256 public constant MAX_TRAITS_INDEX = 1000;
+    uint256 public constant MAX_RESULT_INDEX = 1000;
 
     uint256 public latestCharacterId;
-    mapping(uint256 => uint256[]) public traits;
+
+    // stores results from VRF calls ceiled by MAX_RESULT_INDEX
+    mapping(uint256 => uint256[]) public results;
 
     function tokenURI(
         uint256 _astroId
@@ -84,25 +86,27 @@ abstract contract ReelNFT is CommonNFT, TraitTiers {
         returns (uint256[] memory)
         // returns (TraitType[] memory)
     {
-        uint256[] memory tiers = new uint256[](
+        uint256[] memory traits = new uint256[](
             MAX_TRAIT_TYPES
         );
 
-        tiers = traits[_astroId];
+        traits = results[
+            _astroId
+        ];
 
         uint256 i;
-        uint256 loops = tiers.length;
+        uint256 loops = traits.length;
 
         for (i; i < loops;) {
-            tiers[i] = _getTraitTier(
-                tiers[i]
+            traits[i] = _getTraitTier(
+                traits[i]
             );
             unchecked {
                 ++i;
             }
         }
 
-        return tiers;
+        return traits;
     }
 
     function _increaseCharacterId()

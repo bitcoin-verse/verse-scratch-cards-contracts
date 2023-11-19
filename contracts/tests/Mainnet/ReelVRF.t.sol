@@ -244,7 +244,7 @@ contract TestReelVRF_MAINNET is Test {
         uint256 REROLL_TRAIT_ID = 1;
 
         assertGt(
-            reel.traits(
+            reel.results(
                 1,
                 REROLL_TRAIT_ID
             ),

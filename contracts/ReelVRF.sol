@@ -128,7 +128,7 @@ contract ReelVRF is ReelNFT, CommonVRF {
             revert InvalidTraitId();
         }
 
-        if (traits[_astroId][_traitId] == 0) {
+        if (results[_astroId][_traitId] == 0) {
             revert TraitNotYetDefined();
         }
 
@@ -249,14 +249,16 @@ contract ReelVRF is ReelNFT, CommonVRF {
         for (i; i < MAX_TRAIT_TYPES;) {
             numbers[i] = uniform(
                 _randomWords[i],
-                MAX_TRAITS_INDEX
+                MAX_RESULT_INDEX
             );
             unchecked {
                 ++i;
             }
         }
 
-        traits[currentDraw.astroId] = numbers;
+        results[
+            currentDraw.astroId
+        ] = numbers;
 
         emit RequestFulfilled(
             currentDraw.drawId,
@@ -273,7 +275,7 @@ contract ReelVRF is ReelNFT, CommonVRF {
     {
         uint256 rolledNumber = uniform(
             _randomWords[0],
-            MAX_TRAITS_INDEX
+            MAX_RESULT_INDEX
         );
 
         _updateTrait(
@@ -301,7 +303,7 @@ contract ReelVRF is ReelNFT, CommonVRF {
     )
         internal
     {
-        traits[_astroId][_traitId] = _rolledNumber;
+        results[_astroId][_traitId] = _rolledNumber;
     }
 
     function _increaseDrawId()
