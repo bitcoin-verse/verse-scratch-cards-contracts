@@ -202,5 +202,46 @@ contract TestScratchVRF_MAINNET is Test {
         scratcher.claimPrize(
             1
         );
+
+        uint256 expectedPrize = scratcher.prizes(
+            1
+        );
+
+        IERC20(VERSE_TOKEN).transfer(
+            address(scratcher),
+            expectedPrize
+        );
+
+        scratcher.claimPrize(
+            1
+        );
+
+        vm.stopPrank();
+
+        address[] memory receiversMany = new address[](51);
+
+        for (uint256 i = 0; i < 51; i++) {
+            receiversMany[i] = WISE_DEPLOYER;
+        }
+
+        vm.expectRevert(
+            TooManyReceivers.selector
+        );
+
+        scratcher.giftForFree(
+            receiversMany
+        );
+    }
+
+    function _getVerseBalance(
+        address _address
+    )
+        internal
+        view
+        returns (uint256)
+    {
+        return IERC20(VERSE_TOKEN).balanceOf(
+            _address
+        );
     }
 }
