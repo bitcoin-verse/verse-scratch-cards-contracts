@@ -183,11 +183,12 @@ contract TestReelVRF_MAINNET is Test {
             baseCost
         );
 
-        uint256 initialCharacter = 0;
+        uint256 initialCharacterId = 0;
+        uint256 expectedCharactedId = initialCharacterId + 1;
 
         assertEq(
             reel.latestCharacterId(),
-            initialCharacter
+            initialCharacterId
         );
 
         assertEq(
@@ -225,6 +226,11 @@ contract TestReelVRF_MAINNET is Test {
             0
         );
 
+        assertEq(
+            reel.latestCharacterId(),
+            expectedCharactedId
+        );
+
         coordinanotor.fulfillRandomWords(
             1,
             address(reel)
@@ -232,13 +238,100 @@ contract TestReelVRF_MAINNET is Test {
 
         assertEq(
             reel.latestCharacterId(),
-            initialCharacter + 1
+            expectedCharactedId
         );
 
-        /*assertGt(
-            trait,
+        uint256 REROLL_TRAIT_ID = 1;
+
+        assertGt(
+            reel.traits(
+                1,
+                REROLL_TRAIT_ID
+            ),
             0
-        );*/
+        );
+
+        assertEq(
+            reel.rerollInProgress(
+                expectedCharactedId
+            ),
+            false
+        );
+
+        vm.expectRevert(
+            "CommonBase: INVALID_OWNER"
+        );
+
+        reel.rerollTrait(
+            expectedCharactedId,
+            REROLL_TRAIT_ID
+        );
+
+        vm.startPrank(
+            WISE_DEPLOYER
+        );
+
+        uint256 rerollCost = reel.rerollCost();
+
+        IERC20(VERSE_TOKEN).approve(
+            address(reel),
+            rerollCost
+        );
+
+        uint256 maxTrait = reel.MAX_TRAIT_TYPES();
+
+        vm.expectRevert(
+            InvalidTraitId.selector
+        );
+
+        reel.rerollTrait(
+            expectedCharactedId,
+            maxTrait + 1
+        );
+
+        reel.rerollTrait(
+            expectedCharactedId,
+            REROLL_TRAIT_ID
+        );
+
+        assertEq(
+            reel.rerollInProgress(
+                expectedCharactedId
+            ),
+            true
+        );
+
+        vm.expectRevert(
+            RerollInProgress.selector
+        );
+
+        reel.rerollTrait(
+            expectedCharactedId,
+            REROLL_TRAIT_ID
+        );
+
+        vm.stopPrank();
+
+        coordinanotor.fulfillRandomWords(
+            2,
+            address(reel)
+        );
+
+        assertEq(
+            reel.rerollInProgress(
+                expectedCharactedId
+            ),
+            false
+        );
+
+        uint256[] memory traits = reel.getTraits(
+            expectedCharactedId
+        );
+
+        assertGt(
+            traits[0],
+            0
+        );
     }
 
     /**
@@ -318,6 +411,67 @@ contract TestReelVRF_MAINNET is Test {
         coordinanotor.fulfillRandomWords(
             1,
             address(reel)
+        );
+    }
+
+    function testUnifrom()
+        public
+    {
+        uint256 outcome = reel.uniform(
+            1000,
+            1000
+        );
+
+        assertGt(
+            outcome,
+            0
+        );
+
+        outcome = reel.uniform(
+            1000,
+            1
+        );
+
+        assertEq(
+            outcome,
+            1
+        );
+    }
+
+    /**
+     * @notice it should be possible to change rerollCost
+     */
+    function testRerollCost()
+        public
+    {
+        uint256 rerollCost = reel.rerollCost();
+
+        assertGt(
+            rerollCost,
+            0
+        );
+
+        uint256 newRerollCost = 1_000 * 1E18;
+
+        reel.setRerollCost(
+            newRerollCost
+        );
+
+        assertEq(
+            reel.rerollCost(),
+            newRerollCost
+        );
+
+        vm.startPrank(
+            WISE_DEPLOYER
+        );
+
+        vm.expectRevert(
+            "Ownable: caller is not the owner"
+        );
+
+        reel.setRerollCost(
+            rerollCost
         );
     }
 
