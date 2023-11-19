@@ -138,6 +138,11 @@ contract ReelVRF is ReelNFT, CommonVRF {
 
         rerollInProgress[_astroId] = true;
 
+        _takeTokens(
+            VERSE_TOKEN,
+            rerollCost
+        );
+
         _startRequest({
             _wordCount: 1,
             _astroId: _astroId,
