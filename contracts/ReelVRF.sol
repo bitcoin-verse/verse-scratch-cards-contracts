@@ -27,6 +27,10 @@ contract ReelVRF is ReelNFT, CommonVRF {
         uint256 rolledNumber
     );
 
+    event RerollCostUpdated(
+        uint256 newRerollCost
+    );
+
     constructor(
         string memory _name,
         string memory _symbol,
@@ -117,7 +121,7 @@ contract ReelVRF is ReelNFT, CommonVRF {
         external
         onlyTokenOwner(_astroId)
     {
-        if (_traitId >= MAX_TRAIT_TYPES) {
+        if (_traitId > MAX_TRAIT_TYPES) {
             revert InvalidTraitId();
         }
 
