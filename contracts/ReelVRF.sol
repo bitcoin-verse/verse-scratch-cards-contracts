@@ -56,6 +56,7 @@ contract ReelVRF is ReelNFT, CommonVRF {
         )
     {
         baseCost = _characterCost;
+        rerollCost = _characterCost / 10;
     }
 
     function buyCharacter()
