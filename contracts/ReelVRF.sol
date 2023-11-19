@@ -65,6 +65,21 @@ contract ReelVRF is ReelNFT, CommonVRF {
         );
     }
 
+    function giftCharacter(
+        address _receiver
+    )
+        external
+    {
+        _takeTokens(
+            VERSE_TOKEN,
+            baseCost
+        );
+
+        _mintCharacter(
+            _receiver
+        );
+    }
+
     /**
      * @notice Allows to gift NFT Character for free.
      * @dev Only can be called by the contract owner.
