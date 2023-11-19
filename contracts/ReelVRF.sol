@@ -117,6 +117,18 @@ contract ReelVRF is ReelNFT, CommonVRF {
         external
         onlyTokenOwner(_astroId)
     {
+        if (_traitId >= MAX_TRAIT_TYPES) {
+            revert InvalidTraitId();
+        }
+
+        if (traits[_astroId][_traitId] == 0) {
+            revert TraitNotYetDefined();
+        }
+
+        if (rerollInProgress[_astroId] == true) {
+            revert RerollInProgress();
+        }
+
         rerollInProgress[_astroId] = true;
 
         _startRequest({
