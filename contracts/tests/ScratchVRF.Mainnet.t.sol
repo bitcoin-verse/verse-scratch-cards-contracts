@@ -521,11 +521,11 @@ contract TestScratchVRF_MAINNET is Test {
      * @param _value value in ether
      */
     function testToWei(
-        uint256 _value
+        uint128 _value
     )
         public
     {
-        uint256 etherValue = _value;
+        uint256 etherValue = uint256(_value);
         uint256 expectedWeiValue = etherValue * 1 ether;
 
         uint256 actualWeiValue = scratcher.toWei(
