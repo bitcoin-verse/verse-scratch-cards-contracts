@@ -58,7 +58,7 @@ abstract contract CommonVRF is Ownable, TokenHelper, VRFConsumerBaseV2 {
 
     event WithdrawTokens(
         address indexed receiver,
-        uint256 amount
+        uint256 indexed amount
     );
 
     constructor(
