@@ -48,38 +48,38 @@ contract PrizeTiers {
         prizeTiers.push(
             PrizeTier({
                 drawEdgeA: 10,
-                drawEdgeB: 49,
+                drawEdgeB: 29,
                 winAmount: toWei(10_000)
             })
         );
 
         prizeTiers.push(
             PrizeTier({
-                drawEdgeA: 50,
-                drawEdgeB: 149,
+                drawEdgeA: 30,
+                drawEdgeB: 79,
                 winAmount: toWei(5_000)
             })
         );
 
         prizeTiers.push(
             PrizeTier({
-                drawEdgeA: 150,
-                drawEdgeB: 349,
+                drawEdgeA: 80,
+                drawEdgeB: 279,
                 winAmount: toWei(1_000)
             })
         );
 
         prizeTiers.push(
             PrizeTier({
-                drawEdgeA: 350,
-                drawEdgeB: 649,
+                drawEdgeA: 280,
+                drawEdgeB: 799,
                 winAmount: toWei(5_00)
             })
         );
 
         prizeTiers.push(
             PrizeTier({
-                drawEdgeA: 650,
+                drawEdgeA: 800,
                 drawEdgeB: 1000,
                 winAmount: toWei(1_00)
             })
