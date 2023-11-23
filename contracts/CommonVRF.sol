@@ -2,16 +2,16 @@
 
 pragma solidity =0.8.21;
 
-import "@openzeppelin/contracts/access/Ownable.sol";
 import "@chainlink/contracts/src/v0.8/interfaces/VRFCoordinatorV2Interface.sol";
 import "@chainlink/contracts/src/v0.8/vrf/VRFConsumerBaseV2.sol";
 
-import "./TokenHelper.sol";
+import "./helpers/Pausable.sol";
+import "./helpers/TokenHelper.sol";
 
 error InvalidCost();
 error TooManyReceivers();
 
-abstract contract CommonVRF is Ownable, TokenHelper, VRFConsumerBaseV2 {
+abstract contract CommonVRF is TokenHelper, Pausable, VRFConsumerBaseV2 {
 
     VRFCoordinatorV2Interface public immutable VRF_COORDINATOR;
 
