@@ -61,6 +61,7 @@ contract ReelVRF is ReelNFT, CommonVRF {
 
     function buyCharacter()
         external
+        whenNotPaused
     {
         _takeTokens(
             VERSE_TOKEN,
@@ -76,6 +77,7 @@ contract ReelVRF is ReelNFT, CommonVRF {
         address _receiver
     )
         external
+        whenNotPaused
     {
         _takeTokens(
             VERSE_TOKEN,
@@ -122,6 +124,7 @@ contract ReelVRF is ReelNFT, CommonVRF {
         uint256 _traitId
     )
         external
+        whenNotPaused
         onlyTokenOwner(_astroId)
     {
         if (_traitId > MAX_TRAIT_TYPES) {

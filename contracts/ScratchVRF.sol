@@ -39,6 +39,7 @@ contract ScratchVRF is ScratchNFT, CommonVRF {
      */
     function buyScratchTicket()
         external
+        whenNotPaused
     {
         _newScratchTicket(
             msg.sender
@@ -53,6 +54,7 @@ contract ScratchVRF is ScratchNFT, CommonVRF {
         address _receiver
     )
         external
+        whenNotPaused
     {
         _newScratchTicket(
             _receiver
@@ -228,6 +230,7 @@ contract ScratchVRF is ScratchNFT, CommonVRF {
         uint256 _ticketId
     )
         external
+        whenNotPaused
         onlyTokenOwner(_ticketId)
     {
         _setClaimed(
