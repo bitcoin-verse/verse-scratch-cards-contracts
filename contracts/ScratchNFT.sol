@@ -31,6 +31,7 @@ abstract contract ScratchNFT is CommonNFT, PrizeTiers  {
     event MintCompleted(
         uint256 indexed ticketId,
         uint256 indexed edition,
+        address indexed recipient,
         uint256 prize
     );
 
@@ -59,6 +60,7 @@ abstract contract ScratchNFT is CommonNFT, PrizeTiers  {
         emit MintCompleted(
             _ticketId,
             _editionId,
+            _receiver,
             _prize
         );
     }
