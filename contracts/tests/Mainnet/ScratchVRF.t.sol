@@ -504,7 +504,7 @@ contract TestScratchVRF_MAINNET is Test {
 
         assertEq(
             tokenURI,
-            "1/false&edition=10"
+            "1/false.json"
         );
 
         vm.expectRevert(

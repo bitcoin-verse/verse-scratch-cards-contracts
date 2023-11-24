@@ -15,7 +15,6 @@ abstract contract ScratchNFT is CommonNFT, PrizeTiers  {
 
     mapping(uint256 => bool) public claimed;
     mapping(uint256 => uint256) public prizes;
-    mapping(uint256 => uint256) public editions;
 
     struct Drawing {
         uint256 drawId;
@@ -50,7 +49,6 @@ abstract contract ScratchNFT is CommonNFT, PrizeTiers  {
         internal
     {
         prizes[_ticketId] = _prize;
-        editions[_ticketId] = _editionId;
 
         _mint(
             _receiver,
@@ -81,10 +79,6 @@ abstract contract ScratchNFT is CommonNFT, PrizeTiers  {
         string memory claimDone = claimed[_ticketId]
             ? "true"
             : "false";
-
-        uint256 editionIdFromTicket = editions[
-            _ticketId
-        ];
 
         return string(
             abi.encodePacked(
