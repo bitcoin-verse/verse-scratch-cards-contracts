@@ -92,8 +92,7 @@ abstract contract ScratchNFT is CommonNFT, PrizeTiers  {
                 _ticketId.toString(),
                 "/",
                 claimDone,
-                "&edition=",
-                editionIdFromTicket.toString()
+                ".json"
             )
         );
     }
