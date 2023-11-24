@@ -23,49 +23,9 @@ contract PrizeTiers {
 
         prizeTiers.push(
             PrizeTier({
-                drawEdgeA: 1,
-                drawEdgeB: 1,
-                winAmount: toWei(1_000_000)
-            })
-        );
-
-        prizeTiers.push(
-            PrizeTier({
-                drawEdgeA: 2,
-                drawEdgeB: 3,
-                winAmount: toWei(100_000)
-            })
-        );
-
-        prizeTiers.push(
-            PrizeTier({
-                drawEdgeA: 4,
-                drawEdgeB: 9,
-                winAmount: toWei(50_000)
-            })
-        );
-
-        prizeTiers.push(
-            PrizeTier({
-                drawEdgeA: 10,
-                drawEdgeB: 29,
-                winAmount: toWei(10_000)
-            })
-        );
-
-        prizeTiers.push(
-            PrizeTier({
-                drawEdgeA: 30,
-                drawEdgeB: 79,
-                winAmount: toWei(5_000)
-            })
-        );
-
-        prizeTiers.push(
-            PrizeTier({
-                drawEdgeA: 80,
-                drawEdgeB: 279,
-                winAmount: toWei(1_000)
+                drawEdgeA: 800,
+                drawEdgeB: 1000,
+                winAmount: toWei(1_00)
             })
         );
 
@@ -79,9 +39,49 @@ contract PrizeTiers {
 
         prizeTiers.push(
             PrizeTier({
-                drawEdgeA: 800,
-                drawEdgeB: 1000,
-                winAmount: toWei(1_00)
+                drawEdgeA: 80,
+                drawEdgeB: 279,
+                winAmount: toWei(1_000)
+            })
+        );
+
+        prizeTiers.push(
+            PrizeTier({
+                drawEdgeA: 30,
+                drawEdgeB: 79,
+                winAmount: toWei(5_000)
+            })
+        );
+
+        prizeTiers.push(
+            PrizeTier({
+                drawEdgeA: 10,
+                drawEdgeB: 29,
+                winAmount: toWei(10_000)
+            })
+        );
+
+        prizeTiers.push(
+            PrizeTier({
+                drawEdgeA: 4,
+                drawEdgeB: 9,
+                winAmount: toWei(50_000)
+            })
+        );
+
+        prizeTiers.push(
+            PrizeTier({
+                drawEdgeA: 2,
+                drawEdgeB: 3,
+                winAmount: toWei(100_000)
+            })
+        );
+
+        prizeTiers.push(
+            PrizeTier({
+                drawEdgeA: 1,
+                drawEdgeB: 1,
+                winAmount: toWei(1_000_000)
             })
         );
     }
