@@ -78,9 +78,9 @@ abstract contract ScratchNFT is CommonNFT, PrizeTiers  {
         }
 
         string memory baseURI = _baseURI();
-        string memory claimDone = claimed[_ticketId]
-            ? "true"
-            : "false";
+        string memory visualStatus = claimed[_ticketId]
+            ? "scratched"
+            : "unscratched";
 
         uint256 editionIdFromTicket = editions[
             _ticketId
@@ -91,9 +91,8 @@ abstract contract ScratchNFT is CommonNFT, PrizeTiers  {
                 baseURI,
                 _ticketId.toString(),
                 "/",
-                claimDone,
-                "&edition=",
-                editionIdFromTicket.toString()
+                visualStatus,
+                ".json"
             )
         );
     }
