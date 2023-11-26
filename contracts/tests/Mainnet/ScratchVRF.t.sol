@@ -517,6 +517,42 @@ contract TestScratchVRF_MAINNET is Test {
     }
 
     /**
+     * @notice it should be possible update baseURI
+     */
+    function testUpdateBaseURI()
+        public
+    {
+        testTokenURI();
+
+        vm.startPrank(
+            WISE_DEPLOYER
+        );
+
+        vm.expectRevert(
+            "Ownable: caller is not the owner"
+        );
+
+        scratcher.updateBaseURI(
+            "https://example.com/"
+        );
+
+        vm.stopPrank();
+
+        scratcher.updateBaseURI(
+            "https://example.com/"
+        );
+
+        string memory tokenURI = scratcher.tokenURI(
+            1
+        );
+
+        assertEq(
+            tokenURI,
+            "https://example.com/1/false.json"
+        );
+    }
+
+    /**
      * @notice it should be possible to test toWei()
      * @param _value value in ether
      */
