@@ -77,7 +77,6 @@ abstract contract ScratchNFT is CommonNFT, PrizeTiers  {
             revert InvalidId();
         }
 
-        string memory baseURI = _baseURI();
         string memory claimDone = claimed[_ticketId]
             ? "true"
             : "false";

@@ -29,8 +29,6 @@ abstract contract ReelNFT is CommonNFT, TraitTiers {
             revert InvalidId();
         }
 
-        string memory baseURI = _baseURI();
-
         return string(
             abi.encodePacked(
                 baseURI,
