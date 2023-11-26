@@ -77,14 +77,9 @@ abstract contract ScratchNFT is CommonNFT, PrizeTiers  {
             revert InvalidId();
         }
 
-        string memory baseURI = _baseURI();
         string memory claimDone = claimed[_ticketId]
             ? "true"
             : "false";
-
-        uint256 editionIdFromTicket = editions[
-            _ticketId
-        ];
 
         return string(
             abi.encodePacked(
@@ -92,8 +87,7 @@ abstract contract ScratchNFT is CommonNFT, PrizeTiers  {
                 _ticketId.toString(),
                 "/",
                 claimDone,
-                "&edition=",
-                editionIdFromTicket.toString()
+                ".json"
             )
         );
     }

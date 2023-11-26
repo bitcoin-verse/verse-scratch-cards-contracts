@@ -8,6 +8,7 @@ error InvalidId();
 
 abstract contract CommonNFT is ERC721Enumerable {
 
+    string internal baseURI;
     mapping(uint256 => string) public tokenURIs;
 
     modifier onlyTokenOwner(

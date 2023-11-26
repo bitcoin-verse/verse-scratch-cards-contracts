@@ -261,4 +261,13 @@ contract ScratchVRF is ScratchNFT, CommonVRF {
             prizeWei
         );
     }
+
+    function updateBaseURI(
+        string calldata _newBaseURI
+    )
+        external
+        onlyOwner
+    {
+        baseURI = _newBaseURI;
+    }
 }

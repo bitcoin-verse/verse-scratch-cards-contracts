@@ -504,7 +504,7 @@ contract TestScratchVRF_MAINNET is Test {
 
         assertEq(
             tokenURI,
-            "1/false&edition=10"
+            "1/false.json"
         );
 
         vm.expectRevert(
@@ -513,6 +513,42 @@ contract TestScratchVRF_MAINNET is Test {
 
         scratcher.tokenURI(
             0
+        );
+    }
+
+    /**
+     * @notice it should be possible update baseURI
+     */
+    function testUpdateBaseURI()
+        public
+    {
+        testTokenURI();
+
+        vm.startPrank(
+            WISE_DEPLOYER
+        );
+
+        vm.expectRevert(
+            "Ownable: caller is not the owner"
+        );
+
+        scratcher.updateBaseURI(
+            "https://example.com/"
+        );
+
+        vm.stopPrank();
+
+        scratcher.updateBaseURI(
+            "https://example.com/"
+        );
+
+        string memory tokenURI = scratcher.tokenURI(
+            1
+        );
+
+        assertEq(
+            tokenURI,
+            "https://example.com/1/false.json"
         );
     }
 
