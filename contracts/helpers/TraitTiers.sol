@@ -119,4 +119,58 @@ contract TraitTiers {
             })
         );
     }
+
+    function getRealTraits(
+        uint256[] memory _results,
+        uint256 _maxTraitTypes
+    )
+        external
+        view
+        returns (uint256[] memory)
+    {
+        uint256[] memory traits = new uint256[](
+            _maxTraitTypes
+        );
+
+        traits = _results;
+
+        uint256 i;
+        uint256 loops = traits.length;
+
+        for (i; i < loops;) {
+            traits[i] = _getTraitTier(
+                traits[i]
+            );
+            unchecked {
+                ++i;
+            }
+        }
+
+        return traits;
+    }
+
+    function _getTraitTier(
+        uint256 _number
+    )
+        internal
+        view
+        returns (uint256 trait)
+    {
+        uint256 i;
+        uint256 loops = traitTiers.length;
+
+        while (i < loops) {
+
+            TraitTier memory tt = traitTiers[i];
+
+            if (_number >= tt.drawEdgeA && _number <= tt.drawEdgeB) {
+                trait = tt.traitIndex;
+                return trait;
+            }
+
+            unchecked {
+                ++i;
+            }
+        }
+    }
 }
