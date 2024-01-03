@@ -21,7 +21,11 @@ contract Pausable is Ownable {
         uint256 blocktime
     );
 
-    constructor() {
+    constructor()
+        Ownable(
+            msg.sender
+        )
+    {
         paused = false;
     }
 
