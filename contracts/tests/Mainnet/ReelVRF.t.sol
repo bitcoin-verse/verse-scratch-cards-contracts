@@ -25,6 +25,9 @@ contract TestReelVRF_MAINNET is Test {
     bytes32 constant GAS_KEY_HASH = 0xd89b2bf150e3b9e13446986e571fb9cab24b13cea0a43ea20a6049a85cc807cc;
     uint64 constant SUBSCRIPTON_ID = 0;
 
+    uint256 traitsInContract;
+    uint256 expectedTraitCount;
+
     function setUp()
         public
     {
@@ -50,6 +53,15 @@ contract TestReelVRF_MAINNET is Test {
             VERSE_TOKEN,
             GAS_KEY_HASH,
             SUBSCRIPTON_ID
+        );
+
+        expectedTraitCount = 6;
+        traitsInContract = reel.MAX_TRAIT_TYPES();
+
+        assertEq(
+            traitsInContract,
+            expectedTraitCount,
+            "expectedTraitCount count should be equal to traitsInContract"
         );
 
         vm.startPrank(
@@ -251,7 +263,11 @@ contract TestReelVRF_MAINNET is Test {
             0
         );
 
-        assertEq(reel.getTraits(1).length, 6);
+        assertEq(
+            expectedTraitCount,
+            reel.getTraits(1).length,
+            "Traits length should be expectedTraitCount"
+        );
 
         assertEq(
             reel.rerollInProgress(
@@ -357,7 +373,8 @@ contract TestReelVRF_MAINNET is Test {
 
         assertEq(
             reel.latestCharacterId(),
-            initialCharacter
+            initialCharacter,
+            "Latest character id should be 0"
         );
 
         reel.buyCharacter();
@@ -371,10 +388,15 @@ contract TestReelVRF_MAINNET is Test {
 
         assertEq(
             reel.latestCharacterId(),
-            initialCharacter + 1
+            initialCharacter + 1,
+            "Latest character id should be 1"
         );
 
-        assertEq(reel.getTraits(1).length, 6);
+        assertEq(
+            reel.getTraits(1).length,
+            expectedTraitCount,
+            "Traits length should be equal to expectedTraitCount"
+        );
     }
 
     /**
@@ -407,7 +429,8 @@ contract TestReelVRF_MAINNET is Test {
 
         assertEq(
             reel.latestCharacterId(),
-            initialCharacters + 1
+            initialCharacters + 1,
+            "Latest character id should be 1"
         );
 
         vm.stopPrank();
@@ -417,7 +440,11 @@ contract TestReelVRF_MAINNET is Test {
             address(reel)
         );
 
-        assertEq(reel.getTraits(1).length, 6);
+        assertEq(
+            reel.getTraits(1).length,
+            expectedTraitCount,
+            "Traits length should be equal to expectedTraitCount"
+        );
     }
 
     function testUnifrom()
