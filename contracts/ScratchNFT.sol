@@ -73,7 +73,7 @@ abstract contract ScratchNFT is CommonNFT, PrizeTiers  {
         override
         returns (string memory)
     {
-        if (_exists(_ticketId) == false) {
+        if (_ownerOf(_ticketId) == address(0x0)) {
             revert InvalidId();
         }
 

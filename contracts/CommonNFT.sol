@@ -2,6 +2,7 @@
 
 pragma solidity =0.8.21;
 
+import { Strings } from "@openzeppelin/contracts/utils/Strings.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 
 error InvalidId();
@@ -29,7 +30,7 @@ abstract contract CommonNFT is ERC721Enumerable {
         view
         returns(bool)
     {
-        return _exists(_tokenId);
+        return _ownerOf(_tokenId) > address(0x0);
     }
 
     function ownedByAddress(
@@ -49,7 +50,7 @@ abstract contract CommonNFT is ERC721Enumerable {
 
         uint256 i;
 
-        for (i; i < ownerNFTCount;) {
+        while (i < ownerNFTCount) {
 
             nftIds[i] = tokenOfOwnerByIndex(
                 _owner,
