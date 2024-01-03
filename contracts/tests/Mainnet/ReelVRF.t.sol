@@ -251,6 +251,8 @@ contract TestReelVRF_MAINNET is Test {
             0
         );
 
+        assertEq(reel.getTraits(1).length, 6);
+
         assertEq(
             reel.rerollInProgress(
                 expectedCharactedId
@@ -371,6 +373,8 @@ contract TestReelVRF_MAINNET is Test {
             reel.latestCharacterId(),
             initialCharacter + 1
         );
+
+        assertEq(reel.getTraits(1).length, 6);
     }
 
     /**
@@ -412,6 +416,8 @@ contract TestReelVRF_MAINNET is Test {
             1,
             address(reel)
         );
+
+        assertEq(reel.getTraits(1).length, 6);
     }
 
     function testUnifrom()
