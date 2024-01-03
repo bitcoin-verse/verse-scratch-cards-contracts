@@ -4,6 +4,9 @@ pragma solidity =0.8.21;
 
 import "./CommonNFT.sol";
 
+// @TODO: to consider using on-chain data
+// import "./helpers/TraitTiers.sol";
+
 abstract contract ReelNFT is CommonNFT {
 
     using Strings for uint256;
@@ -24,7 +27,7 @@ abstract contract ReelNFT is CommonNFT {
         override
         returns (string memory)
     {
-        if (_exists(_astroId) == false) {
+        if (_ownerOf(_astroId) == address(0x0)) {
             revert InvalidId();
         }
 
@@ -35,22 +38,6 @@ abstract contract ReelNFT is CommonNFT {
             )
         );
     }
-
-    /*
-    function getTrait(
-        uint256 _astroId,
-        uint256 _traitType
-    )
-        external
-        view
-        returns (uint256)
-        // returns (TraitType[] memory)
-    {
-        return traits[_astroId][_traitType];
-    }
-    */
-
-
 
     function getTraits(
         uint256 _astroId
