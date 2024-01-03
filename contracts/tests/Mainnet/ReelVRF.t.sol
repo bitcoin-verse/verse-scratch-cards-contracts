@@ -20,7 +20,7 @@ contract TestReelVRF_MAINNET is Test {
     address constant VERSE_TOKEN = 0x249cA82617eC3DfB2589c4c17ab7EC9765350a18;
     address constant WISE_DEPLOYER = 0x641AD78BAca220C5BD28b51Ce8e0F495e85Fe689;
 
-    VRFCoordinatorV2Mock public coordinanotor;
+    VRFCoordinatorV2Mock public coordinator;
 
     bytes32 constant GAS_KEY_HASH = 0xd89b2bf150e3b9e13446986e571fb9cab24b13cea0a43ea20a6049a85cc807cc;
     uint64 constant SUBSCRIPTON_ID = 0;
@@ -36,7 +36,7 @@ contract TestReelVRF_MAINNET is Test {
         uint96 _baseFee = 100_000_000_000;
         uint96 _gasPriceLink = 1_000_000;
 
-        coordinanotor = new VRFCoordinatorV2Mock(
+        coordinator = new VRFCoordinatorV2Mock(
             _baseFee,
             _gasPriceLink
         );
@@ -44,7 +44,7 @@ contract TestReelVRF_MAINNET is Test {
         reel = new ReelVRF(
             "ReelVRF",
             "RVRF",
-            address(coordinanotor),
+            address(coordinator),
             CHARACTER_COST,
             LINK_TOKEN,
             VERSE_TOKEN,
@@ -63,7 +63,7 @@ contract TestReelVRF_MAINNET is Test {
             topUp
         );
 
-        coordinanotor.fundSubscription(
+        coordinator.fundSubscription(
             uint64(reel.SUBSCRIPTION_ID()),
             uint96(topUp)
         );
@@ -231,7 +231,7 @@ contract TestReelVRF_MAINNET is Test {
             expectedCharactedId
         );
 
-        coordinanotor.fulfillRandomWords(
+        coordinator.fulfillRandomWords(
             1,
             address(reel)
         );
@@ -314,7 +314,7 @@ contract TestReelVRF_MAINNET is Test {
 
         vm.stopPrank();
 
-        coordinanotor.fulfillRandomWords(
+        coordinator.fulfillRandomWords(
             2,
             address(reel)
         );
@@ -364,7 +364,7 @@ contract TestReelVRF_MAINNET is Test {
 
         vm.stopPrank();
 
-        coordinanotor.fulfillRandomWords(
+        coordinator.fulfillRandomWords(
             1,
             address(reel)
         );
@@ -412,7 +412,7 @@ contract TestReelVRF_MAINNET is Test {
 
         vm.stopPrank();
 
-        coordinanotor.fulfillRandomWords(
+        coordinator.fulfillRandomWords(
             1,
             address(reel)
         );
@@ -507,7 +507,7 @@ contract TestReelVRF_MAINNET is Test {
             initialCharacter + 1
         );
 
-        coordinanotor.fulfillRandomWords(
+        coordinator.fulfillRandomWords(
             1,
             address(reel)
         );
@@ -558,7 +558,7 @@ contract TestReelVRF_MAINNET is Test {
 
         vm.stopPrank();
 
-        coordinanotor.fulfillRandomWords(
+        coordinator.fulfillRandomWords(
             1,
             address(reel)
         );
@@ -599,7 +599,7 @@ contract TestReelVRF_MAINNET is Test {
 
         vm.stopPrank();
 
-        coordinanotor.fulfillRandomWords(
+        coordinator.fulfillRandomWords(
             1,
             address(reel)
         );
@@ -644,7 +644,7 @@ contract TestReelVRF_MAINNET is Test {
 
         vm.stopPrank();
 
-        coordinanotor.fulfillRandomWords(
+        coordinator.fulfillRandomWords(
             1,
             address(reel)
         );
