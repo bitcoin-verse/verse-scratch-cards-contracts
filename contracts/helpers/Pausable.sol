@@ -2,7 +2,7 @@
 
 pragma solidity =0.8.21;
 
-import "@openzeppelin/contracts/access/Ownable.sol";
+import "./Ownable.sol";
 
 error ContractPaused();
 error ContractNotPaused();
@@ -21,7 +21,9 @@ contract Pausable is Ownable {
         uint256 blocktime
     );
 
-    constructor() {
+    constructor()
+        Ownable(msg.sender)
+    {
         paused = false;
     }
 

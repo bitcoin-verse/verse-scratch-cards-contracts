@@ -6,6 +6,7 @@
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
         "foundry-size": "forge build --sizes",
+        "foundry-test-log": "forge test -vv",
         "foundry-test-default": "forge test --gas-report -vvv",
         "foundry-test-reports": "forge test --gas-report > gasreport.ansi -vvv",
         "foundry-test-mainnet": "forge test --match-path contracts/tests/Mainnet/*.sol --gas-report -vvv",

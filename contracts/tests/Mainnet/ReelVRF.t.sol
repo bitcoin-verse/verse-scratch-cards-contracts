@@ -125,7 +125,7 @@ contract TestReelVRF_MAINNET is Test {
         );
 
         vm.expectRevert(
-            "Ownable: caller is not the owner"
+            NotMaster.selector
         );
 
         reel.changeBaseCost(
@@ -265,7 +265,7 @@ contract TestReelVRF_MAINNET is Test {
 
         assertEq(
             expectedTraitCount,
-            reel.getTraits(1).length,
+            reel.getTraitIds(1).length,
             "Traits length should be expectedTraitCount"
         );
 
@@ -342,7 +342,7 @@ contract TestReelVRF_MAINNET is Test {
             false
         );
 
-        uint256[] memory traits = reel.getTraits(
+        uint256[] memory traits = reel.getTraitIds(
             expectedCharactedId
         );
 
@@ -386,6 +386,26 @@ contract TestReelVRF_MAINNET is Test {
             address(reel)
         );
 
+        string memory bgName = reel.getBackgroundColorName(
+            1
+        );
+
+        Character memory character = reel.getTraitNames(
+            1
+        );
+
+        console.log(bgName, "bgName");
+        console.log(character.backgroundColor, "backgroundColor");
+        console.log(character.backType, "backType");
+        console.log(character.bodyType, "bodyType");
+        console.log(character.gearType, "gearType");
+        console.log(character.headType, "headType");
+        console.log(character.extraType, "extraType");
+
+        uint256[] memory tr = reel.getTraitIds(1);
+
+        console.log(tr[0], "tr[0]");
+
         assertEq(
             reel.latestCharacterId(),
             initialCharacter + 1,
@@ -393,7 +413,7 @@ contract TestReelVRF_MAINNET is Test {
         );
 
         assertEq(
-            reel.getTraits(1).length,
+            reel.getTraitIds(1).length,
             expectedTraitCount,
             "Traits length should be equal to expectedTraitCount"
         );
@@ -441,7 +461,7 @@ contract TestReelVRF_MAINNET is Test {
         );
 
         assertEq(
-            reel.getTraits(1).length,
+            reel.getTraitIds(1).length,
             expectedTraitCount,
             "Traits length should be equal to expectedTraitCount"
         );
@@ -500,7 +520,7 @@ contract TestReelVRF_MAINNET is Test {
         );
 
         vm.expectRevert(
-            "Ownable: caller is not the owner"
+            NotMaster.selector
         );
 
         reel.setRerollCost(

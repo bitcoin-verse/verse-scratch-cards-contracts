@@ -114,7 +114,7 @@ contract TestScratchVRF_MAINNET is Test {
         );
 
         vm.expectRevert(
-            "Ownable: caller is not the owner"
+            NotMaster.selector
         );
 
         scratcher.changeBaseCost(
@@ -529,7 +529,7 @@ contract TestScratchVRF_MAINNET is Test {
         );
 
         vm.expectRevert(
-            "Ownable: caller is not the owner"
+            NotMaster.selector
         );
 
         scratcher.updateBaseURI(

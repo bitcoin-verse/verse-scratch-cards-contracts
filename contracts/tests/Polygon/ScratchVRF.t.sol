@@ -77,7 +77,7 @@ contract TestScratchVRF_POLYGON is Test {
         );
 
         vm.expectRevert(
-            "Ownable: caller is not the owner"
+            NotMaster.selector
         );
 
         scratcher.changeBaseCost(

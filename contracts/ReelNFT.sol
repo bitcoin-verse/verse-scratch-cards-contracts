@@ -3,11 +3,9 @@
 pragma solidity =0.8.21;
 
 import "./CommonNFT.sol";
+import "./helpers/TraitTiers.sol";
 
-// @TODO: to consider using on-chain data
-// import "./helpers/TraitTiers.sol";
-
-abstract contract ReelNFT is CommonNFT {
+abstract contract ReelNFT is CommonNFT, TraitTiers {
 
     using Strings for uint256;
 
@@ -39,10 +37,10 @@ abstract contract ReelNFT is CommonNFT {
         );
     }
 
-    function getTraits(
+    function getTraitIds(
         uint256 _astroId
     )
-        external
+        public
         view
         returns (uint256[] memory)
     {
@@ -55,6 +53,140 @@ abstract contract ReelNFT is CommonNFT {
         ];
 
         return traits;
+    }
+
+    function getTraitNames(
+        uint256 _astroId
+    )
+        external
+        view
+        returns (Character memory astro)
+    {
+        uint256[] memory traits = getTraitIds(
+            _astroId
+        );
+
+        astro.backgroundColor = _getBackgroundColor(
+            traits[0]
+        );
+
+        astro.backType = _getBackType(
+            traits[1]
+        );
+
+        astro.bodyType = _getBodyType(
+            traits[2]
+        );
+
+        astro.gearType = _getGearType(
+            traits[3]
+        );
+
+        astro.headType = _getHeadType(
+            traits[4]
+        );
+
+        astro.extraType = _getExtraType(
+            traits[5]
+        );
+
+        return astro;
+    }
+
+    function getBackgroundColorName(
+        uint256 _astroId
+    )
+        external
+        view
+        returns (string memory backgroundColor)
+    {
+        uint256[] memory traits = getTraitIds(
+            _astroId
+        );
+
+        return _getBackgroundColor(
+            traits[0]
+        );
+    }
+
+    function getBackName(
+        uint256 _astroId
+    )
+        external
+        view
+        returns (string memory backName)
+    {
+        uint256[] memory traits = getTraitIds(
+            _astroId
+        );
+
+        return _getBackType(
+            traits[1]
+        );
+    }
+
+    function getBodyName(
+        uint256 _astroId
+    )
+        external
+        view
+        returns (string memory bodyName)
+    {
+        uint256[] memory traits = getTraitIds(
+            _astroId
+        );
+
+        return _getBodyType(
+            traits[2]
+        );
+    }
+
+    function getGearName(
+        uint256 _astroId
+    )
+        external
+        view
+        returns (string memory gearName)
+    {
+        uint256[] memory traits = getTraitIds(
+            _astroId
+        );
+
+        return _getGearType(
+            traits[3]
+        );
+    }
+
+    function getHeadName(
+        uint256 _astroId
+    )
+        external
+        view
+        returns (string memory headName)
+    {
+        uint256[] memory traits = getTraitIds(
+            _astroId
+        );
+
+        return _getHeadType(
+            traits[4]
+        );
+    }
+
+    function getExtraName(
+        uint256 _astroId
+    )
+        external
+        view
+        returns (string memory extraName)
+    {
+        uint256[] memory traits = getTraitIds(
+            _astroId
+        );
+
+        return _getExtraType(
+            traits[5]
+        );
     }
 
     function _increaseCharacterId()
