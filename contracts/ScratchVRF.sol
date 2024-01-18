@@ -95,23 +95,20 @@ contract ScratchVRF is ScratchNFT, CommonVRF {
             revert TooManyReceivers();
         }
 
-        for (i; i < loops;) {
-
+        while (i < loops) {
             _drawTicketRequest(
                 _receivers[i]
             );
-
             unchecked {
                 ++i;
             }
         }
     }
 
-
     /**
      * @notice Allows to bulk purchase of multiple tickets
      * @param _receiver destination address for purchased tickets
-     * @param _amount amount of tickets to purchase
+     * @param _ticketCount amount of tickets to purchase
      */
     function bulkPurchase(
         address _receiver,
