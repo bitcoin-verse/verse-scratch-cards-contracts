@@ -119,27 +119,25 @@ contract ScratchVRF is ScratchNFT, CommonVRF {
     )
         external
     {
-
-        uint256 i;
-        uint256 loops = _amount;
         if (_amount == 0) {
             revert ZeroAmount();
         }
 
-        if (loops > MAX_LOOPS) {
+        if (_ticketCount > MAX_LOOPS) {
             revert TooManyTickets();
         }
 
         _takeTokens(
             VERSE_TOKEN,
-            baseCost * loops
+            baseCost * _ticketCount
         );
 
-        for (i; i < loops;) {
+        uint256 i;
+
+        while (i < _ticketCount) {
             _drawTicketRequest(
                 _receiver
             );
-
             unchecked {
                 ++i;
             }
