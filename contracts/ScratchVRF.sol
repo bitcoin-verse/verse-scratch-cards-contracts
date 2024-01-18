@@ -134,7 +134,7 @@ contract ScratchVRF is ScratchNFT, CommonVRF {
 
         for (i; i < loops;) {
             _drawTicketRequest(
-               _receiver
+                _receiver
             );
 
             unchecked {
