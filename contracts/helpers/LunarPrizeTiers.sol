@@ -20,7 +20,7 @@ contract PrizeTiers {
         PrizeTier({
             drawEdgeA: 790,
             drawEdgeB: 887,
-            winAmount: toWei(1_000) 
+            winAmount: toWei(1_000)
         })
     );
 
@@ -28,7 +28,7 @@ contract PrizeTiers {
         PrizeTier({
             drawEdgeA: 889,
             drawEdgeB: 1000,
-            winAmount: toWei(1_000) 
+            winAmount: toWei(1_000)
         })
     );
 
@@ -36,7 +36,7 @@ contract PrizeTiers {
         PrizeTier({
             drawEdgeA: 594,
             drawEdgeB: 789,
-            winAmount: toWei(2_000) 
+            winAmount: toWei(2_000)
         })
     );
 
@@ -44,7 +44,7 @@ contract PrizeTiers {
         PrizeTier({
             drawEdgeA: 396,
             drawEdgeB: 593,
-            winAmount: toWei(5_000) 
+            winAmount: toWei(5_000)
         })
     );
 
@@ -52,7 +52,7 @@ contract PrizeTiers {
         PrizeTier({
             drawEdgeA: 244,
             drawEdgeB: 395,
-            winAmount: toWei(10_000) 
+            winAmount: toWei(10_000)
         })
     );
 
@@ -60,7 +60,7 @@ contract PrizeTiers {
         PrizeTier({
             drawEdgeA: 104,
             drawEdgeB: 243,
-            winAmount: toWei(12000) 
+            winAmount: toWei(12000)
         })
     );
 
@@ -69,7 +69,7 @@ contract PrizeTiers {
         PrizeTier({
             drawEdgeA: 59,
             drawEdgeB: 103,
-            winAmount: toWei(30_000) 
+            winAmount: toWei(30_000)
         })
     );
 
@@ -77,7 +77,7 @@ contract PrizeTiers {
         PrizeTier({
             drawEdgeA: 16,
             drawEdgeB: 58,
-            winAmount: toWei(50_000) 
+            winAmount: toWei(50_000)
         })
     );
 
@@ -85,7 +85,7 @@ contract PrizeTiers {
         PrizeTier({
             drawEdgeA: 2,
             drawEdgeB: 15,
-            winAmount: toWei(100_000) 
+            winAmount: toWei(100_000)
         })
     );
 
@@ -93,15 +93,15 @@ contract PrizeTiers {
         PrizeTier({
             drawEdgeA: 1,
             drawEdgeB: 1,
-            winAmount: toWei(800_000) 
+            winAmount: toWei(800_000)
         })
     );
 
     prizeTiers.push(
         PrizeTier({
             drawEdgeA: 888,
-            drawEdgeB: 888, 
-            winAmount: toWei(8_888_888) 
+            drawEdgeB: 888,
+            winAmount: toWei(8_888_888)
         })
     );
     }
