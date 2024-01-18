@@ -16,92 +16,86 @@ contract PrizeTiers {
 
     constructor() {
 
-        prizeTiers.push(
-            PrizeTier({
-                drawEdgeA: 790,
-                drawEdgeB: 887,
-                winAmount: toWei(1_000)
-            })
-        );
+        _addPrize({
+            _drawEdgeA: 889,
+            _drawEdgeB: 1000,
+            _winAmount: toWei(1_000)
+        });
 
-        prizeTiers.push(
-            PrizeTier({
-                drawEdgeA: 889,
-                drawEdgeB: 1000,
-                winAmount: toWei(1_000)
-            })
-        );
+        _addPrize({
+            _drawEdgeA: 790,
+            _drawEdgeB: 887,
+            _winAmount: toWei(1_000)
+        });
 
-        prizeTiers.push(
-            PrizeTier({
-                drawEdgeA: 594,
-                drawEdgeB: 789,
-                winAmount: toWei(2_000)
-            })
-        );
+        _addPrize({
+            _drawEdgeA: 594,
+            _drawEdgeB: 789,
+            _winAmount: toWei(2_000)
+        });
 
-        prizeTiers.push(
-            PrizeTier({
-                drawEdgeA: 396,
-                drawEdgeB: 593,
-                winAmount: toWei(5_000)
-            })
-        );
+        _addPrize({
+            _drawEdgeA: 396,
+            _drawEdgeB: 593,
+            _winAmount: toWei(5_000)
+        });
 
-        prizeTiers.push(
-            PrizeTier({
-                drawEdgeA: 244,
-                drawEdgeB: 395,
-                winAmount: toWei(10_000)
-            })
-        );
+        _addPrize({
+            _drawEdgeA: 244,
+            _drawEdgeB: 395,
+            _winAmount: toWei(10_000)
+        });
 
-        prizeTiers.push(
-            PrizeTier({
-                drawEdgeA: 104,
-                drawEdgeB: 243,
-                winAmount: toWei(12000)
-            })
-        );
+        _addPrize({
+            _drawEdgeA: 104,
+            _drawEdgeB: 243,
+            _winAmount: toWei(12000)
+        });
 
 
-        prizeTiers.push(
-            PrizeTier({
-                drawEdgeA: 59,
-                drawEdgeB: 103,
-                winAmount: toWei(30_000)
-            })
-        );
+        _addPrize({
+            _drawEdgeA: 59,
+            _drawEdgeB: 103,
+            _winAmount: toWei(30_000)
+        });
 
-        prizeTiers.push(
-            PrizeTier({
-                drawEdgeA: 16,
-                drawEdgeB: 58,
-                winAmount: toWei(50_000)
-            })
-        );
+        _addPrize({
+            _drawEdgeA: 16,
+            _drawEdgeB: 58,
+            _winAmount: toWei(50_000)
+        });
 
-        prizeTiers.push(
-            PrizeTier({
-                drawEdgeA: 2,
-                drawEdgeB: 15,
-                winAmount: toWei(100_000)
-            })
-        );
+        _addPrize({
+            _drawEdgeA: 2,
+            _drawEdgeB: 15,
+            _winAmount: toWei(100_000)
+        });
 
-        prizeTiers.push(
-            PrizeTier({
-                drawEdgeA: 1,
-                drawEdgeB: 1,
-                winAmount: toWei(800_000)
-            })
-        );
+        _addPrize({
+            _drawEdgeA: 1,
+            _drawEdgeB: 1,
+            _winAmount: toWei(800_000)
+        });
 
+        _addPrize({
+            _drawEdgeA: 888,
+            _drawEdgeB: 888,
+            _winAmount: toWei(8_888_888)
+        });
+    }
+
+    function _addPrize(
+        uint256 _drawEdgeA,
+        uint256 _drawEdgeB,
+        uint256 _winAmount
+    )
+        internal
+    {
         prizeTiers.push(
             PrizeTier({
-                drawEdgeA: 888,
-                drawEdgeB: 888,
-                winAmount: toWei(8_888_888)
+                drawEdgeA: _drawEdgeA,
+                drawEdgeB: _drawEdgeB,
+                winAmount: _winAmount
             })
         );
     }
