@@ -114,7 +114,7 @@ contract ScratchVRF is ScratchNFT, CommonVRF {
      */
     function bulkPurchase(
         address _receiver,
-        uint _amount
+        uint256 _ticketCount
     )
         external
     {
