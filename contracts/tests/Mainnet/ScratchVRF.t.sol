@@ -239,6 +239,24 @@ contract TestScratchVRF_MAINNET is Test {
             1
         );
     }
+
+    /**
+     * @notice it should throw an error
+     * if trying to purchase 0 tickets
+     */
+    function testZeroPurchase()
+        public
+    {
+        vm.expectRevert(
+            ZeroTickts.selector
+        );
+
+        scratcher.bulkPurchase(
+            WISE_DEPLOYER,
+            0
+        );
+    }
+
     /**
      * @notice it should be possible to buy tickets in bulk
      */
