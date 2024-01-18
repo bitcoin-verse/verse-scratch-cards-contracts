@@ -5,7 +5,7 @@ pragma solidity =0.8.21;
 import "./CommonVRF.sol";
 import "./ScratchNFT.sol";
 
-error ZeroAmount();
+error ZeroTickts();
 error NotEnoughFunds();
 
 contract ScratchVRF is ScratchNFT, CommonVRF {
@@ -119,8 +119,8 @@ contract ScratchVRF is ScratchNFT, CommonVRF {
     )
         external
     {
-        if (_amount == 0) {
-            revert ZeroAmount();
+        if (_ticketCount == 0) {
+            revert ZeroTickts();
         }
 
         if (_ticketCount > MAX_LOOPS) {
