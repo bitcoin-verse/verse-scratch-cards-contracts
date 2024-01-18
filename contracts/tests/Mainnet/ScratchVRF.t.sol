@@ -57,6 +57,11 @@ contract TestScratchVRF_MAINNET is Test {
             WISE_DEPLOYER
         );
 
+        IERC20(VERSE_TOKEN).transfer(
+            address(scratcher),
+            1_000_000 * 1E18
+        );
+
         uint256 topUp = 10 * 1E18;
 
         IERC20(LINK_TOKEN).approve(
@@ -406,6 +411,13 @@ contract TestScratchVRF_MAINNET is Test {
         assertEq(
             scratcher.latestTicketId(),
             initialTickets + 1
+        );
+
+        scratcher.withdrawTokens(
+            IERC20(VERSE_TOKEN),
+            _getVerseBalance(
+                address(scratcher)
+            )
         );
 
         vm.startPrank(
