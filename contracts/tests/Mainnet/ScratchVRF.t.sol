@@ -237,7 +237,7 @@ contract TestScratchVRF_MAINNET is Test {
     /**
      * @notice it should be possible to buy tickets in bulk
      */
-    function testBulkPurchase() 
+    function testBulkPurchase()
         public
     {
         uint256 purchaseAmount = 30;
@@ -251,14 +251,14 @@ contract TestScratchVRF_MAINNET is Test {
             address(scratcher),
             baseCost * purchaseAmount
         );
-        
+
         scratcher.bulkPurchase(
             WISE_DEPLOYER,
             purchaseAmount
         );
 
         uint256 initialTickets = 0;
-        
+
         assertEq(
             scratcher.latestTicketId(),
             initialTickets
@@ -267,10 +267,10 @@ contract TestScratchVRF_MAINNET is Test {
         vm.stopPrank();
 
         for (uint256 i = 1; i < purchaseAmount; i++) {
-         coordinanotor.fulfillRandomWords(
-            i,
-            address(scratcher)
-          );
+            coordinanotor.fulfillRandomWords(
+                i,
+                address(scratcher)
+            );
         }
 
         assertEq(
@@ -280,7 +280,7 @@ contract TestScratchVRF_MAINNET is Test {
 
         purchaseAmount = 100;
 
-         vm.startPrank(
+        vm.startPrank(
             WISE_DEPLOYER
         );
 
@@ -288,7 +288,7 @@ contract TestScratchVRF_MAINNET is Test {
             address(scratcher),
             baseCost * purchaseAmount
         );
-        
+
         vm.expectRevert(
             TooManyTickets.selector
         );
@@ -297,7 +297,6 @@ contract TestScratchVRF_MAINNET is Test {
             WISE_DEPLOYER,
             purchaseAmount
         );
-        
     }
 
     /**
