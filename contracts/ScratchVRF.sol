@@ -5,6 +5,7 @@ pragma solidity =0.8.21;
 import "./CommonVRF.sol";
 import "./ScratchNFT.sol";
 
+error ZeroAmount();
 error NotEnoughFunds();
 
 contract ScratchVRF is ScratchNFT, CommonVRF {
@@ -118,10 +119,12 @@ contract ScratchVRF is ScratchNFT, CommonVRF {
     )
         external
     {
-        require(_amount > 0, "Amount must be greater than 0");
 
         uint256 i;
         uint256 loops = _amount;
+        if (_amount == 0) {
+            revert ZeroAmount();
+        }
 
         if (loops > MAX_LOOPS) {
             revert TooManyTickets();
