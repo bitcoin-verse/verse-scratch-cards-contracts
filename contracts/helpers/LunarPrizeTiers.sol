@@ -2,7 +2,7 @@
 
 pragma solidity =0.8.21;
 
-contract PrizeTiers {
+contract LunarPrizeTiers {
 
     PrizeTier[] public prizeTiers;
 
