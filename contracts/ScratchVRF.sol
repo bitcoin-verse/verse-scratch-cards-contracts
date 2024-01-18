@@ -109,16 +109,19 @@ contract ScratchVRF is ScratchNFT, CommonVRF {
 
     /**
      * @notice Allows to bulk purchase of multiple tickets
-     * @param amount amount of tickets to purchase 
+     * @param _receiver destination address for purchased tickets
+     * @param _amount amount of tickets to purchase 
      */
     function bulkPurchase(
         address _receiver,
-        uint amount
+        uint _amount
     )
         external
     {
+        require(_amount > 0, "Amount must be greater than 0");
+        
         uint256 i;
-        uint256 loops = amount;
+        uint256 loops = _amount;
 
         if (loops > MAX_LOOPS) {
             revert TooManyTickets();
@@ -126,7 +129,7 @@ contract ScratchVRF is ScratchNFT, CommonVRF {
 
         _takeTokens(
             VERSE_TOKEN,
-            baseCost * amount
+            baseCost * _amount
         );
 
         for (i; i < loops;) {
