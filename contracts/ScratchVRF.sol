@@ -119,7 +119,7 @@ contract ScratchVRF is ScratchNFT, CommonVRF {
         external
     {
         require(_amount > 0, "Amount must be greater than 0");
-        
+
         uint256 i;
         uint256 loops = _amount;
 
@@ -129,7 +129,7 @@ contract ScratchVRF is ScratchNFT, CommonVRF {
 
         _takeTokens(
             VERSE_TOKEN,
-            baseCost * _amount
+            baseCost * loops
         );
 
         for (i; i < loops;) {
