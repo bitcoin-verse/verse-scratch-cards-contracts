@@ -52,7 +52,6 @@ contract LunarPrizeTiers {
             _winAmount: toWei(12000)
         });
 
-
         _addPrize({
             _drawEdgeA: 59,
             _drawEdgeB: 103,
