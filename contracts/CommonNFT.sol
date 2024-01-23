@@ -2,8 +2,7 @@
 
 pragma solidity =0.8.23;
 
-import { Strings } from "@openzeppelin/contracts/utils/Strings.sol";
-import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
+import "./flats/ERC721Enumerable.sol";
 
 error InvalidId();
 
@@ -18,7 +17,7 @@ abstract contract CommonNFT is ERC721Enumerable {
     {
         require(
             ownerOf(_tokenId) == msg.sender,
-            "CommonBase: INVALID_OWNER"
+            "CommonNFT: INVALID_OWNER"
         );
         _;
     }
@@ -63,5 +62,48 @@ abstract contract CommonNFT is ERC721Enumerable {
         }
 
         return nftIds;
+    }
+
+    /**
+     * @dev Converts tokenId uint to string.
+     */
+    function _toString(
+        uint256 _tokenId
+    )
+        internal
+        pure
+        returns (string memory str)
+    {
+        if (_tokenId == 0) {
+            return "0";
+        }
+
+        uint256 j = _tokenId;
+        uint256 length;
+
+        while (j != 0) {
+            length++;
+            j /= 10;
+        }
+
+        bytes memory bstr = new bytes(
+            length
+        );
+
+        uint256 k = length;
+        j = _tokenId;
+
+        while (j != 0) {
+            bstr[--k] = bytes1(
+                uint8(
+                    48 + j % 10
+                )
+            );
+            j /= 10;
+        }
+
+        str = string(
+            bstr
+        );
     }
 }
