@@ -10,6 +10,7 @@ import "./helpers/TokenHelper.sol";
 
 error InvalidCost();
 error TooManyReceivers();
+error TooManyTickets();
 
 abstract contract CommonVRF is TokenHelper, Pausable, VRFConsumerBaseV2 {
 

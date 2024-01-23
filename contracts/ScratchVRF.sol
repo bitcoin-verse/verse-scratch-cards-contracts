@@ -5,6 +5,7 @@ pragma solidity =0.8.21;
 import "./CommonVRF.sol";
 import "./ScratchNFT.sol";
 
+error ZeroTickts();
 error NotEnoughFunds();
 
 contract ScratchVRF is ScratchNFT, CommonVRF {
@@ -94,12 +95,46 @@ contract ScratchVRF is ScratchNFT, CommonVRF {
             revert TooManyReceivers();
         }
 
-        for (i; i < loops;) {
-
+        while (i < loops) {
             _drawTicketRequest(
                 _receivers[i]
             );
+            unchecked {
+                ++i;
+            }
+        }
+    }
 
+    /**
+     * @notice Allows to bulk purchase of multiple tickets
+     * @param _receiver destination address for purchased tickets
+     * @param _ticketCount amount of tickets to purchase
+     */
+    function bulkPurchase(
+        address _receiver,
+        uint256 _ticketCount
+    )
+        external
+    {
+        if (_ticketCount == 0) {
+            revert ZeroTickts();
+        }
+
+        if (_ticketCount > MAX_LOOPS) {
+            revert TooManyTickets();
+        }
+
+        _takeTokens(
+            VERSE_TOKEN,
+            baseCost * _ticketCount
+        );
+
+        uint256 i;
+
+        while (i < _ticketCount) {
+            _drawTicketRequest(
+                _receiver
+            );
             unchecked {
                 ++i;
             }

@@ -57,6 +57,11 @@ contract TestScratchVRF_MAINNET is Test {
             WISE_DEPLOYER
         );
 
+        IERC20(VERSE_TOKEN).transfer(
+            address(scratcher),
+            1_000_000 * 1E18
+        );
+
         uint256 topUp = 10 * 1E18;
 
         IERC20(LINK_TOKEN).approve(
@@ -236,6 +241,88 @@ contract TestScratchVRF_MAINNET is Test {
     }
 
     /**
+     * @notice it should throw an error
+     * if trying to purchase 0 tickets
+     */
+    function testZeroPurchase()
+        public
+    {
+        vm.expectRevert(
+            ZeroTickts.selector
+        );
+
+        scratcher.bulkPurchase(
+            WISE_DEPLOYER,
+            0
+        );
+    }
+
+    /**
+     * @notice it should be possible to buy tickets in bulk
+     */
+    function testBulkPurchase()
+        public
+    {
+        uint256 purchaseAmount = 30;
+        uint256 baseCost = scratcher.baseCost();
+
+        vm.startPrank(
+            WISE_DEPLOYER
+        );
+
+        IERC20(VERSE_TOKEN).approve(
+            address(scratcher),
+            baseCost * purchaseAmount
+        );
+
+        scratcher.bulkPurchase(
+            WISE_DEPLOYER,
+            purchaseAmount
+        );
+
+        uint256 initialTickets = 0;
+
+        assertEq(
+            scratcher.latestTicketId(),
+            initialTickets
+        );
+
+        vm.stopPrank();
+
+        for (uint256 i = 1; i < purchaseAmount; i++) {
+            coordinanotor.fulfillRandomWords(
+                i,
+                address(scratcher)
+            );
+        }
+
+        assertEq(
+            scratcher.latestTicketId() + 1,
+            purchaseAmount
+        );
+
+        purchaseAmount = 100;
+
+        vm.startPrank(
+            WISE_DEPLOYER
+        );
+
+        IERC20(VERSE_TOKEN).approve(
+            address(scratcher),
+            baseCost * purchaseAmount
+        );
+
+        vm.expectRevert(
+            TooManyTickets.selector
+        );
+
+        scratcher.bulkPurchase(
+            WISE_DEPLOYER,
+            purchaseAmount
+        );
+    }
+
+    /**
      * @notice it should be possible to gift tickets
      */
     function testGiftTickets()
@@ -342,6 +429,13 @@ contract TestScratchVRF_MAINNET is Test {
         assertEq(
             scratcher.latestTicketId(),
             initialTickets + 1
+        );
+
+        scratcher.withdrawTokens(
+            IERC20(VERSE_TOKEN),
+            _getVerseBalance(
+                address(scratcher)
+            )
         );
 
         vm.startPrank(
