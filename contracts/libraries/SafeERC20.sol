@@ -2,6 +2,8 @@
 
 pragma solidity =0.8.23;
 
+import "../libraries/Address.sol";
+
 error SafeERC20FailedOperation(
     IERC20 token
 );
@@ -54,6 +56,8 @@ interface IERC20 {
 
 library SafeERC20 {
 
+    using Address for address;
+
     function safeTransfer(
         IERC20 _token,
         address _to,
@@ -100,7 +104,7 @@ library SafeERC20 {
     )
         private
     {
-        bytes memory returndata = _token.functionCall(
+        bytes memory returndata = address(_token).functionCall(
             _data
         );
 

@@ -277,7 +277,7 @@ contract TestReelVRF_MAINNET is Test {
         );
 
         vm.expectRevert(
-            "CommonBase: INVALID_OWNER"
+            "CommonNFT: INVALID_OWNER"
         );
 
         reel.rerollTrait(

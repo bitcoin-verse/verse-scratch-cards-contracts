@@ -1313,7 +1313,7 @@ abstract contract ERC721 is Context, ERC165, IERC721, IERC721Metadata, IERC721Er
     function _requireOwned(uint256 tokenId) internal view returns (address) {
         address owner = _ownerOf(tokenId);
         if (owner == address(0)) {
-            revert ERC721NonexistentToken(tokenId);
+            revert("ERC721: invalid token ID");
         }
         return owner;
     }
