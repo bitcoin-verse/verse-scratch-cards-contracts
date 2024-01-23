@@ -18,9 +18,6 @@
     "dependencies": {
         "@chainlink/contracts": "^0.8.0",
         "@ethersproject/address": "^5.7.0",
-        "@openzeppelin/contracts": "4.9.5",
-        "@openzeppelin/merkle-tree": "^1.0.5",
-        "@openzeppelin/test-helpers": "^0.5.16",
         "@uniswap/v3-periphery": "^1.4.3",
         "hardhat": "^2.16.0",
         "hardhat-gas-reporter": "^1.0.9"
