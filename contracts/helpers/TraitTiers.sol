@@ -284,13 +284,11 @@ contract TraitTiers {
             _backType: "None"
         });
 
-
         _pushBackTier({
             _drawEdgeA: 401,
             _drawEdgeB: 438,
             _backType: "Offworld Pack"
         });
-
 
         _pushBackTier({
             _drawEdgeA: 439,
@@ -298,13 +296,11 @@ contract TraitTiers {
             _backType: "Expanse Wings"
         });
 
-
         _pushBackTier({
             _drawEdgeA: 477,
             _drawEdgeB: 514,
             _backType: "Radar Pack"
         });
-
 
         _pushBackTier({
             _drawEdgeA: 515,
@@ -312,13 +308,11 @@ contract TraitTiers {
             _backType: "Arcane Shield"
         });
 
-
         _pushBackTier({
             _drawEdgeA: 553,
             _drawEdgeB: 590,
             _backType: "Covert Ops Pack"
         });
-
 
         _pushBackTier({
             _drawEdgeA: 591,
@@ -326,13 +320,11 @@ contract TraitTiers {
             _backType: "Armored Pack"
         });
 
-
         _pushBackTier({
             _drawEdgeA: 629,
             _drawEdgeB: 666,
             _backType: "Settler's Rake"
         });
-
 
         _pushBackTier({
             _drawEdgeA: 667,
@@ -390,28 +382,27 @@ contract TraitTiers {
 
         _pushBackTier({
             _drawEdgeA: 939,
-            _drawEdgeB: 950,
+            _drawEdgeB: 953,
             _backType: "Baby Monkey Pal"
         });
 
         _pushBackTier({
-            _drawEdgeA: 951,
-            _drawEdgeB: 962,
+            _drawEdgeA: 954,
+            _drawEdgeB: 968,
             _backType: "Sludged"
         });
 
         _pushBackTier({
-            _drawEdgeA: 963,
-            _drawEdgeB: 974,
+            _drawEdgeA: 969,
+            _drawEdgeB: 983,
             _backType: "Templar Sword"
         });
 
         _pushBackTier({
-            _drawEdgeA: 975,
-            _drawEdgeB: 986,
+            _drawEdgeA: 984,
+            _drawEdgeB: 1000,
             _backType: "Dual Wakizashi"
         });
-
     }
 
     function _pushBackTier(
@@ -484,7 +475,7 @@ contract TraitTiers {
         bodyTiers.push(
             BodyTier({
                 drawEdgeA: 469,
-                drawEdgeB: 546,
+                drawEdgeB: 550,
                 bodyType: "Etherlight Greens"
             })
         );
@@ -532,7 +523,7 @@ contract TraitTiers {
         bodyTiers.push(
             BodyTier({
                 drawEdgeA: 881,
-                drawEdgeB: 946,
+                drawEdgeB: 950,
                 bodyType: "Venusian Sandfolk"
             })
         );
@@ -688,7 +679,7 @@ contract TraitTiers {
         gearTiers.push(
             GearTier({
                 drawEdgeA: 853,
-                drawEdgeB: 894,
+                drawEdgeB: 900,
                 gearType: "Symbiote High Collar"
             })
         );
@@ -796,7 +787,7 @@ contract TraitTiers {
         headTiers.push(
             HeadTier({
                 drawEdgeA: 529,
-                drawEdgeB: 594,
+                drawEdgeB: 600,
                 headType: "Cyberpunk Voyager"
             })
         );
@@ -968,7 +959,7 @@ contract TraitTiers {
         extraTiers.push(
             ExtraTier({
                 drawEdgeA: 711,
-                drawEdgeB: 752,
+                drawEdgeB: 794,
                 extraType: "Blue Energy Orb"
             })
         );
@@ -1048,7 +1039,7 @@ contract TraitTiers {
         extraTiers.push(
             ExtraTier({
                 drawEdgeA: 974,
-                drawEdgeB: 989,
+                drawEdgeB: 1000,
                 extraType: "Starfield"
             })
         );
