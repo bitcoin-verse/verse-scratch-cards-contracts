@@ -3,7 +3,7 @@
 
 pragma solidity =0.8.23;
 
-import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
+import "../libraries/SafeERC20.sol";
 
 interface ILinkToken is IERC20 {
 
