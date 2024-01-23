@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: -- BCOM --
 
-pragma solidity =0.8.21;
+pragma solidity =0.8.23;
 
 import "@chainlink/contracts/src/v0.8/interfaces/VRFCoordinatorV2Interface.sol";
 import "@chainlink/contracts/src/v0.8/vrf/VRFConsumerBaseV2.sol";

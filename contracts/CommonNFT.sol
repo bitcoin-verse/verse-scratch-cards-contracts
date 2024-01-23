@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: -- BCOM --
 
-pragma solidity =0.8.21;
+pragma solidity =0.8.23;
 
 import { Strings } from "@openzeppelin/contracts/utils/Strings.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
