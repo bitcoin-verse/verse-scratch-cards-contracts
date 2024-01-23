@@ -5,7 +5,7 @@ pragma solidity =0.8.23;
 import "forge-std/Test.sol";
 
 import "../../ReelVRF.sol";
-import "@chainlink/contracts/src/v0.8/mocks/VRFCoordinatorV2Mock.sol";
+import {VRFCoordinatorV2Mock} from "../../flats/VRFCoordinatorV2Mock.sol";
 
 contract TestReelVRF_MAINNET is Test {
 

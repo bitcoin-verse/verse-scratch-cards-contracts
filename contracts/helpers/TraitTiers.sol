@@ -72,251 +72,205 @@ contract TraitTiers {
     function _setupBackgroundTiers()
         internal
     {
-        backgroundTiers.push(
-            BackgroundTier({
-                drawEdgeA: 1,
-                drawEdgeB: 50,
-                backgroundColor: "Pitch Black Void"
-            })
-        );
+        _pushBackgrounTier({
+            _drawEdgeA: 1,
+            _drawEdgeB: 50,
+            _backgroundColor: "Pitch Black Void"
+        });
 
-        backgroundTiers.push(
-            BackgroundTier({
-                drawEdgeA: 51,
-                drawEdgeB: 100,
-                backgroundColor: "Pure White Expanse"
-            })
-        );
+        _pushBackgrounTier({
+            _drawEdgeA: 51,
+            _drawEdgeB: 100,
+            _backgroundColor: "Pure White Expanse"
+        });
 
-        backgroundTiers.push(
-            BackgroundTier({
-                drawEdgeA: 101,
-                drawEdgeB: 150,
-                backgroundColor: "Azure Sky"
-            })
-        );
+        _pushBackgrounTier({
+            _drawEdgeA: 101,
+            _drawEdgeB: 150,
+            _backgroundColor: "Azure Sky"
+        });
 
-        backgroundTiers.push(
-            BackgroundTier({
-                drawEdgeA: 151,
-                drawEdgeB: 200,
-                backgroundColor: "Mint Freshness"
-            })
-        );
+        _pushBackgrounTier({
+            _drawEdgeA: 151,
+            _drawEdgeB: 200,
+            _backgroundColor: "Mint Freshness"
+        });
 
-        backgroundTiers.push(
-            BackgroundTier({
-                drawEdgeA: 201,
-                drawEdgeB: 250,
-                backgroundColor: "Deep Space Purple"
-            })
-        );
+        _pushBackgrounTier({
+            _drawEdgeA: 201,
+            _drawEdgeB: 250,
+            _backgroundColor: "Deep Space Purple"
+        });
 
-        backgroundTiers.push(
-            BackgroundTier({
-                drawEdgeA: 251,
-                drawEdgeB: 300,
-                backgroundColor: "Oceanic Blue"
-            })
-        );
+        _pushBackgrounTier({
+            _drawEdgeA: 251,
+            _drawEdgeB: 300,
+            _backgroundColor: "Oceanic Blue"
+        });
 
-        backgroundTiers.push(
-            BackgroundTier({
-                drawEdgeA: 301,
-                drawEdgeB: 350,
-                backgroundColor: "Sunset Purple"
-            })
-        );
+        _pushBackgrounTier({
+            _drawEdgeA: 301,
+            _drawEdgeB: 350,
+            _backgroundColor: "Sunset Purple"
+        });
 
-        backgroundTiers.push(
-            BackgroundTier({
-                drawEdgeA: 351,
-                drawEdgeB: 400,
-                backgroundColor: "Coral Radiance"
-            })
-        );
+        _pushBackgrounTier({
+            _drawEdgeA: 351,
+            _drawEdgeB: 400,
+            _backgroundColor: "Coral Radiance"
+        });
 
-        backgroundTiers.push(
-            BackgroundTier({
-                drawEdgeA: 401,
-                drawEdgeB: 450,
-                backgroundColor: "Vibrant Magenta"
-            })
-        );
+        _pushBackgrounTier({
+            _drawEdgeA: 401,
+            _drawEdgeB: 450,
+            _backgroundColor: "Vibrant Magenta"
+        });
 
-        backgroundTiers.push(
-            BackgroundTier({
-                drawEdgeA: 451,
-                drawEdgeB: 500,
-                backgroundColor: "Saffron Sunrise"
-            })
-        );
+        _pushBackgrounTier({
+            _drawEdgeA: 451,
+            _drawEdgeB: 500,
+            _backgroundColor: "Saffron Sunrise"
+        });
 
-        backgroundTiers.push(
-            BackgroundTier({
-                drawEdgeA: 501,
-                drawEdgeB: 526,
-                backgroundColor: "Pastel Dream"
-            })
-        );
+        _pushBackgrounTier({
+            _drawEdgeA: 501,
+            _drawEdgeB: 526,
+            _backgroundColor: "Pastel Dream"
+        });
 
-        backgroundTiers.push(
-            BackgroundTier({
-                drawEdgeA: 527,
-                drawEdgeB: 552,
-                backgroundColor: "Twilight Serenity"
-            })
-        );
+        _pushBackgrounTier({
+            _drawEdgeA: 527,
+            _drawEdgeB: 552,
+            _backgroundColor: "Twilight Serenity"
+        });
 
-        backgroundTiers.push(
-            BackgroundTier({
-                drawEdgeA: 553,
-                drawEdgeB: 578,
-                backgroundColor: "Arctic Chill"
-            })
-        );
+        _pushBackgrounTier({
+            _drawEdgeA: 553,
+            _drawEdgeB: 578,
+            _backgroundColor: "Arctic Chill"
+        });
 
-        backgroundTiers.push(
-            BackgroundTier({
-                drawEdgeA: 579,
-                drawEdgeB: 604,
-                backgroundColor: "Midnight Velvet"
-            })
-        );
+        _pushBackgrounTier({
+            _drawEdgeA: 579,
+            _drawEdgeB: 604,
+            _backgroundColor: "Midnight Velvet"
+        });
 
-        backgroundTiers.push(
-            BackgroundTier({
-                drawEdgeA: 605,
-                drawEdgeB: 630,
-                backgroundColor: "Blazing Horizon"
-            })
-        );
+        _pushBackgrounTier({
+            _drawEdgeA: 605,
+            _drawEdgeB: 630,
+            _backgroundColor: "Blazing Horizon"
+        });
 
-        backgroundTiers.push(
-            BackgroundTier({
-                drawEdgeA: 631,
-                drawEdgeB: 656,
-                backgroundColor: "Neon Spring"
-            })
-        );
+        _pushBackgrounTier({
+            _drawEdgeA: 631,
+            _drawEdgeB: 656,
+            _backgroundColor: "Neon Spring"
+        });
 
-        backgroundTiers.push(
-            BackgroundTier({
-                drawEdgeA: 657,
-                drawEdgeB: 682,
-                backgroundColor: "Golden Shine"
-            })
-        );
+        _pushBackgrounTier({
+            _drawEdgeA: 657,
+            _drawEdgeB: 682,
+            _backgroundColor: "Golden Shine"
+        });
 
-        backgroundTiers.push(
-            BackgroundTier({
-                drawEdgeA: 683,
-                drawEdgeB: 708,
-                backgroundColor: "Spring Meadow"
-            })
-        );
+        _pushBackgrounTier({
+            _drawEdgeA: 683,
+            _drawEdgeB: 708,
+            _backgroundColor: "Spring Meadow"
+        });
 
-        backgroundTiers.push(
-            BackgroundTier({
-                drawEdgeA: 709,
-                drawEdgeB: 734,
-                backgroundColor: "Lavender Dream"
-            })
-        );
+        _pushBackgrounTier({
+            _drawEdgeA: 709,
+            _drawEdgeB: 734,
+            _backgroundColor: "Lavender Dream"
+        });
 
-        backgroundTiers.push(
-            BackgroundTier({
-                drawEdgeA: 735,
-                drawEdgeB: 760,
-                backgroundColor: "Ocean Horizon"
-            })
-        );
+        _pushBackgrounTier({
+            _drawEdgeA: 735,
+            _drawEdgeB: 760,
+            _backgroundColor: "Ocean Horizon"
+        });
 
-        backgroundTiers.push(
-            BackgroundTier({
-                drawEdgeA: 761,
-                drawEdgeB: 786,
-                backgroundColor: "Starry Night"
-            })
-        );
+        _pushBackgrounTier({
+            _drawEdgeA: 761,
+            _drawEdgeB: 786,
+            _backgroundColor: "Starry Night"
+        });
 
-        backgroundTiers.push(
-            BackgroundTier({
-                drawEdgeA: 787,
-                drawEdgeB: 812,
-                backgroundColor: "Solar Eclipse"
-            })
-        );
+        _pushBackgrounTier({
+            _drawEdgeA: 787,
+            _drawEdgeB: 812,
+            _backgroundColor: "Solar Eclipse"
+        });
 
-        backgroundTiers.push(
-            BackgroundTier({
-                drawEdgeA: 813,
-                drawEdgeB: 838,
-                backgroundColor: "Star Trails"
-            })
-        );
+        _pushBackgrounTier({
+            _drawEdgeA: 813,
+            _drawEdgeB: 838,
+            _backgroundColor: "Star Trails"
+        });
 
-        backgroundTiers.push(
-            BackgroundTier({
-                drawEdgeA: 851,
-                drawEdgeB: 868,
-                backgroundColor: "Indonesian Pagoda"
-            })
-        );
+        _pushBackgrounTier({
+            _drawEdgeA: 851,
+            _drawEdgeB: 868,
+            _backgroundColor: "Indonesian Pagoda"
+        });
 
-        backgroundTiers.push(
-            BackgroundTier({
-                drawEdgeA: 869,
-                drawEdgeB: 886,
-                backgroundColor: "Martian Dome"
-            })
-        );
+        _pushBackgrounTier({
+            _drawEdgeA: 869,
+            _drawEdgeB: 886,
+            _backgroundColor: "Martian Dome"
+        });
 
-        backgroundTiers.push(
-            BackgroundTier({
-                drawEdgeA: 887,
-                drawEdgeB: 904,
-                backgroundColor: "New York Dusk"
-            })
-        );
+        _pushBackgrounTier({
+            _drawEdgeA: 887,
+            _drawEdgeB: 904,
+            _backgroundColor: "New York Dusk"
+        });
 
-        backgroundTiers.push(
-            BackgroundTier({
-                drawEdgeA: 905,
-                drawEdgeB: 922,
-                backgroundColor: "Nigerian Abuja Gate"
-            })
-        );
+        _pushBackgrounTier({
+            _drawEdgeA: 905,
+            _drawEdgeB: 922,
+            _backgroundColor: "Nigerian Abuja Gate"
+        });
 
-        backgroundTiers.push(
-            BackgroundTier({
-                drawEdgeA: 923,
-                drawEdgeB: 940,
-                backgroundColor: "Singapore Neon"
-            })
-        );
+        _pushBackgrounTier({
+            _drawEdgeA: 923,
+            _drawEdgeB: 940,
+            _backgroundColor: "Singapore Neon"
+        });
 
-        backgroundTiers.push(
-            BackgroundTier({
-                drawEdgeA: 941,
-                drawEdgeB: 958,
-                backgroundColor: "Tokyo Twilight"
-            })
-        );
+        _pushBackgrounTier({
+            _drawEdgeA: 941,
+            _drawEdgeB: 958,
+            _backgroundColor: "Tokyo Twilight"
+        });
 
-        backgroundTiers.push(
-            BackgroundTier({
-                drawEdgeA: 959,
-                drawEdgeB: 976,
-                backgroundColor: "Vietnam Visitor"
-            })
-        );
+        _pushBackgrounTier({
+            _drawEdgeA: 959,
+            _drawEdgeB: 976,
+            _backgroundColor: "Vietnam Visitor"
+        });
 
+        _pushBackgrounTier({
+            _drawEdgeA: 977,
+            _drawEdgeB: 1000,
+            _backgroundColor: "Antarctic Glow"
+        });
+    }
+
+    function _pushBackgrounTier(
+        uint256 _drawEdgeA,
+        uint256 _drawEdgeB,
+        string memory _backgroundColor
+    )
+        internal
+    {
         backgroundTiers.push(
             BackgroundTier({
-                drawEdgeA: 977,
-                drawEdgeB: 1000,
-                backgroundColor: "Antarctic Glow"
+                drawEdgeA: _drawEdgeA,
+                drawEdgeB: _drawEdgeB,
+                backgroundColor: _backgroundColor
             })
         );
     }
@@ -324,171 +278,154 @@ contract TraitTiers {
     function _setupBackTiers()
         internal
     {
-        backTiers.push(
-            BackTier({
-                drawEdgeA: 1,
-                drawEdgeB: 400,
-                backType: "None"
-            })
-        );
+        _pushBackTier({
+            _drawEdgeA: 1,
+            _drawEdgeB: 400,
+            _backType: "None"
+        });
 
-        backTiers.push(
-            BackTier({
-                drawEdgeA: 401,
-                drawEdgeB: 438,
-                backType: "Offworld Pack"
-            })
-        );
 
-        backTiers.push(
-            BackTier({
-                drawEdgeA: 439,
-                drawEdgeB: 476,
-                backType: "Expanse Wings"
-            })
-        );
+        _pushBackTier({
+            _drawEdgeA: 401,
+            _drawEdgeB: 438,
+            _backType: "Offworld Pack"
+        });
 
-        backTiers.push(
-            BackTier({
-                drawEdgeA: 477,
-                drawEdgeB: 514,
-                backType: "Radar Pack"
-            })
-        );
 
-        backTiers.push(
-            BackTier({
-                drawEdgeA: 515,
-                drawEdgeB: 552,
-                backType: "Arcane Shield"
-            })
-        );
+        _pushBackTier({
+            _drawEdgeA: 439,
+            _drawEdgeB: 476,
+            _backType: "Expanse Wings"
+        });
 
-        backTiers.push(
-            BackTier({
-                drawEdgeA: 553,
-                drawEdgeB: 590,
-                backType: "Covert Ops Pack"
-            })
-        );
 
-        backTiers.push(
-            BackTier({
-                drawEdgeA: 591,
-                drawEdgeB: 628,
-                backType: "Armored Pack"
-            })
-        );
+        _pushBackTier({
+            _drawEdgeA: 477,
+            _drawEdgeB: 514,
+            _backType: "Radar Pack"
+        });
 
-        backTiers.push(
-            BackTier({
-                drawEdgeA: 629,
-                drawEdgeB: 666,
-                backType: "Settler's Rake"
-            })
-        );
 
-        backTiers.push(
-            BackTier({
-                drawEdgeA: 667,
-                drawEdgeB: 704,
-                backType: "Void Wings"
-            })
-        );
+        _pushBackTier({
+            _drawEdgeA: 515,
+            _drawEdgeB: 552,
+            _backType: "Arcane Shield"
+        });
 
-        backTiers.push(
-            BackTier({
-                drawEdgeA: 705,
-                drawEdgeB: 742,
-                backType: "Battered Trail Rockets"
-            })
-        );
 
-        backTiers.push(
-            BackTier({
-                drawEdgeA: 743,
-                drawEdgeB: 770,
-                backType: "Hydro Pack"
-            })
-        );
+        _pushBackTier({
+            _drawEdgeA: 553,
+            _drawEdgeB: 590,
+            _backType: "Covert Ops Pack"
+        });
 
-        backTiers.push(
-            BackTier({
-                drawEdgeA: 771,
-                drawEdgeB: 798,
-                backType: "Rocket Thrusters"
-            })
-        );
 
-        backTiers.push(
-            BackTier({
-                drawEdgeA: 799,
-                drawEdgeB: 826,
-                backType: "Canon Pack"
-            })
-        );
+        _pushBackTier({
+            _drawEdgeA: 591,
+            _drawEdgeB: 628,
+            _backType: "Armored Pack"
+        });
 
-        backTiers.push(
-            BackTier({
-                drawEdgeA: 827,
-                drawEdgeB: 854,
-                backType: "Neon Pack"
-            })
-        );
 
-        backTiers.push(
-            BackTier({
-                drawEdgeA: 855,
-                drawEdgeB: 882,
-                backType: "Crimson Pulse Rifle"
-            })
-        );
+        _pushBackTier({
+            _drawEdgeA: 629,
+            _drawEdgeB: 666,
+            _backType: "Settler's Rake"
+        });
 
-        backTiers.push(
-            BackTier({
-                drawEdgeA: 883,
-                drawEdgeB: 910,
-                backType: "Gromlin"
-            })
-        );
 
-        backTiers.push(
-            BackTier({
-                drawEdgeA: 911,
-                drawEdgeB: 938,
-                backType: "Advanced Jetpack"
-            })
-        );
+        _pushBackTier({
+            _drawEdgeA: 667,
+            _drawEdgeB: 704,
+            _backType: "Void Wings"
+        });
 
-        backTiers.push(
-            BackTier({
-                drawEdgeA: 939,
-                drawEdgeB: 950,
-                backType: "Baby Monkey Pal"
-            })
-        );
+        _pushBackTier({
+            _drawEdgeA: 705,
+            _drawEdgeB: 742,
+            _backType: "Battered Trail Rockets"
+        });
 
-        backTiers.push(
-            BackTier({
-                drawEdgeA: 951,
-                drawEdgeB: 962,
-                backType: "Sludged"
-            })
-        );
+        _pushBackTier({
+            _drawEdgeA: 743,
+            _drawEdgeB: 770,
+            _backType: "Hydro Pack"
+        });
 
-        backTiers.push(
-            BackTier({
-                drawEdgeA: 963,
-                drawEdgeB: 974,
-                backType: "Templar Sword"
-            })
-        );
+        _pushBackTier({
+            _drawEdgeA: 771,
+            _drawEdgeB: 798,
+            _backType: "Rocket Thrusters"
+        });
 
+        _pushBackTier({
+            _drawEdgeA: 799,
+            _drawEdgeB: 826,
+            _backType: "Canon Pack"
+        });
+
+        _pushBackTier({
+            _drawEdgeA: 827,
+            _drawEdgeB: 854,
+            _backType: "Neon Pack"
+        });
+
+        _pushBackTier({
+            _drawEdgeA: 855,
+            _drawEdgeB: 882,
+            _backType: "Crimson Pulse Rifle"
+        });
+
+        _pushBackTier({
+            _drawEdgeA: 883,
+            _drawEdgeB: 910,
+            _backType: "Gromlin"
+        });
+
+        _pushBackTier({
+            _drawEdgeA: 911,
+            _drawEdgeB: 938,
+            _backType: "Advanced Jetpack"
+        });
+
+        _pushBackTier({
+            _drawEdgeA: 939,
+            _drawEdgeB: 950,
+            _backType: "Baby Monkey Pal"
+        });
+
+        _pushBackTier({
+            _drawEdgeA: 951,
+            _drawEdgeB: 962,
+            _backType: "Sludged"
+        });
+
+        _pushBackTier({
+            _drawEdgeA: 963,
+            _drawEdgeB: 974,
+            _backType: "Templar Sword"
+        });
+
+        _pushBackTier({
+            _drawEdgeA: 975,
+            _drawEdgeB: 986,
+            _backType: "Dual Wakizashi"
+        });
+
+    }
+
+    function _pushBackTier(
+        uint256 _drawEdgeA,
+        uint256 _drawEdgeB,
+        string memory _backType
+    )
+        internal
+    {
         backTiers.push(
             BackTier({
-                drawEdgeA: 975,
-                drawEdgeB: 986,
-                backType: "Dual Wakizashi"
+                drawEdgeA: _drawEdgeA,
+                drawEdgeB: _drawEdgeB,
+                backType: _backType
             })
         );
     }
