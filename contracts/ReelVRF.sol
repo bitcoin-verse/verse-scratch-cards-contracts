@@ -160,19 +160,24 @@ contract ReelVRF is ReelNFT, CommonVRF {
             );
         }
 
-        _increaseRerollCount(
-            _astroId,
-            _traitId
-        );
+        rerollCountPerTrait[_astroId][_traitId] = rerollCount + 1;
     }
 
-    function _increaseRerollCount(
+    function getNextRerollPrice(
         uint256 _astroId,
         uint256 _traitId
     )
-        internal
+        external
+        view
+        returns (uint256)
     {
-        rerollCountPerTrait[_astroId][_traitId]++;
+        uint256 rerollCount = rerollCountPerTrait[_astroId][_traitId];
+
+        if (rerollCount == 0) {
+            return 0;
+        }
+
+        return rerollCost ** rerollCount;
     }
 
     function lockRerollCost()
