@@ -53,6 +53,7 @@ interface VRFCoordinatorV2Interface {
         uint64 subId
     )
         external;
+
     function addConsumer(
         uint64 subId,
         address consumer

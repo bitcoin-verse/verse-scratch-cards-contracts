@@ -13,14 +13,18 @@ struct Drawing {
 
 error InvalidTraitId();
 error RerollInProgress();
+error RerollCostLocked();
 error TraitNotYetDefined();
 
 contract ReelVRF is ReelNFT, CommonVRF {
 
     uint256 public rerollCost;
+    bool public isRerollCostLocked;
 
     mapping(uint256 => bool) public rerollInProgress;
     mapping(uint256 => Drawing) public requestIdToDrawing;
+
+    mapping(uint256 => mapping(uint256 => uint256)) public rerollCountPerTrait;
 
     event RerollFulfilled(
         uint256 indexed drawId,
@@ -141,16 +145,41 @@ contract ReelVRF is ReelNFT, CommonVRF {
 
         rerollInProgress[_astroId] = true;
 
-        _takeTokens(
-            VERSE_TOKEN,
-            rerollCost
-        );
-
         _startRequest({
             _wordCount: 1,
             _astroId: _astroId,
             _traitId: _traitId
         });
+
+        uint256 rerollCount = rerollCountPerTrait[_astroId][_traitId];
+
+        if (rerollCount > 0) {
+            _takeTokens(
+                VERSE_TOKEN,
+                rerollCost ** rerollCount
+            );
+        }
+
+        _increaseRerollCount(
+            _astroId,
+            _traitId
+        );
+    }
+
+    function _increaseRerollCount(
+        uint256 _astroId,
+        uint256 _traitId
+    )
+        internal
+    {
+        rerollCountPerTrait[_astroId][_traitId]++;
+    }
+
+    function lockRerollCost()
+        external
+        onlyOwner
+    {
+        isRerollCostLocked = true;
     }
 
     function setRerollCost(
@@ -159,6 +188,10 @@ contract ReelVRF is ReelNFT, CommonVRF {
         external
         onlyOwner
     {
+        if (isRerollCostLocked == true) {
+            revert RerollCostLocked();
+        }
+
         rerollCost = _newRerollCost;
 
         emit RerollCostUpdated(
