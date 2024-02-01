@@ -2,10 +2,11 @@
 
 pragma solidity =0.8.23;
 
+import "./helpers/Ownable.sol";
 import "./CommonNFT.sol";
 import "./helpers/TraitTiers.sol";
 
-abstract contract ReelNFT is CommonNFT, TraitTiers {
+abstract contract ReelNFT is CommonNFT, TraitTiers, Ownable {
 
     using Strings for uint256;
 
@@ -16,26 +17,6 @@ abstract contract ReelNFT is CommonNFT, TraitTiers {
 
     // stores results from VRF calls ceiled by MAX_RESULT_INDEX
     mapping(uint256 => uint256[]) public results;
-
-    function tokenURI(
-        uint256 _astroId
-    )
-        public
-        view
-        override
-        returns (string memory)
-    {
-        if (_ownerOf(_astroId) == address(0x0)) {
-            revert InvalidId();
-        }
-
-        return string(
-            abi.encodePacked(
-                baseURI,
-                _astroId.toString()
-            )
-        );
-    }
 
     function getTraitIds(
         uint256 _astroId
@@ -196,5 +177,35 @@ abstract contract ReelNFT is CommonNFT, TraitTiers {
         unchecked {
             return ++latestCharacterId;
         }
+    }
+
+    function updateBaseURI(
+        string memory _newBaseURI
+    )
+        external
+        onlyOwner
+    {
+        baseURI = _newBaseURI;
+    }
+
+    function tokenURI(
+        uint256 _astroId
+    )
+        public
+        view
+        override
+        returns (string memory)
+    {
+        if (_ownerOf(_astroId) == address(0x0)) {
+            revert InvalidId();
+        }
+
+        return string(
+            abi.encodePacked(
+                baseURI,
+                _astroId.toString(),
+                ".json"
+            )
+        );
     }
 }

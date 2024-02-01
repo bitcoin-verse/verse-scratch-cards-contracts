@@ -702,7 +702,7 @@ contract TestReelVRF_MAINNET is Test {
 
         assertEq(
             tokenURI,
-            "1"
+            "1.json"
         );
 
         vm.expectRevert(
