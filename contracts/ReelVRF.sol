@@ -24,7 +24,7 @@ contract ReelVRF is ReelNFT, CommonVRF {
     mapping(uint256 => bool) public rerollInProgress;
     mapping(uint256 => Drawing) public requestIdToDrawing;
 
-    mapping(uint256 => mapping(uint256 => uint256)) public rerollCountPerTrait;
+    mapping(uint256 => uint256) public rerollCountPerNft;
 
     event RerollFulfilled(
         uint256 indexed drawId,
@@ -151,7 +151,9 @@ contract ReelVRF is ReelNFT, CommonVRF {
             _traitId: _traitId
         });
 
-        uint256 rerollCount = rerollCountPerTrait[_astroId][_traitId];
+        uint256 rerollCount = rerollCountPerNft[
+            _astroId
+        ];
 
         if (rerollCount > 0) {
             _takeTokens(
@@ -160,18 +162,17 @@ contract ReelVRF is ReelNFT, CommonVRF {
             );
         }
 
-        rerollCountPerTrait[_astroId][_traitId] = rerollCount + 1;
+        rerollCountPerNft[_astroId] = rerollCount + 1;
     }
 
     function getNextRerollPrice(
-        uint256 _astroId,
-        uint256 _traitId
+        uint256 _astroId
     )
         external
         view
         returns (uint256)
     {
-        uint256 rerollCount = rerollCountPerTrait[_astroId][_traitId];
+        uint256 rerollCount = rerollCountPerNft[_astroId];
 
         if (rerollCount == 0) {
             return 0;
