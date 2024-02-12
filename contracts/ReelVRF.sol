@@ -6,6 +6,7 @@ import "./CommonVRF.sol";
 import "./ReelNFT.sol";
 
 struct Drawing {
+    bool isMinting;
     uint256 drawId;
     uint256 astroId;
     uint256 traitId;
@@ -240,7 +241,8 @@ contract ReelVRF is ReelNFT, CommonVRF {
         Drawing memory newDrawing = Drawing({
             drawId: latestDrawId,
             astroId: _astroId,
-            traitId: _traitId
+            traitId: _traitId,
+            isMinting: _wordCount == MAX_TRAIT_TYPES
         });
 
         requestIdToDrawing[requestId] = newDrawing;
@@ -264,7 +266,7 @@ contract ReelVRF is ReelNFT, CommonVRF {
             _requestId
         ];
 
-        currentDraw.traitId == 0
+        currentDraw.isMinting == true
             ? _initialMint(
                 currentDraw,
                 _randomWords,

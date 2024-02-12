@@ -218,10 +218,16 @@ contract TestReelVRF_MAINNET is Test {
         vm.stopPrank();
 
         (
+            bool isMinting,
             uint256 drawId,
             uint256 astroId,
             uint256 traitId
         ) = reel.requestIdToDrawing(1);
+
+        assertEq(
+            isMinting,
+            true
+        );
 
         assertEq(
             drawId,
@@ -253,7 +259,7 @@ contract TestReelVRF_MAINNET is Test {
             expectedCharactedId
         );
 
-        uint256 REROLL_TRAIT_ID = 1;
+        uint256 REROLL_TRAIT_ID = 0;
 
         assertGt(
             reel.results(
@@ -307,6 +313,14 @@ contract TestReelVRF_MAINNET is Test {
             maxTrait + 1
         );
 
+        Character memory astro = reel.getTraitNames(
+            1
+        );
+
+        string memory currentBackground = astro.backgroundColor;
+
+        // console.log(currentBackground, 'currentBackground');
+
         reel.rerollTrait(
             expectedCharactedId,
             REROLL_TRAIT_ID
@@ -334,6 +348,19 @@ contract TestReelVRF_MAINNET is Test {
             2,
             address(reel)
         );
+
+        Character memory astroAfter = reel.getTraitNames(
+            1
+        );
+
+        string memory newBackground = astroAfter.backgroundColor;
+
+        assertNotEq(
+            currentBackground,
+            newBackground
+        );
+
+        // console.log(newBackground, 'newBackground');
 
         assertEq(
             reel.rerollInProgress(
