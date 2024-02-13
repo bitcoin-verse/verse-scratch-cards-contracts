@@ -5,6 +5,7 @@
     "main": "index.js",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
+        "thirdweb-deploy": "npx thirdweb deploy",
         "foundry-size": "forge build --sizes",
         "foundry-test-log": "forge test -vv",
         "foundry-test-default": "forge test --gas-report -vvv",
