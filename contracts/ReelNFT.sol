@@ -10,12 +10,12 @@ abstract contract ReelNFT is CommonNFT, TraitTiers, Ownable {
 
     using Strings for uint256;
 
-    uint32 public constant MAX_TRAIT_TYPES = 6;
+    uint8 public MAX_REROLL_COUNT = 12;
+    uint8 public constant MAX_TRAIT_TYPES = 6;
     uint256 public constant MAX_RESULT_INDEX = 1000;
 
     uint256 public latestCharacterId;
 
-    // stores results from VRF calls ceiled by MAX_RESULT_INDEX
     mapping(uint256 => uint256[]) public results;
 
     function getTraitIds(
