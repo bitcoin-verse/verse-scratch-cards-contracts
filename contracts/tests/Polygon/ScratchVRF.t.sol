@@ -16,7 +16,7 @@ contract TestScratchVRF_POLYGON is Test {
     address constant LINK_TOKEN = 0x53E0bca35eC356BD5ddDFebbD1Fc0fD03FaBad39;
     address constant VERSE_TOKEN = 0xc708D6F2153933DAA50B2D0758955Be0A93A8FEc;
 
-    address constant VRD_COORDINATOR = 0xAE975071Be8F8eE67addBC1A82488F1C24858067;
+    address constant VRF_COORDINATOR = 0xAE975071Be8F8eE67addBC1A82488F1C24858067;
     bytes32 constant GAS_KEY_HASH = 0xcc294a196eeeb44da2888d17c0625cc88d70d9760a69d58d853ba6581a9ab0cd;
 
     address constant WISE_DEPLOYER = 0x641AD78BAca220C5BD28b51Ce8e0F495e85Fe689;
@@ -34,7 +34,7 @@ contract TestScratchVRF_POLYGON is Test {
         scratcher = new ScratchVRF(
             "ScratchVRF",
             "SVRF",
-            VRD_COORDINATOR,
+            VRF_COORDINATOR,
             TICKET_COST,
             LINK_TOKEN,
             VERSE_TOKEN,

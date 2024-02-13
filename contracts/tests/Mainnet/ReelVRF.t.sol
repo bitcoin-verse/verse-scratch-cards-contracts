@@ -295,7 +295,7 @@ contract TestReelVRF_MAINNET is Test {
             WISE_DEPLOYER
         );
 
-        uint256 rerollCost = reel.rerollCost();
+        uint256 rerollCost = reel.getNextRerollPrice(1);
 
         IERC20(VERSE_TOKEN).approve(
             address(reel),
@@ -524,34 +524,49 @@ contract TestReelVRF_MAINNET is Test {
     function testRerollCost()
         public
     {
-        uint256 rerollCost = reel.rerollCost();
-
-        assertGt(
-            rerollCost,
-            0
-        );
-
-        uint256 newRerollCost = 1_000 * 1E18;
-
-        reel.setRerollCost(
-            newRerollCost
-        );
+        uint256 rerollCost = reel.getNextRerollPrice(0);
 
         assertEq(
-            reel.rerollCost(),
-            newRerollCost
+            rerollCost,
+            0,
+            "Initial Reroll cost should be equal to 0"
         );
 
         vm.startPrank(
             WISE_DEPLOYER
         );
 
+        uint256 newRerollCost = 1_000 * 1E18;
+
         vm.expectRevert(
             NotMaster.selector
         );
 
-        reel.setRerollCost(
-            rerollCost
+        reel.setRerollPrice(
+            0,
+            newRerollCost
+        );
+
+        vm.stopPrank();
+
+        reel.setRerollPrice(
+            0,
+            newRerollCost
+        );
+
+        uint256 cost = reel.getRerollProce(0);
+        rerollCost = reel.getNextRerollPrice(0);
+
+        assertEq(
+            cost,
+            newRerollCost,
+            "Cost should be equal to newRerollCost"
+        );
+
+        assertEq(
+            rerollCost,
+            newRerollCost,
+            "rerollCost should be equal to newRerollCost"
         );
     }
 
