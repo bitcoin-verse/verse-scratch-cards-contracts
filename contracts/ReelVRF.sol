@@ -154,7 +154,7 @@ contract ReelVRF is ReelNFT, CommonVRF {
             revert TooManyReceivers();
         }
 
-        for (i; i < loops;) {
+        while (i < loops) {
 
             _mintCharacter(
                 _receivers[i]
@@ -315,7 +315,7 @@ contract ReelVRF is ReelNFT, CommonVRF {
             MAX_TRAIT_TYPES
         );
 
-        for (i; i < MAX_TRAIT_TYPES;) {
+        while (i < MAX_TRAIT_TYPES) {
             numbers[i] = uniform(
                 _randomWords[i],
                 MAX_RESULT_INDEX
