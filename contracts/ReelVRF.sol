@@ -19,13 +19,15 @@ error TraitNotYetDefined();
 
 contract ReelVRF is ReelNFT, CommonVRF {
 
-    uint256 public rerollCost;
     bool public isRerollCostLocked;
 
     mapping(uint256 => bool) public rerollInProgress;
     mapping(uint256 => Drawing) public requestIdToDrawing;
-
     mapping(uint256 => uint256) public rerollCountPerNft;
+
+    uint256[] rerollPrices = new uint256[](
+        MAX_REROLL_COUNT
+    );
 
     event RerollFulfilled(
         uint256 indexed drawId,
@@ -61,7 +63,47 @@ contract ReelVRF is ReelNFT, CommonVRF {
         )
     {
         baseCost = _characterCost;
-        rerollCost = _characterCost / 10;
+        rerollPrices[0] = 0;
+
+        rerollPrices[1] = 300E18;
+        rerollPrices[2] = 600E18;
+
+        rerollPrices[3] = 1_500E18;
+        rerollPrices[4] = 4_000E18;
+        rerollPrices[5] = 8_000E18;
+
+        rerollPrices[6] = 13_000E18;
+        rerollPrices[7] = 20_000E18;
+        rerollPrices[8] = 50_000E18;
+
+        rerollPrices[9] = 50_000E18;
+
+        rerollPrices[10] = 100_000E18;
+        rerollPrices[11] = 250_000E18;
+    }
+
+    function setRerollPrice(
+        uint256 _rerollCount,
+        uint256 _newPrice
+    )
+        external
+        onlyOwner
+    {
+        if (isRerollCostLocked == true) {
+            revert RerollCostLocked();
+        }
+
+        rerollPrices[_rerollCount] = _newPrice;
+    }
+
+    function getRerollProce(
+        uint256 _rerollCount
+    )
+        external
+        view
+        returns (uint256)
+    {
+        return rerollPrices[_rerollCount];
     }
 
     function buyCharacter()
@@ -156,10 +198,14 @@ contract ReelVRF is ReelNFT, CommonVRF {
             _astroId
         ];
 
-        if (rerollCount > 0) {
+        uint256 rerollPrice = rerollPrices[
+            rerollCount
+        ];
+
+        if (rerollPrice > 0) {
             _takeTokens(
                 VERSE_TOKEN,
-                rerollCost ** rerollCount
+                rerollPrice
             );
         }
 
@@ -173,13 +219,9 @@ contract ReelVRF is ReelNFT, CommonVRF {
         view
         returns (uint256)
     {
-        uint256 rerollCount = rerollCountPerNft[_astroId];
-
-        if (rerollCount == 0) {
-            return 0;
-        }
-
-        return rerollCost ** rerollCount;
+        return rerollPrices[
+            rerollCountPerNft[_astroId]
+        ];
     }
 
     function lockRerollCost()
@@ -187,23 +229,6 @@ contract ReelVRF is ReelNFT, CommonVRF {
         onlyOwner
     {
         isRerollCostLocked = true;
-    }
-
-    function setRerollCost(
-        uint256 _newRerollCost
-    )
-        external
-        onlyOwner
-    {
-        if (isRerollCostLocked == true) {
-            revert RerollCostLocked();
-        }
-
-        rerollCost = _newRerollCost;
-
-        emit RerollCostUpdated(
-            _newRerollCost
-        );
     }
 
     function _mintCharacter(
