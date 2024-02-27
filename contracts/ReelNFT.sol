@@ -171,6 +171,22 @@ abstract contract ReelNFT is CommonNFT, TraitTiers, Ownable {
         );
     }
 
+    function getBadgeName(
+        uint256 _astroId
+    )
+        external
+        view
+        returns (string memory badgeName)
+    {
+        uint256[] memory traits = getTraitIds(
+            _astroId
+        );
+
+        return _getBadgeType(
+            traits[6]
+        );
+    }
+
     function _increaseCharacterId()
         internal
         returns (uint256)
