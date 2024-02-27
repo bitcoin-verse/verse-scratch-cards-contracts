@@ -175,6 +175,25 @@ contract ReelVRF is ReelNFT, CommonVRF {
         freeGiftCount += loops;
     }
 
+    function _updateBadge(
+        uint256 _astroId
+    )
+        internal
+    {
+        uint256 i;
+        uint256 resultSum;
+
+        while (i < MAX_TRAIT_TYPES) {
+            resultSum += results[_astroId][i];
+            unchecked {
+                ++i;
+            }
+        }
+
+        uint256 badgeType = resultSum % 2 == 0 ? 1 : 2;
+        results[_astroId][BADGE_TRAIT_ID] = badgeType;
+    }
+
     function rerollTrait(
         uint256 _astroId,
         uint256 _traitId
