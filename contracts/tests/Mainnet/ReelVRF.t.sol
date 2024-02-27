@@ -55,7 +55,7 @@ contract TestReelVRF_MAINNET is Test {
             SUBSCRIPTON_ID
         );
 
-        expectedTraitCount = 6;
+        expectedTraitCount = 7;
         traitsInContract = reel.MAX_TRAIT_TYPES();
 
         assertEq(
