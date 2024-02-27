@@ -9,6 +9,7 @@ struct Character {
     string gearType;
     string headType;
     string extraType;
+    string saleBadge;
 }
 
 contract TraitTiers {
@@ -49,6 +50,12 @@ contract TraitTiers {
         string extraType;
     }
 
+    struct BadgeTier {
+        uint256 drawEdgeA;
+        uint256 drawEdgeB;
+        string saleBadge;
+    }
+
     BackgroundTier[] public backgroundTiers;
 
     BackTier[] public backTiers;
@@ -57,6 +64,7 @@ contract TraitTiers {
     HeadTier[] public headTiers;
 
     ExtraTier[] public extraTiers;
+    BadgeTier[] public badgeTiers;
 
     constructor() {
         _setupBackgroundTiers();
@@ -67,6 +75,7 @@ contract TraitTiers {
         _setupHeadTiers();
 
         _setupExtraTiers();
+        _setupBadgeTiers();
     }
 
     function _setupBackgroundTiers()
@@ -1041,6 +1050,34 @@ contract TraitTiers {
                 drawEdgeA: 974,
                 drawEdgeB: 1000,
                 extraType: "Starfield"
+            })
+        );
+    }
+
+    function _setupBadgeTiers()
+        internal
+    {
+        badgeTiers.push(
+            BadgeTier({
+                drawEdgeA: 1,
+                drawEdgeB: 1,
+                saleBadge: "Star Unit Pin"
+            })
+        );
+
+        badgeTiers.push(
+            BadgeTier({
+                drawEdgeA: 2,
+                drawEdgeB: 2,
+                saleBadge: "Burn Unit Pin"
+            })
+        );
+
+        badgeTiers.push(
+            BadgeTier({
+                drawEdgeA: 3,
+                drawEdgeB: 10000,
+                saleBadge: "None"
             })
         );
     }
