@@ -1225,4 +1225,28 @@ contract TraitTiers {
             }
         }
     }
+
+    function _getBadgeType(
+        uint256 _number
+    )
+        internal
+        view
+        returns (string memory badgeType)
+    {
+        uint256 i;
+        uint256 badges = badgeTiers.length;
+
+        while (i < badges) {
+
+            BadgeTier memory tier = badgeTiers[i];
+
+            if (_number >= tier.drawEdgeA && _number <= tier.drawEdgeB) {
+                return tier.saleBadge;
+            }
+
+            unchecked {
+                ++i;
+            }
+        }
+    }
 }
