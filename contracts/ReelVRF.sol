@@ -280,6 +280,7 @@ contract ReelVRF is ReelNFT, CommonVRF {
 
         _startRequest({
             _traitId: 0,
+            _addBadge: _addBadge,
             _wordCount: MAX_TRAIT_TYPES,
             _astroId: latestCharacterId
         });
@@ -303,6 +304,7 @@ contract ReelVRF is ReelNFT, CommonVRF {
             drawId: latestDrawId,
             astroId: _astroId,
             traitId: _traitId,
+            addBadge: _addBadge,
             isMinting: _wordCount == MAX_TRAIT_TYPES
         });
 
