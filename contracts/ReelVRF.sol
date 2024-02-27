@@ -207,7 +207,12 @@ contract ReelVRF is ReelNFT, CommonVRF {
         whenNotPaused
         onlyTokenOwner(_astroId)
     {
-        if (_traitId > MAX_TRAIT_TYPES) {
+        require(
+            _traitId < MAX_TRAIT_TYPES,
+            "ReelVRF: InvalidTraitId"
+        );
+
+        if (_traitId == BADGE_TRAIT_ID) {
             revert InvalidTraitId();
         }
 
