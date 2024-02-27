@@ -6,6 +6,7 @@ import "./CommonVRF.sol";
 import "./ReelNFT.sol";
 
 struct Drawing {
+    bool addBadge;
     bool isMinting;
     uint256 drawId;
     uint256 astroId;
@@ -119,9 +120,10 @@ contract ReelVRF is ReelNFT, CommonVRF {
             baseCost
         );
 
-        _mintCharacter(
-            msg.sender
-        );
+        _mintCharacter({
+            _addBadge: false,
+            _receiver: msg.sender
+        });
     }
 
     function giftCharacter(
@@ -135,9 +137,10 @@ contract ReelVRF is ReelNFT, CommonVRF {
             baseCost
         );
 
-        _mintCharacter(
-            _receiver
-        );
+        _mintCharacter({
+            _addBadge: false,
+            _receiver: _receiver
+        });
     }
 
     /**
@@ -146,6 +149,7 @@ contract ReelVRF is ReelNFT, CommonVRF {
      * @param _receivers address for gifted NFTs.
      */
     function giftForFree(
+        bool _addBadge,
         address[] calldata _receivers
     )
         external
@@ -165,6 +169,7 @@ contract ReelVRF is ReelNFT, CommonVRF {
         while (i < loops) {
 
             _mintCharacter(
+                _addBadge,
                 _receivers[i]
             );
 
@@ -218,6 +223,7 @@ contract ReelVRF is ReelNFT, CommonVRF {
 
         _startRequest({
             _wordCount: 1,
+            _addBadge: false,
             _astroId: _astroId,
             _traitId: _traitId
         });
@@ -260,6 +266,7 @@ contract ReelVRF is ReelNFT, CommonVRF {
     }
 
     function _mintCharacter(
+        bool _addBadge,
         address _receiver
     )
         internal
@@ -279,6 +286,7 @@ contract ReelVRF is ReelNFT, CommonVRF {
     }
 
     function _startRequest(
+        bool _addBadge,
         uint32 _wordCount,
         uint256 _traitId,
         uint256 _astroId
@@ -356,6 +364,16 @@ contract ReelVRF is ReelNFT, CommonVRF {
         results[
             currentDraw.astroId
         ] = numbers;
+
+        currentDraw.addBadge == true
+            ? _updateBadge(
+                currentDraw.astroId
+            )
+            : _updateTrait(
+                currentDraw.astroId,
+                BADGE_TRAIT_ID,
+                MAX_RESULT_INDEX
+            );
 
         emit RequestFulfilled(
             currentDraw.drawId,
