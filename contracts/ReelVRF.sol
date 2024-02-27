@@ -177,6 +177,7 @@ contract ReelVRF is ReelNFT, CommonVRF {
                 ++i;
             }
         }
+
         freeGiftCount += loops;
     }
 
@@ -359,10 +360,12 @@ contract ReelVRF is ReelNFT, CommonVRF {
         );
 
         while (i < MAX_TRAIT_TYPES) {
+
             numbers[i] = uniform(
                 _randomWords[i],
                 MAX_RESULT_INDEX
             );
+
             unchecked {
                 ++i;
             }
