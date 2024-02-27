@@ -96,7 +96,7 @@ contract ReelVRF is ReelNFT, CommonVRF {
         rerollPrices[_rerollCount] = _newPrice;
     }
 
-    function getRerollProce(
+    function getRerollPrice(
         uint256 _rerollCount
     )
         external

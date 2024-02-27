@@ -554,7 +554,7 @@ contract TestReelVRF_MAINNET is Test {
             newRerollCost
         );
 
-        uint256 cost = reel.getRerollProce(0);
+        uint256 cost = reel.getRerollPrice(0);
         rerollCost = reel.getNextRerollPrice(0);
 
         assertEq(
