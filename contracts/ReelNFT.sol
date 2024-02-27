@@ -72,6 +72,10 @@ abstract contract ReelNFT is CommonNFT, TraitTiers, Ownable {
             traits[5]
         );
 
+        astro.saleBadge = _getBadgeType(
+            traits[6]
+        );
+
         return astro;
     }
 
