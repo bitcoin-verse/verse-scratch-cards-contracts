@@ -15,6 +15,7 @@ struct Drawing {
 error InvalidTraitId();
 error RerollInProgress();
 error RerollCostLocked();
+error TooManyFreeGifts();
 error TraitNotYetDefined();
 
 contract ReelVRF is ReelNFT, CommonVRF {
@@ -24,6 +25,9 @@ contract ReelVRF is ReelNFT, CommonVRF {
     mapping(uint256 => bool) public rerollInProgress;
     mapping(uint256 => Drawing) public requestIdToDrawing;
     mapping(uint256 => uint256) public rerollCountPerNft;
+
+    uint256 public freeGiftCount;
+    uint256 public MAX_FREE_GIFT = 2000;
 
     uint256[] rerollPrices = new uint256[](
         MAX_REROLL_COUNT
@@ -154,6 +158,10 @@ contract ReelVRF is ReelNFT, CommonVRF {
             revert TooManyReceivers();
         }
 
+        if (freeGiftCount + loops > MAX_FREE_GIFT) {
+            revert TooManyFreeGifts();
+        }
+
         while (i < loops) {
 
             _mintCharacter(
@@ -164,6 +172,7 @@ contract ReelVRF is ReelNFT, CommonVRF {
                 ++i;
             }
         }
+        freeGiftCount += loops;
     }
 
     function rerollTrait(
