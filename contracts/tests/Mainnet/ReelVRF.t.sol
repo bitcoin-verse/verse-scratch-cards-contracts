@@ -55,7 +55,7 @@ contract TestReelVRF_MAINNET is Test {
             SUBSCRIPTON_ID
         );
 
-        expectedTraitCount = 6;
+        expectedTraitCount = 7;
         traitsInContract = reel.MAX_TRAIT_TYPES();
 
         assertEq(
@@ -218,11 +218,17 @@ contract TestReelVRF_MAINNET is Test {
         vm.stopPrank();
 
         (
+            bool addPin,
             bool isMinting,
             uint256 drawId,
             uint256 astroId,
             uint256 traitId
         ) = reel.requestIdToDrawing(1);
+
+        assertEq(
+            addPin,
+            false
+        );
 
         assertEq(
             isMinting,
@@ -305,7 +311,7 @@ contract TestReelVRF_MAINNET is Test {
         uint256 maxTrait = reel.MAX_TRAIT_TYPES();
 
         vm.expectRevert(
-            InvalidTraitId.selector
+            "ReelVRF: InvalidTraitId"
         );
 
         reel.rerollTrait(
@@ -413,7 +419,7 @@ contract TestReelVRF_MAINNET is Test {
             address(reel)
         );
 
-        string memory bgName = reel.getBackgroundColorName(
+        string memory badgeName = reel.getBadgeName(
             1
         );
 
@@ -421,13 +427,24 @@ contract TestReelVRF_MAINNET is Test {
             1
         );
 
-        console.log(bgName, "bgName");
+        assertEq(
+            badgeName,
+            character.saleBadge
+        );
+
+        assertEq(
+            badgeName,
+            "None"
+        );
+
+        console.log(badgeName, "badgeName");
         console.log(character.backgroundColor, "backgroundColor");
         console.log(character.backType, "backType");
         console.log(character.bodyType, "bodyType");
         console.log(character.gearType, "gearType");
         console.log(character.headType, "headType");
         console.log(character.extraType, "extraType");
+        console.log(character.saleBadge, "badgeType");
 
         uint256[] memory tr = reel.getTraitIds(1);
 
@@ -492,6 +509,18 @@ contract TestReelVRF_MAINNET is Test {
             expectedTraitCount,
             "Traits length should be equal to expectedTraitCount"
         );
+
+        Character memory character = reel.getTraitNames(
+            1
+        );
+
+        console.log(character.backgroundColor, "backgroundColor");
+        console.log(character.backType, "backType");
+        console.log(character.bodyType, "bodyType");
+        console.log(character.gearType, "gearType");
+        console.log(character.headType, "headType");
+        console.log(character.extraType, "extraType");
+        console.log(character.saleBadge, "badgeType");
     }
 
     function testUnifrom()
@@ -554,7 +583,7 @@ contract TestReelVRF_MAINNET is Test {
             newRerollCost
         );
 
-        uint256 cost = reel.getRerollProce(0);
+        uint256 cost = reel.getRerollPrice(0);
         rerollCost = reel.getNextRerollPrice(0);
 
         assertEq(
@@ -587,19 +616,59 @@ contract TestReelVRF_MAINNET is Test {
             initialCharacter
         );
 
-        reel.giftForFree(
-            receivers
-        );
+        reel.giftForFree({
+            _addBadge: true,
+            _receivers: receivers
+        });
 
         assertEq(
             reel.latestCharacterId(),
             initialCharacter + 1
         );
 
+        (
+            bool addPin,
+            ,
+            ,
+            ,
+        ) = reel.requestIdToDrawing(1);
+
+        assertEq(
+            addPin,
+            true
+        );
+
         coordinator.fulfillRandomWords(
             1,
             address(reel)
         );
+
+        string memory badgeName = reel.getBadgeName(
+            1
+        );
+
+        Character memory character = reel.getTraitNames(
+            1
+        );
+
+        assertEq(
+            badgeName,
+            character.saleBadge
+        );
+
+        assertNotEq(
+            badgeName,
+            "None"
+        );
+
+        console.log(badgeName, "badgeName");
+        console.log(character.backgroundColor, "backgroundColor");
+        console.log(character.backType, "backType");
+        console.log(character.bodyType, "bodyType");
+        console.log(character.gearType, "gearType");
+        console.log(character.headType, "headType");
+        console.log(character.extraType, "extraType");
+        console.log(character.saleBadge, "badgeType");
 
         vm.startPrank(
             WISE_DEPLOYER
@@ -621,9 +690,10 @@ contract TestReelVRF_MAINNET is Test {
             TooManyReceivers.selector
         );
 
-        reel.giftForFree(
-            receiversMany
-        );
+        reel.giftForFree({
+            _addBadge: true,
+            _receivers: receiversMany
+        });
     }
 
     /**

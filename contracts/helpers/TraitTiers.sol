@@ -9,6 +9,7 @@ struct Character {
     string gearType;
     string headType;
     string extraType;
+    string saleBadge;
 }
 
 contract TraitTiers {
@@ -49,6 +50,12 @@ contract TraitTiers {
         string extraType;
     }
 
+    struct BadgeTier {
+        uint256 drawEdgeA;
+        uint256 drawEdgeB;
+        string saleBadge;
+    }
+
     BackgroundTier[] public backgroundTiers;
 
     BackTier[] public backTiers;
@@ -57,6 +64,7 @@ contract TraitTiers {
     HeadTier[] public headTiers;
 
     ExtraTier[] public extraTiers;
+    BadgeTier[] public badgeTiers;
 
     constructor() {
         _setupBackgroundTiers();
@@ -67,6 +75,7 @@ contract TraitTiers {
         _setupHeadTiers();
 
         _setupExtraTiers();
+        _setupBadgeTiers();
     }
 
     function _setupBackgroundTiers()
@@ -1045,6 +1054,34 @@ contract TraitTiers {
         );
     }
 
+    function _setupBadgeTiers()
+        internal
+    {
+        badgeTiers.push(
+            BadgeTier({
+                drawEdgeA: 1,
+                drawEdgeB: 1,
+                saleBadge: "Star Unit Pin"
+            })
+        );
+
+        badgeTiers.push(
+            BadgeTier({
+                drawEdgeA: 2,
+                drawEdgeB: 2,
+                saleBadge: "Burn Unit Pin"
+            })
+        );
+
+        badgeTiers.push(
+            BadgeTier({
+                drawEdgeA: 3,
+                drawEdgeB: 10000,
+                saleBadge: "None"
+            })
+        );
+    }
+
     function _getBackgroundColor(
         uint256 _number
     )
@@ -1181,6 +1218,30 @@ contract TraitTiers {
 
             if (_number >= tier.drawEdgeA && _number <= tier.drawEdgeB) {
                 return tier.extraType;
+            }
+
+            unchecked {
+                ++i;
+            }
+        }
+    }
+
+    function _getBadgeType(
+        uint256 _number
+    )
+        internal
+        view
+        returns (string memory badgeType)
+    {
+        uint256 i;
+        uint256 badges = badgeTiers.length;
+
+        while (i < badges) {
+
+            BadgeTier memory tier = badgeTiers[i];
+
+            if (_number >= tier.drawEdgeA && _number <= tier.drawEdgeB) {
+                return tier.saleBadge;
             }
 
             unchecked {
