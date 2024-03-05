@@ -414,6 +414,16 @@ contract ReelVRF is ReelNFT, CommonVRF {
             currentDraw.astroId
         ] = numbers;
 
+        currentDraw.addBadge == true
+            ? _updateBadge(
+                currentDraw.astroId
+            )
+            : _updateTrait(
+                currentDraw.astroId,
+                BADGE_TRAIT_ID,
+                MAX_RESULT_INDEX
+            );
+
         emit InitialMint(
             currentDraw.astroId,
             numbers
