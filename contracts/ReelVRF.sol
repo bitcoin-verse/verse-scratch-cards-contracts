@@ -50,11 +50,23 @@ contract ReelVRF is ReelNFT, CommonVRF {
         uint256 indexed drawId,
         uint256 indexed astroId,
         uint256 traitNumber,
-        uint256 rolledNumber
+        uint256 rolledNumber,
+        uint256 rerollCount,
+        uint256 rerollPrice
     );
 
     event RerollCostUpdated(
         uint256 newRerollCost
+    );
+
+    event InitialMint(
+        uint256 indexed astroId,
+        uint256[] numbers
+    );
+
+    event RerollDone(
+        uint256 indexed astroId,
+        uint256[] numbers
     );
 
     constructor(
@@ -402,6 +414,11 @@ contract ReelVRF is ReelNFT, CommonVRF {
             currentDraw.astroId
         ] = numbers;
 
+        emit InitialMint(
+            currentDraw.astroId,
+            numbers
+        );
+
         emit RequestFulfilled(
             currentDraw.drawId,
             _requestId,
@@ -430,11 +447,21 @@ contract ReelVRF is ReelNFT, CommonVRF {
             _currentDraw.astroId
         ] = false;
 
+        uint256 rerollCount = rerollCountPerNft[
+            _currentDraw.astroId
+        ] - 1;
+
+        uint256 rerollPrice = rerollPrices[
+            rerollCount
+        ];
+
         emit RerollFulfilled(
             _currentDraw.drawId,
             _currentDraw.astroId,
             _currentDraw.traitId,
-            rolledNumber
+            rolledNumber,
+            rerollCount,
+            rerollPrice
         );
     }
 
