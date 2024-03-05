@@ -6,6 +6,8 @@ test = "contracts/tests"
 cache_path = "forge-cache"
 solc = "0.8.23"
 evm_version ="shanghai"
+optimizer = true
+optimizer_runs = 999999
 [rpc_endpoints]
 mainnet = "https://eth.llamarpc.com"
 polygon = "https://polygon-rpc.com"
