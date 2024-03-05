@@ -465,6 +465,11 @@ contract ReelVRF is ReelNFT, CommonVRF {
             rerollCount
         ];
 
+        emit RerollDone(
+            _currentDraw.astroId,
+            results[_currentDraw.astroId]
+        );
+
         emit RerollFulfilled(
             _currentDraw.drawId,
             _currentDraw.astroId,
