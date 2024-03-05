@@ -13,60 +13,33 @@ struct Drawing {
     uint256 traitId;
 }
 
-error MaxNftReached();
 error InvalidTraitId();
 error RerollInProgress();
 error RerollCostLocked();
 error TooManyFreeGifts();
 error TraitNotYetDefined();
-error PublicMintingNotActive();
 
 contract ReelVRF is ReelNFT, CommonVRF {
 
     bool public isRerollCostLocked;
-    bool public isPublicMintingActive;
 
     mapping(uint256 => bool) public rerollInProgress;
     mapping(uint256 => Drawing) public requestIdToDrawing;
     mapping(uint256 => uint256) public rerollCountPerNft;
 
-    uint256 public freeGiftCount;
-
-    uint256 public MAX_FREE_GIFT = 2000;
-    uint256 public MAX_NFT_COUNT = 10000;
-
     uint256[] rerollPrices = new uint256[](
         MAX_REROLL_COUNT
     );
-
-    modifier whenPublicMintActive() {
-        if (isPublicMintingActive == false) {
-            revert PublicMintingNotActive();
-        }
-        _;
-    }
 
     event RerollFulfilled(
         uint256 indexed drawId,
         uint256 indexed astroId,
         uint256 traitNumber,
-        uint256 rolledNumber,
-        uint256 rerollCount,
-        uint256 rerollPrice
+        uint256 rolledNumber
     );
 
     event RerollCostUpdated(
         uint256 newRerollCost
-    );
-
-    event InitialMint(
-        uint256 indexed astroId,
-        uint256[] numbers
-    );
-
-    event RerollDone(
-        uint256 indexed astroId,
-        uint256[] numbers
     );
 
     constructor(
@@ -111,15 +84,6 @@ contract ReelVRF is ReelNFT, CommonVRF {
         rerollPrices[11] = 250_000E18;
     }
 
-    function setPublicMinting(
-        bool _isActive
-    )
-        external
-        onlyOwner
-    {
-        isPublicMintingActive = _isActive;
-    }
-
     function setRerollPrice(
         uint256 _rerollCount,
         uint256 _newPrice
@@ -147,7 +111,6 @@ contract ReelVRF is ReelNFT, CommonVRF {
     function buyCharacter()
         external
         whenNotPaused
-        whenPublicMintActive
     {
         _takeTokens(
             VERSE_TOKEN,
@@ -165,7 +128,6 @@ contract ReelVRF is ReelNFT, CommonVRF {
     )
         external
         whenNotPaused
-        whenPublicMintActive
     {
         _takeTokens(
             VERSE_TOKEN,
@@ -314,10 +276,6 @@ contract ReelVRF is ReelNFT, CommonVRF {
     {
         uint256 latestCharacterId = _increaseCharacterId();
 
-        if (latestCharacterId > MAX_NFT_COUNT) {
-            revert MaxNftReached();
-        }
-
         _mint(
             _receiver,
             latestCharacterId
@@ -414,21 +372,6 @@ contract ReelVRF is ReelNFT, CommonVRF {
             currentDraw.astroId
         ] = numbers;
 
-        currentDraw.addBadge == true
-            ? _updateBadge(
-                currentDraw.astroId
-            )
-            : _updateTrait(
-                currentDraw.astroId,
-                BADGE_TRAIT_ID,
-                MAX_RESULT_INDEX
-            );
-
-        emit InitialMint(
-            currentDraw.astroId,
-            numbers
-        );
-
         emit RequestFulfilled(
             currentDraw.drawId,
             _requestId,
@@ -457,21 +400,11 @@ contract ReelVRF is ReelNFT, CommonVRF {
             _currentDraw.astroId
         ] = false;
 
-        uint256 rerollCount = rerollCountPerNft[
-            _currentDraw.astroId
-        ] - 1;
-
-        uint256 rerollPrice = rerollPrices[
-            rerollCount
-        ];
-
         emit RerollFulfilled(
             _currentDraw.drawId,
             _currentDraw.astroId,
             _currentDraw.traitId,
-            rolledNumber,
-            rerollCount,
-            rerollPrice
+            rolledNumber
         );
     }
 
