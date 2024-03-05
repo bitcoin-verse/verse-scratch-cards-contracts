@@ -55,6 +55,10 @@ contract TestReelVRF_MAINNET is Test {
             SUBSCRIPTON_ID
         );
 
+        reel.setPublicMinting(
+            true
+        );
+
         expectedTraitCount = 7;
         traitsInContract = reel.MAX_TRAIT_TYPES();
 
@@ -176,6 +180,53 @@ contract TestReelVRF_MAINNET is Test {
             SUBSCRIPTION_ID,
             0
         );
+    }
+
+    function testSetPublicMinting()
+        public
+    {
+        vm.startPrank(
+            WISE_DEPLOYER
+        );
+
+        vm.expectRevert(
+            NotMaster.selector
+        );
+
+        reel.setPublicMinting(
+            false
+        );
+
+        vm.stopPrank();
+
+        reel.setPublicMinting(
+            false
+        );
+
+        vm.expectRevert(
+            PublicMintingNotActive.selector
+        );
+
+        reel.buyCharacter();
+
+        reel.setPublicMinting(
+            true
+        );
+
+        uint256 baseCost = reel.baseCost();
+
+        vm.startPrank(
+            WISE_DEPLOYER
+        );
+
+        IERC20(VERSE_TOKEN).approve(
+            address(reel),
+            baseCost
+        );
+
+        reel.buyCharacter();
+
+        vm.stopPrank();
     }
 
     /**
