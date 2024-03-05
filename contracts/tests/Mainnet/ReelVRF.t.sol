@@ -55,6 +55,10 @@ contract TestReelVRF_MAINNET is Test {
             SUBSCRIPTON_ID
         );
 
+        reel.setPublicMinting(
+            true
+        );
+
         expectedTraitCount = 7;
         traitsInContract = reel.MAX_TRAIT_TYPES();
 
@@ -176,6 +180,53 @@ contract TestReelVRF_MAINNET is Test {
             SUBSCRIPTION_ID,
             0
         );
+    }
+
+    function testSetPublicMinting()
+        public
+    {
+        vm.startPrank(
+            WISE_DEPLOYER
+        );
+
+        vm.expectRevert(
+            NotMaster.selector
+        );
+
+        reel.setPublicMinting(
+            false
+        );
+
+        vm.stopPrank();
+
+        reel.setPublicMinting(
+            false
+        );
+
+        vm.expectRevert(
+            PublicMintingNotActive.selector
+        );
+
+        reel.buyCharacter();
+
+        reel.setPublicMinting(
+            true
+        );
+
+        uint256 baseCost = reel.baseCost();
+
+        vm.startPrank(
+            WISE_DEPLOYER
+        );
+
+        IERC20(VERSE_TOKEN).approve(
+            address(reel),
+            baseCost
+        );
+
+        reel.buyCharacter();
+
+        vm.stopPrank();
     }
 
     /**
@@ -606,8 +657,9 @@ contract TestReelVRF_MAINNET is Test {
     function testGiftCharactersForFree()
         public
     {
-        address[] memory receivers = new address[](1);
+        address[] memory receivers = new address[](2);
         receivers[0] = WISE_DEPLOYER;
+        receivers[1] = WISE_DEPLOYER;
 
         uint256 initialCharacter = 0;
 
@@ -616,14 +668,23 @@ contract TestReelVRF_MAINNET is Test {
             initialCharacter
         );
 
+        uint256 freeGiftCountBefore = reel.freeGiftCount();
+
         reel.giftForFree({
             _addBadge: true,
             _receivers: receivers
         });
 
+        uint256 freeGiftCountAfter = reel.freeGiftCount();
+
+        assertEq(
+            freeGiftCountAfter,
+            freeGiftCountBefore + receivers.length
+        );
+
         assertEq(
             reel.latestCharacterId(),
-            initialCharacter + 1
+            initialCharacter + receivers.length
         );
 
         (
