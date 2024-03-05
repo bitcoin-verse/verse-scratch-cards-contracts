@@ -18,10 +18,12 @@ error RerollInProgress();
 error RerollCostLocked();
 error TooManyFreeGifts();
 error TraitNotYetDefined();
+error PublicMintingNotActive();
 
 contract ReelVRF is ReelNFT, CommonVRF {
 
     bool public isRerollCostLocked;
+    bool public isPublicMintingActive;
 
     mapping(uint256 => bool) public rerollInProgress;
     mapping(uint256 => Drawing) public requestIdToDrawing;
@@ -30,6 +32,13 @@ contract ReelVRF is ReelNFT, CommonVRF {
     uint256[] rerollPrices = new uint256[](
         MAX_REROLL_COUNT
     );
+
+    modifier whenPublicMintActive() {
+        if (isPublicMintingActive == false) {
+            revert PublicMintingNotActive();
+        }
+        _;
+    }
 
     event RerollFulfilled(
         uint256 indexed drawId,
@@ -84,6 +93,15 @@ contract ReelVRF is ReelNFT, CommonVRF {
         rerollPrices[11] = 250_000E18;
     }
 
+    function setPublicMinting(
+        bool _isActive
+    )
+        external
+        onlyOwner
+    {
+        isPublicMintingActive = _isActive;
+    }
+
     function setRerollPrice(
         uint256 _rerollCount,
         uint256 _newPrice
@@ -111,6 +129,7 @@ contract ReelVRF is ReelNFT, CommonVRF {
     function buyCharacter()
         external
         whenNotPaused
+        whenPublicMintActive
     {
         _takeTokens(
             VERSE_TOKEN,
@@ -128,6 +147,7 @@ contract ReelVRF is ReelNFT, CommonVRF {
     )
         external
         whenNotPaused
+        whenPublicMintActive
     {
         _takeTokens(
             VERSE_TOKEN,
