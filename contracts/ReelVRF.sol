@@ -6,6 +6,7 @@ import "./CommonVRF.sol";
 import "./ReelNFT.sol";
 
 struct Drawing {
+    bool addBadge;
     bool isMinting;
     uint256 drawId;
     uint256 astroId;
@@ -16,6 +17,7 @@ error MaxNftReached();
 error InvalidTraitId();
 error RerollInProgress();
 error RerollCostLocked();
+error TooManyFreeGifts();
 error TraitNotYetDefined();
 error PublicMintingNotActive();
 
@@ -132,7 +134,7 @@ contract ReelVRF is ReelNFT, CommonVRF {
         rerollPrices[_rerollCount] = _newPrice;
     }
 
-    function getRerollProce(
+    function getRerollPrice(
         uint256 _rerollCount
     )
         external
@@ -152,9 +154,10 @@ contract ReelVRF is ReelNFT, CommonVRF {
             baseCost
         );
 
-        _mintCharacter(
-            msg.sender
-        );
+        _mintCharacter({
+            _addBadge: false,
+            _receiver: msg.sender
+        });
     }
 
     function giftCharacter(
@@ -169,9 +172,10 @@ contract ReelVRF is ReelNFT, CommonVRF {
             baseCost
         );
 
-        _mintCharacter(
-            _receiver
-        );
+        _mintCharacter({
+            _addBadge: false,
+            _receiver: _receiver
+        });
     }
 
     /**
@@ -180,6 +184,7 @@ contract ReelVRF is ReelNFT, CommonVRF {
      * @param _receivers address for gifted NFTs.
      */
     function giftForFree(
+        bool _addBadge,
         address[] calldata _receivers
     )
         external
@@ -192,9 +197,14 @@ contract ReelVRF is ReelNFT, CommonVRF {
             revert TooManyReceivers();
         }
 
+        if (freeGiftCount + loops > MAX_FREE_GIFT) {
+            revert TooManyFreeGifts();
+        }
+
         while (i < loops) {
 
             _mintCharacter(
+                _addBadge,
                 _receivers[i]
             );
 
@@ -202,6 +212,27 @@ contract ReelVRF is ReelNFT, CommonVRF {
                 ++i;
             }
         }
+
+        freeGiftCount += loops;
+    }
+
+    function _updateBadge(
+        uint256 _astroId
+    )
+        internal
+    {
+        uint256 i;
+        uint256 resultSum;
+
+        while (i < MAX_TRAIT_TYPES) {
+            resultSum += results[_astroId][i];
+            unchecked {
+                ++i;
+            }
+        }
+
+        uint256 badgeType = resultSum % 2 == 0 ? 1 : 2;
+        results[_astroId][BADGE_TRAIT_ID] = badgeType;
     }
 
     function rerollTrait(
@@ -212,7 +243,12 @@ contract ReelVRF is ReelNFT, CommonVRF {
         whenNotPaused
         onlyTokenOwner(_astroId)
     {
-        if (_traitId > MAX_TRAIT_TYPES) {
+        require(
+            _traitId < MAX_TRAIT_TYPES,
+            "ReelVRF: InvalidTraitId"
+        );
+
+        if (_traitId == BADGE_TRAIT_ID) {
             revert InvalidTraitId();
         }
 
@@ -228,6 +264,7 @@ contract ReelVRF is ReelNFT, CommonVRF {
 
         _startRequest({
             _wordCount: 1,
+            _addBadge: false,
             _astroId: _astroId,
             _traitId: _traitId
         });
@@ -270,6 +307,7 @@ contract ReelVRF is ReelNFT, CommonVRF {
     }
 
     function _mintCharacter(
+        bool _addBadge,
         address _receiver
     )
         internal
@@ -287,12 +325,14 @@ contract ReelVRF is ReelNFT, CommonVRF {
 
         _startRequest({
             _traitId: 0,
+            _addBadge: _addBadge,
             _wordCount: MAX_TRAIT_TYPES,
             _astroId: latestCharacterId
         });
     }
 
     function _startRequest(
+        bool _addBadge,
         uint32 _wordCount,
         uint256 _traitId,
         uint256 _astroId
@@ -309,6 +349,7 @@ contract ReelVRF is ReelNFT, CommonVRF {
             drawId: latestDrawId,
             astroId: _astroId,
             traitId: _traitId,
+            addBadge: _addBadge,
             isMinting: _wordCount == MAX_TRAIT_TYPES
         });
 
@@ -358,10 +399,12 @@ contract ReelVRF is ReelNFT, CommonVRF {
         );
 
         while (i < MAX_TRAIT_TYPES) {
+
             numbers[i] = uniform(
                 _randomWords[i],
                 MAX_RESULT_INDEX
             );
+
             unchecked {
                 ++i;
             }

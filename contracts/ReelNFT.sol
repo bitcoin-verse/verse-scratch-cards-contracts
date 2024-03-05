@@ -11,7 +11,8 @@ abstract contract ReelNFT is CommonNFT, TraitTiers, Ownable {
     using Strings for uint256;
 
     uint8 public MAX_REROLL_COUNT = 12;
-    uint8 public constant MAX_TRAIT_TYPES = 6;
+    uint8 public constant BADGE_TRAIT_ID = 6;
+    uint8 public constant MAX_TRAIT_TYPES = 7;
     uint256 public constant MAX_RESULT_INDEX = 1000;
 
     uint256 public latestCharacterId;
@@ -69,6 +70,10 @@ abstract contract ReelNFT is CommonNFT, TraitTiers, Ownable {
 
         astro.extraType = _getExtraType(
             traits[5]
+        );
+
+        astro.saleBadge = _getBadgeType(
+            traits[6]
         );
 
         return astro;
@@ -167,6 +172,22 @@ abstract contract ReelNFT is CommonNFT, TraitTiers, Ownable {
 
         return _getExtraType(
             traits[5]
+        );
+    }
+
+    function getBadgeName(
+        uint256 _astroId
+    )
+        external
+        view
+        returns (string memory badgeName)
+    {
+        uint256[] memory traits = getTraitIds(
+            _astroId
+        );
+
+        return _getBadgeType(
+            traits[6]
         );
     }
 
