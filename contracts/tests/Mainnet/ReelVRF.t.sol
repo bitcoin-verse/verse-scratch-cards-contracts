@@ -657,8 +657,9 @@ contract TestReelVRF_MAINNET is Test {
     function testGiftCharactersForFree()
         public
     {
-        address[] memory receivers = new address[](1);
+        address[] memory receivers = new address[](2);
         receivers[0] = WISE_DEPLOYER;
+        receivers[1] = WISE_DEPLOYER;
 
         uint256 initialCharacter = 0;
 
@@ -667,14 +668,23 @@ contract TestReelVRF_MAINNET is Test {
             initialCharacter
         );
 
+        uint256 freeGiftCountBefore = reel.freeGiftCount();
+
         reel.giftForFree({
             _addBadge: true,
             _receivers: receivers
         });
 
+        uint256 freeGiftCountAfter = reel.freeGiftCount();
+
+        assertEq(
+            freeGiftCountAfter,
+            freeGiftCountBefore + receivers.length
+        );
+
         assertEq(
             reel.latestCharacterId(),
-            initialCharacter + 1
+            initialCharacter + receivers.length
         );
 
         (
