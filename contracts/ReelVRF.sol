@@ -13,6 +13,7 @@ struct Drawing {
     uint256 traitId;
 }
 
+error MaxNftReached();
 error InvalidTraitId();
 error RerollInProgress();
 error RerollCostLocked();
@@ -28,6 +29,11 @@ contract ReelVRF is ReelNFT, CommonVRF {
     mapping(uint256 => bool) public rerollInProgress;
     mapping(uint256 => Drawing) public requestIdToDrawing;
     mapping(uint256 => uint256) public rerollCountPerNft;
+
+    uint256 public freeGiftCount;
+
+    uint256 public MAX_FREE_GIFT = 2000;
+    uint256 public MAX_NFT_COUNT = 10000;
 
     uint256[] rerollPrices = new uint256[](
         MAX_REROLL_COUNT
@@ -295,6 +301,10 @@ contract ReelVRF is ReelNFT, CommonVRF {
         internal
     {
         uint256 latestCharacterId = _increaseCharacterId();
+
+        if (latestCharacterId > MAX_NFT_COUNT) {
+            revert MaxNftReached();
+        }
 
         _mint(
             _receiver,
