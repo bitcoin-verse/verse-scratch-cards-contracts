@@ -13,18 +13,23 @@ struct Drawing {
     uint256 traitId;
 }
 
+error StakedVoyager();
 error MaxNftReached();
 error InvalidTraitId();
 error RerollInProgress();
 error RerollCostLocked();
 error TooManyFreeGifts();
 error TraitNotYetDefined();
+error StakingOperatorOnly();
 error PublicMintingNotActive();
 
 contract ReelVRF is ReelNFT, CommonVRF {
 
     bool public isRerollCostLocked;
     bool public isPublicMintingActive;
+
+    mapping(address => bool) public stakingOperator;
+    mapping(uint256 => bool) public isVoyagerStaked;
 
     mapping(uint256 => bool) public rerollInProgress;
     mapping(uint256 => Drawing) public requestIdToDrawing;
@@ -38,6 +43,13 @@ contract ReelVRF is ReelNFT, CommonVRF {
     uint256[] rerollPrices = new uint256[](
         MAX_REROLL_COUNT
     );
+
+    modifier onlyStakingOperator() {
+        if (stakingOperator[msg.sender] == false) {
+            revert StakingOperatorOnly();
+        }
+        _;
+    }
 
     modifier whenPublicMintActive() {
         if (isPublicMintingActive == false) {
@@ -111,6 +123,16 @@ contract ReelVRF is ReelNFT, CommonVRF {
         rerollPrices[11] = 250_000E18;
     }
 
+    function setStakingOperator(
+        address _operator,
+        bool _isActive
+    )
+        external
+        onlyOwner
+    {
+        stakingOperator[_operator] = _isActive;
+    }
+
     function setPublicMinting(
         bool _isActive
     )
@@ -118,6 +140,92 @@ contract ReelVRF is ReelNFT, CommonVRF {
         onlyOwner
     {
         isPublicMintingActive = _isActive;
+    }
+
+    function stakeVoyager(
+        uint256 _voyagerId
+    )
+        external
+        onlyStakingOperator
+    {
+        isVoyagerStaked[_voyagerId] = true;
+    }
+
+    function unstakeVoyager(
+        uint256 _voyagerId
+    )
+        external
+        onlyStakingOperator
+    {
+        isVoyagerStaked[_voyagerId] = false;
+    }
+
+    function transferFrom(
+        address _from,
+        address _to,
+        uint256 _tokenId
+    )
+        public
+        override(
+            ERC721,
+            IERC721
+        )
+    {
+        if (isVoyagerStaked[_tokenId] == true) {
+            revert StakedVoyager();
+        }
+
+        super.transferFrom(
+            _from,
+            _to,
+            _tokenId
+        );
+    }
+
+    function safeTransferFrom(
+        address _from,
+        address _to,
+        uint256 _tokenId
+    )
+        public
+        override(
+            ERC721,
+            IERC721
+        )
+    {
+        if (isVoyagerStaked[_tokenId] == true) {
+            revert StakedVoyager();
+        }
+
+        super.safeTransferFrom(
+            _from,
+            _to,
+            _tokenId
+        );
+    }
+
+    function safeTransferFrom(
+        address _from,
+        address _to,
+        uint256 _tokenId,
+        bytes memory _data
+    )
+        public
+        override(
+            ERC721,
+            IERC721
+        )
+    {
+        if (isVoyagerStaked[_tokenId] == true) {
+            revert StakedVoyager();
+        }
+
+        super.safeTransferFrom(
+            _from,
+            _to,
+            _tokenId,
+            _data
+        );
     }
 
     function setRerollPrice(
