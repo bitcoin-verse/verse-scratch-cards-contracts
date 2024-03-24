@@ -4,3 +4,4 @@ out/
 coverage/
 lcov.info
 lcov.info
+.env
