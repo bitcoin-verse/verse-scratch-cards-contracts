@@ -1,0 +1,140 @@
+No files changed, compilation skipped
+
+Running 13 tests for contracts/tests/Mainnet/ScratchVRF.t.sol:TestScratchVRF_MAINNET
+[32m[PASS][0m testBulkPurchase() (gas: 7681513)
+[32m[PASS][0m testBuyTickets() (gas: 428714)
+[32m[PASS][0m testChangeBaseCost() (gas: 14615)
+[32m[PASS][0m testChangeBaseCostExceptions() (gas: 29063)
+[32m[PASS][0m testGiftTickets() (gas: 453783)
+[32m[PASS][0m testGiftTicketsForFree() (gas: 485239)
+[32m[PASS][0m testIsMinted() (gas: 394055)
+[32m[PASS][0m testOwnerByAddress() (gas: 392732)
+[32m[PASS][0m testSubscription() (gas: 5564)
+[32m[PASS][0m testToWei(uint128) (runs: 256, μ: 6018, ~: 6018)
+[32m[PASS][0m testTokenURI() (gas: 403522)
+[32m[PASS][0m testUpdateBaseURI() (gas: 435712)
+[32m[PASS][0m testZeroPurchase() (gas: 8661)
+Test result: [32mok[0m. [32m13[0m passed; [31m0[0m failed; [33m0[0m skipped; finished in 2.14s
+
+Running 13 tests for contracts/tests/Mainnet/ReelVRF.t.sol:TestReelVRF_MAINNET
+[32m[PASS][0m testBuyCharacter() (gas: 908125)
+Logs:
+  None badgeName
+  Saffron Sunrise backgroundColor
+  Armored Pack backType
+  Gravitas Shade bodyType
+  Leafline Hoodie gearType
+  Star Visor headType
+  None extraType
+  None badgeType
+  462 tr[0]
+
+[32m[PASS][0m testChangeBaseCost() (gas: 14791)
+[32m[PASS][0m testChangeBaseCostExceptions() (gas: 29019)
+[32m[PASS][0m testCheckIfTokenExists() (gas: 553933)
+[32m[PASS][0m testGiftCharacter() (gas: 893358)
+Logs:
+  Saffron Sunrise backgroundColor
+  Armored Pack backType
+  Gravitas Shade bodyType
+  Leafline Hoodie gearType
+  Star Visor headType
+  None extraType
+  None badgeType
+
+[32m[PASS][0m testGiftCharactersForFree() (gas: 1120748)
+Logs:
+  Star Unit Pin badgeName
+  Saffron Sunrise backgroundColor
+  Armored Pack backType
+  Gravitas Shade bodyType
+  Leafline Hoodie gearType
+  Star Visor headType
+  None extraType
+  Star Unit Pin badgeType
+
+[32m[PASS][0m testOwnerByAddress() (gas: 552472)
+[32m[PASS][0m testRerollCost() (gas: 47004)
+[32m[PASS][0m testRerollTrait() (gas: 1234228)
+[32m[PASS][0m testSetPublicMinting() (gas: 375633)
+[32m[PASS][0m testSubscription() (gas: 5652)
+[32m[PASS][0m testTokenURI() (gas: 560988)
+[32m[PASS][0m testUnifrom() (gas: 7483)
+Test result: [32mok[0m. [32m13[0m passed; [31m0[0m failed; [33m0[0m skipped; finished in 2.14s
+
+Running 3 tests for contracts/tests/Polygon/ScratchVRF.t.sol:TestScratchVRF_POLYGON
+[32m[PASS][0m testSubscription() (gas: 5586)
+[32m[PASS][0m testchangeBaseCost() (gas: 14595)
+[32m[PASS][0m testchangeBaseCostExceptions() (gas: 28585)
+Test result: [32mok[0m. [32m3[0m passed; [31m0[0m failed; [33m0[0m skipped; finished in 2.16s
+| contracts/ReelVRF.sol:ReelVRF contract |                 |        |        |        |         |
+|----------------------------------------|-----------------|--------|--------|--------|---------|
+| Deployment Cost                        | Deployment Size |        |        |        |         |
+| 12932941                               | 37055           |        |        |        |         |
+| Function Name                          | min             | avg    | median | max    | # calls |
+| MAX_TRAIT_TYPES                        | 314             | 314    | 314    | 314    | 14      |
+| SUBSCRIPTION_ID                        | 361             | 361    | 361    | 361    | 14      |
+| baseCost                               | 472             | 2272   | 2472   | 2472   | 10      |
+| buyCharacter                           | 2641            | 294016 | 341912 | 343912 | 7       |
+| changeBaseCost                         | 678             | 3252   | 2616   | 5540   | 6       |
+| freeGiftCount                          | 384             | 1384   | 1384   | 2384   | 2       |
+| getBadgeName                           | 11890           | 19251  | 19251  | 26613  | 2       |
+| getNextRerollPrice                     | 834             | 4834   | 6834   | 6834   | 3       |
+| getRerollPrice                         | 662             | 662    | 662    | 662    | 1       |
+| getTraitIds                            | 2621            | 2621   | 2621   | 2621   | 5       |
+| getTraitNames                          | 186893          | 286158 | 301658 | 321658 | 5       |
+| giftCharacter                          | 342023          | 342023 | 342023 | 342023 | 1       |
+| giftForFree                            | 784             | 284322 | 284322 | 567861 | 2       |
+| isMinted                               | 578             | 1578   | 1578   | 2578   | 4       |
+| latestCharacterId                      | 405             | 1293   | 405    | 2405   | 9       |
+| ownedByAddress                         | 1837            | 1837   | 1837   | 1837   | 1       |
+| rawFulfillRandomWords                  | 11109           | 169254 | 191347 | 194841 | 8       |
+| requestIdToDrawing                     | 984             | 984    | 984    | 984    | 2       |
+| rerollInProgress                       | 603             | 1269   | 603    | 2603   | 3       |
+| rerollTrait                            | 892             | 36962  | 1179   | 144599 | 4       |
+| results                                | 791             | 791    | 791    | 791    | 1       |
+| setPublicMinting                       | 832             | 19162  | 22732  | 22732  | 16      |
+| setRerollPrice                         | 2596            | 13744  | 13744  | 24892  | 2       |
+| tokenURI                               | 2622            | 3339   | 3339   | 4056   | 2       |
+| uniform                                | 836             | 836    | 836    | 836    | 2       |
+
+
+| contracts/ScratchVRF.sol:ScratchVRF contract |                 |        |        |         |         |
+|----------------------------------------------|-----------------|--------|--------|---------|---------|
+| Deployment Cost                              | Deployment Size |        |        |         |         |
+| 3229111                                      | 14190           |        |        |         |         |
+| Function Name                                | min             | avg    | median | max     | # calls |
+| SUBSCRIPTION_ID                              | 295             | 295    | 295    | 295     | 15      |
+| baseCost                                     | 384             | 2076   | 2384   | 2384    | 13      |
+| bulkPurchase                                 | 447             | 995101 | 473    | 2984383 | 3       |
+| buyScratchTicket                             | 157163          | 157163 | 157163 | 157163  | 5       |
+| changeBaseCost                               | 700             | 3274   | 2638   | 5562    | 12      |
+| claimPrize                                   | 1082            | 17955  | 25560  | 33886   | 7       |
+| giftForFree                                  | 749             | 71636  | 71636  | 142523  | 2       |
+| giftScratchTicket                            | 157318          | 157318 | 157318 | 157318  | 1       |
+| isMinted                                     | 523             | 1523   | 1523   | 2523    | 2       |
+| latestTicketId                               | 428             | 1428   | 1428   | 2428    | 8       |
+| ownedByAddress                               | 1794            | 1794   | 1794   | 1794    | 1       |
+| prizes                                       | 501             | 501    | 501    | 501     | 1       |
+| rawFulfillRandomWords                        | 166700          | 181358 | 169168 | 220716  | 36      |
+| toWei                                        | 490             | 490    | 490    | 490     | 1       |
+| tokenURI                                     | 2457            | 4086   | 2533   | 6454    | 5       |
+| updateBaseURI                                | 2662            | 12886  | 12886  | 23111   | 2       |
+| withdrawTokens                               | 30526           | 30926  | 30926  | 31326   | 2       |
+
+
+| contracts/flats/VRFCoordinatorV2Mock.sol:VRFCoordinatorV2Mock contract |                 |        |        |        |         |
+|------------------------------------------------------------------------|-----------------|--------|--------|--------|---------|
+| Deployment Cost                                                        | Deployment Size |        |        |        |         |
+| 1371868                                                                | 7292            |        |        |        |         |
+| Function Name                                                          | min             | avg    | median | max    | # calls |
+| addConsumer                                                            | 47232           | 47232  | 47232  | 47232  | 26      |
+| createSubscription                                                     | 46825           | 46825  | 46825  | 46825  | 26      |
+| fulfillRandomWords                                                     | 37889           | 207679 | 197450 | 250740 | 44      |
+| fundSubscription                                                       | 3174            | 3174   | 3174   | 3174   | 26      |
+| requestRandomWords                                                     | 28229           | 34220  | 28229  | 45829  | 47      |
+
+
+
+ 
+Ran 3 test suites: [32m29[0m tests passed, [31m0[0m failed, [33m0[0m skipped (29 total tests)
