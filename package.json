@@ -12,7 +12,9 @@
         "foundry-test-reports": "forge test --gas-report > gasreport.ansi -vvv",
         "foundry-test-mainnet": "forge test --match-path contracts/tests/Mainnet/*.sol --gas-report -vvv",
         "foundry-test-polygon": "forge test --match-path contracts/tests/Polygon/*.sol --gas-report -vvv",
-        "foundry-coverage": "forge coverage --report lcov && genhtml lcov.info --branch-coverage --output-dir coverage"
+        "foundry-coverage": "forge coverage --report lcov && genhtml lcov.info --branch-coverage --output-dir coverage",
+        "deploy-reel-vrf": "forge script contracts/scripts/Deployer.s.sol:DeployReelVRF --broadcast --verify --chain-id=137 --rpc-url polygon",
+        "verify-reel-vrf": "forge verify-contract --chain-id=137 0x2D210dc61103fBD9C5Cf9C9b0cD7F264BCf84AeE ReelVRF --watch"
     },
     "author": "",
     "license": "ISC",
