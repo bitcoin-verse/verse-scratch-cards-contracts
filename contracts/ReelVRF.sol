@@ -36,9 +36,11 @@ contract ReelVRF is ReelNFT, CommonVRF {
     mapping(uint256 => uint256) public rerollCountPerNft;
 
     uint256 public freeGiftCount;
+    uint256 public publicMintCount;
 
     uint256 public MAX_FREE_GIFT = 2000;
     uint256 public MAX_NFT_COUNT = 10000;
+    uint256 public MAX_PUBLIC_MINT = MAX_NFT_COUNT - MAX_FREE_GIFT;
 
     uint256[] rerollPrices = new uint256[](
         MAX_REROLL_COUNT
@@ -262,10 +264,24 @@ contract ReelVRF is ReelNFT, CommonVRF {
             baseCost
         );
 
+        _increasePublicCount();
+
         _mintCharacter({
             _addBadge: false,
             _receiver: msg.sender
         });
+    }
+
+    function _increasePublicCount()
+        internal
+    {
+        unchecked {
+            ++publicMintCount;
+        }
+
+        if (publicMintCount > MAX_PUBLIC_MINT) {
+            revert MaxNftReached();
+        }
     }
 
     function giftCharacter(
@@ -279,6 +295,8 @@ contract ReelVRF is ReelNFT, CommonVRF {
             VERSE_TOKEN,
             baseCost
         );
+
+        _increasePublicCount();
 
         _mintCharacter({
             _addBadge: false,
@@ -339,7 +357,10 @@ contract ReelVRF is ReelNFT, CommonVRF {
             }
         }
 
-        uint256 badgeType = resultSum % 2 == 0 ? 1 : 2;
+        uint256 badgeType = resultSum % 2 == 0
+            ? 1
+            : 2;
+
         results[_astroId][BADGE_TRAIT_ID] = badgeType;
     }
 
@@ -392,7 +413,11 @@ contract ReelVRF is ReelNFT, CommonVRF {
             );
         }
 
-        rerollCountPerNft[_astroId] = rerollCount + 1;
+        uint256 nextCounter = ++rerollCount;
+
+        if (nextCounter < MAX_REROLL_COUNT) {
+            rerollCountPerNft[_astroId] = nextCounter;
+        }
     }
 
     function getNextRerollPrice(
