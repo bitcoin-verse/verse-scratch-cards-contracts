@@ -436,6 +436,108 @@ contract TestReelVRF_MAINNET is Test {
         );
     }
 
+    function testRerollSameTrait11Times()
+        public
+    {
+        vm.startPrank(
+            WISE_DEPLOYER
+        );
+
+        IERC20(VERSE_TOKEN).approve(
+            address(reel),
+            type(uint256).max
+        );
+
+        uint256 initialCharacterId = 0;
+        uint256 expectedCharactedId = initialCharacterId + 1;
+
+        assertEq(
+            reel.latestCharacterId(),
+            initialCharacterId
+        );
+
+        assertEq(
+            reel.isMinted(1),
+            false
+        );
+
+        reel.buyCharacter();
+
+        vm.stopPrank();
+
+        (
+            bool addPin,
+            bool isMinting,
+            uint256 drawId,
+            uint256 astroId,
+            uint256 traitId
+        ) = reel.requestIdToDrawing(1);
+
+        assertEq(
+            addPin,
+            false
+        );
+
+        assertEq(
+            isMinting,
+            true
+        );
+
+        assertEq(
+            drawId,
+            1
+        );
+
+        assertEq(
+            astroId,
+            1
+        );
+
+        assertEq(
+            traitId,
+            0
+        );
+
+        assertEq(
+            reel.latestCharacterId(),
+            expectedCharactedId
+        );
+
+        coordinator.fulfillRandomWords(
+            1,
+            address(reel)
+        );
+
+        assertEq(
+            reel.latestCharacterId(),
+            expectedCharactedId
+        );
+
+        uint256 REROLL_TRAIT_ID = 0;
+
+        for (uint256 i = 1; i < 15; i++) {
+
+            vm.startPrank(
+                WISE_DEPLOYER
+            );
+
+            uint256 rerollCost = reel.getNextRerollPrice(1);
+            console.log(rerollCost, 'rerollCost');
+
+            reel.rerollTrait(
+                expectedCharactedId,
+                REROLL_TRAIT_ID
+            );
+
+            vm.stopPrank();
+
+            coordinator.fulfillRandomWords(
+                i + 1,
+                address(reel)
+            );
+        }
+    }
+
     /**
      * @notice it should be possible to buy character
      */
