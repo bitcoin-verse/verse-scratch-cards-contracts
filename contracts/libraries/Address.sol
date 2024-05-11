@@ -1,5 +1,4 @@
 // SPDX-License-Identifier: MIT
-// OpenZeppelin Contracts (last updated v5.0.0) (utils/Address.sol)
 
 pragma solidity ^0.8.20;
 
@@ -10,12 +9,16 @@ library Address {
     /**
      * @dev The ETH balance of the account is not enough to perform the operation.
      */
-    error AddressInsufficientBalance(address account);
+    error AddressInsufficientBalance(
+        address account
+    );
 
     /**
      * @dev There's no code at `target` (it is not a contract).
      */
-    error AddressEmptyCode(address target);
+    error AddressEmptyCode(
+        address target
+    );
 
     /**
      * @dev A call to an address target failed. The target may have reverted.
@@ -33,17 +36,30 @@ library Address {
      *
      * https://consensys.net/diligence/blog/2019/09/stop-using-soliditys-transfer-now/[Learn more].
      *
-     * IMPORTANT: because control is transferred to `recipient`, care must be
+     * IMPORTANT: because control is transferred to `_recipient`, care must be
      * taken to not create reentrancy vulnerabilities. Consider using
      * {ReentrancyGuard} or the
      * https://solidity.readthedocs.io/en/v0.8.20/security-considerations.html#use-the-checks-effects-interactions-pattern[checks-effects-interactions pattern].
      */
-    function sendValue(address payable recipient, uint256 amount) internal {
-        if (address(this).balance < amount) {
-            revert AddressInsufficientBalance(address(this));
+    function sendValue(
+        address payable _recipient,
+        uint256 _amount
+    )
+        internal
+    {
+        if (address(this).balance < _amount) {
+            revert AddressInsufficientBalance(
+                address(this)
+            );
         }
 
-        (bool success, ) = recipient.call{value: amount}("");
+        (
+            bool success
+            ,
+        ) = _recipient.call{
+            value: _amount
+        }("");
+
         if (!success) {
             revert FailedInnerCall();
         }
@@ -54,7 +70,7 @@ library Address {
      * plain `call` is an unsafe replacement for a function call: use this
      * function instead.
      *
-     * If `target` reverts with a revert reason or custom error, it is bubbled
+     * If `_target` reverts with a revert reason or custom error, it is bubbled
      * up by this function (like regular Solidity function calls). However, if
      * the call reverted with no returned reason, this function reverts with a
      * {FailedInnerCall} error.
@@ -64,11 +80,21 @@ library Address {
      *
      * Requirements:
      *
-     * - `target` must be a contract.
-     * - calling `target` with `data` must not revert.
+     * - `_target` must be a contract.
+     * - calling `_target` with `_data` must not revert.
      */
-    function functionCall(address target, bytes memory data) internal returns (bytes memory) {
-        return functionCallWithValue(target, data, 0);
+    function functionCall(
+        address _target,
+        bytes memory _data
+    )
+        internal
+        returns (bytes memory)
+    {
+        return functionCallWithValue(
+            _target,
+            _data,
+            0
+        );
     }
 
     /**
@@ -80,30 +106,83 @@ library Address {
      * - the calling contract must have an ETH balance of at least `value`.
      * - the called Solidity function must be `payable`.
      */
-    function functionCallWithValue(address target, bytes memory data, uint256 value) internal returns (bytes memory) {
-        if (address(this).balance < value) {
-            revert AddressInsufficientBalance(address(this));
+    function functionCallWithValue(
+        address _target,
+        bytes memory _data,
+        uint256 _value
+    )
+        internal
+        returns (bytes memory)
+    {
+        if (address(this).balance < _value) {
+            revert AddressInsufficientBalance(
+                address(this)
+            );
         }
-        (bool success, bytes memory returndata) = target.call{value: value}(data);
-        return verifyCallResultFromTarget(target, success, returndata);
+
+        (
+            bool success,
+            bytes memory returndata
+        ) = _target.call{
+            value: _value
+        }(_data);
+
+        return verifyCallResultFromTarget(
+            _target,
+            success,
+            returndata
+        );
     }
 
     /**
      * @dev Same as {xref-Address-functionCall-address-bytes-}[`functionCall`],
      * but performing a static call.
      */
-    function functionStaticCall(address target, bytes memory data) internal view returns (bytes memory) {
-        (bool success, bytes memory returndata) = target.staticcall(data);
-        return verifyCallResultFromTarget(target, success, returndata);
+    function functionStaticCall(
+        address _target,
+        bytes memory _data
+    )
+        internal
+        view
+        returns (bytes memory)
+    {
+        (
+            bool success,
+            bytes memory returndata
+        ) = _target.staticcall(
+            _data
+        );
+
+        return verifyCallResultFromTarget(
+            _target,
+            success,
+            returndata
+        );
     }
 
     /**
      * @dev Same as {xref-Address-functionCall-address-bytes-}[`functionCall`],
      * but performing a delegate call.
      */
-    function functionDelegateCall(address target, bytes memory data) internal returns (bytes memory) {
-        (bool success, bytes memory returndata) = target.delegatecall(data);
-        return verifyCallResultFromTarget(target, success, returndata);
+    function functionDelegateCall(
+        address _target,
+        bytes memory _data
+    )
+        internal
+        returns (bytes memory)
+    {
+        (
+            bool success,
+            bytes memory returndata
+        ) = _target.delegatecall(
+            _data
+        );
+
+        return verifyCallResultFromTarget(
+            _target,
+            success,
+            returndata
+        );
     }
 
     /**
@@ -112,19 +191,28 @@ library Address {
      * unsuccessful call.
      */
     function verifyCallResultFromTarget(
-        address target,
-        bool success,
-        bytes memory returndata
-    ) internal view returns (bytes memory) {
-        if (!success) {
-            _revert(returndata);
+        address _target,
+        bool _success,
+        bytes memory _returndata
+    )
+        internal
+        view
+        returns (bytes memory)
+    {
+        if (!_success) {
+            _revert(
+                _returndata
+            );
         } else {
             // only check if target is a contract if the call was successful and the return data is empty
             // otherwise we already know that it was a contract
-            if (returndata.length == 0 && target.code.length == 0) {
-                revert AddressEmptyCode(target);
+            if (_returndata.length == 0 && _target.code.length == 0) {
+                revert AddressEmptyCode(
+                    _target
+                );
             }
-            return returndata;
+
+            return _returndata;
         }
     }
 
@@ -132,25 +220,37 @@ library Address {
      * @dev Tool to verify that a low level call was successful, and reverts if it wasn't, either by bubbling the
      * revert reason or with a default {FailedInnerCall} error.
      */
-    function verifyCallResult(bool success, bytes memory returndata) internal pure returns (bytes memory) {
-        if (!success) {
-            _revert(returndata);
+    function verifyCallResult(
+        bool _success,
+        bytes memory _returndata
+    )
+        internal
+        pure
+        returns (bytes memory)
+    {
+        if (!_success) {
+            _revert(_returndata);
         } else {
-            return returndata;
+            return _returndata;
         }
     }
 
     /**
      * @dev Reverts with returndata if present. Otherwise reverts with {FailedInnerCall}.
      */
-    function _revert(bytes memory returndata) private pure {
+    function _revert(
+        bytes memory _returndata
+    )
+        private
+        pure
+    {
         // Look for revert reason and bubble it up if present
-        if (returndata.length > 0) {
+        if (_returndata.length > 0) {
             // The easiest way to bubble the revert reason is using memory via assembly
             /// @solidity memory-safe-assembly
             assembly {
-                let returndata_size := mload(returndata)
-                revert(add(32, returndata), returndata_size)
+                let returndata_size := mload(_returndata)
+                revert(add(32, _returndata), returndata_size)
             }
         } else {
             revert FailedInnerCall();

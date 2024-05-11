@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: -- BCOM --
 
-pragma solidity =0.8.23;
+pragma solidity =0.8.25;
 
 import "../libraries/Address.sol";
 
@@ -108,7 +108,10 @@ library SafeERC20 {
             _data
         );
 
-        if (returndata.length != 0 && !abi.decode(returndata, (bool))) {
+        if (returndata.length != 0 && !abi.decode(
+            returndata,
+            (bool)
+        )) {
             revert SafeERC20FailedOperation(
                 _token
             );
