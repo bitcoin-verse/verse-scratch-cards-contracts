@@ -1,7 +1,6 @@
-
 // SPDX-License-Identifier: -- BCOM --
 
-pragma solidity =0.8.23;
+pragma solidity =0.8.25;
 
 import "../libraries/SafeERC20.sol";
 

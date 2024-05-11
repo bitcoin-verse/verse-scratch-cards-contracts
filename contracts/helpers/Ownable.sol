@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: -- BCOM --
 
-pragma solidity =0.8.23;
+pragma solidity =0.8.25;
 
 error NoValue();
 error NotMaster();
@@ -11,7 +11,7 @@ contract Ownable {
     address public master;
     address private proposedMaster;
 
-    address internal constant ZERO_ADDRESS = address(0x0);
+    address private constant ZERO_ADDRESS = address(0x0);
 
     modifier onlyProposed() {
         _onlyProposed();
