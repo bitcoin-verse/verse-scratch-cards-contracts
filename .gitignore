@@ -5,3 +5,5 @@ coverage/
 lcov.info
 lcov.info
 .env
+broadcast/*
+forge-cache/*
