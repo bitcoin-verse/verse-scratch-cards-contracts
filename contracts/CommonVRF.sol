@@ -1,134 +1,16 @@
 // SPDX-License-Identifier: -- BCOM --
 
-pragma solidity =0.8.23;
-
-interface VRFCoordinatorV2Interface {
-
-    function getRequestConfig()
-        external
-        view
-        returns (
-            uint16,
-            uint32,
-            bytes32[] memory
-        );
-
-    function requestRandomWords(
-        bytes32 keyHash,
-        uint64 subId,
-        uint16 minimumRequestConfirmations,
-        uint32 callbackGasLimit,
-        uint32 numWords
-    )
-        external
-        returns (
-            uint256 requestId
-        );
-
-    function createSubscription()
-        external
-        returns (
-            uint64 subId
-        );
-
-    function getSubscription(
-        uint64 subId
-    )
-        external
-        view
-        returns (
-            uint96 balance,
-            uint64 reqCount,
-            address owner,
-            address[] memory consumers
-        );
-
-    function requestSubscriptionOwnerTransfer(
-        uint64 subId,
-        address newOwner
-    )
-        external;
-
-    function acceptSubscriptionOwnerTransfer(
-        uint64 subId
-    )
-        external;
-
-    function addConsumer(
-        uint64 subId,
-        address consumer
-    )
-        external;
-
-    function removeConsumer(
-        uint64 subId,
-        address consumer
-    )
-        external;
-
-    function cancelSubscription(
-        uint64 subId,
-        address to
-    )
-        external;
-
-    function pendingRequestExists(
-        uint64 subId
-    )
-        external
-        view
-        returns (bool);
-}
-
-abstract contract VRFConsumerBaseV2 {
-
-    error OnlyCoordinatorCanFulfill(
-        address have,
-        address want
-    )
-    ;
-    address private immutable vrfCoordinator;
-
-    constructor(
-        address _vrfCoordinator
-    )
-    {
-        vrfCoordinator = _vrfCoordinator;
-    }
-
-    function fulfillRandomWords(
-        uint256 _requestId,
-        uint256[] memory _randomWords
-    )
-        internal
-        virtual;
-
-    function rawFulfillRandomWords(
-        uint256 _requestId,
-        uint256[] memory _randomWords
-    )
-        external
-    {
-        if (msg.sender != vrfCoordinator) {
-            revert OnlyCoordinatorCanFulfill(
-                msg.sender,
-                vrfCoordinator
-            );
-        }
-
-        fulfillRandomWords(
-            _requestId,
-            _randomWords
-        );
-    }
-}
+pragma solidity =0.8.25;
 
 import "./helpers/Pausable.sol";
 import "./helpers/TokenHelper.sol";
 
+import "./vrf/VRFConsumerBaseV2.sol";
+import "./vrf/VRFCoordinatorV2Interface.sol";
+
 error InvalidCost();
-error TooManyReceivers();
 error TooManyTickets();
+error TooManyReceivers();
 
 abstract contract CommonVRF is TokenHelper, Pausable, VRFConsumerBaseV2 {
 
@@ -239,7 +121,7 @@ abstract contract CommonVRF is TokenHelper, Pausable, VRFConsumerBaseV2 {
 
     /**
      * @notice Allows load {$LINK} tokens to subscription.
-     * @dev Can be called with anyone, who wants to donate.
+     * @dev Can be called by anyone, who wants to donate.
      * @param _linkAmount how much to load to subscription.
      */
     function loadSubscription(
