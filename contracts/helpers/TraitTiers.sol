@@ -732,7 +732,7 @@ contract TraitTiers {
         headTiers.push(
             HeadTier({
                 drawEdgeA: 1,
-                drawEdgeB: 60,
+                drawEdgeB: 66,
                 headType: "Knight's Valor"
             })
         );
