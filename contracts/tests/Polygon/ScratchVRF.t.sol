@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: -- BCOM --
 
-pragma solidity =0.8.23;
+pragma solidity =0.8.25;
 
 import "forge-std/Test.sol";
 
@@ -11,16 +11,15 @@ contract TestScratchVRF_POLYGON is Test {
     uint256 constant FORK_POLYGON_BLOCK = 49_296_033;
 
     ScratchVRF public scratcher;
-    uint256 constant TICKET_COST = 3_000 * 1E18;
-
-    address constant LINK_TOKEN = 0x53E0bca35eC356BD5ddDFebbD1Fc0fD03FaBad39;
-    address constant VERSE_TOKEN = 0xc708D6F2153933DAA50B2D0758955Be0A93A8FEc;
-
-    address constant VRF_COORDINATOR = 0xAE975071Be8F8eE67addBC1A82488F1C24858067;
-    bytes32 constant GAS_KEY_HASH = 0xcc294a196eeeb44da2888d17c0625cc88d70d9760a69d58d853ba6581a9ab0cd;
 
     address constant WISE_DEPLOYER = 0x641AD78BAca220C5BD28b51Ce8e0F495e85Fe689;
 
+
+    uint256 constant TICKET_COST = 3_000 * 1E18;
+    address constant LINK_TOKEN = 0x53E0bca35eC356BD5ddDFebbD1Fc0fD03FaBad39;
+    address constant VERSE_TOKEN = 0xc708D6F2153933DAA50B2D0758955Be0A93A8FEc;
+    address constant VRF_COORDINATOR = 0xAE975071Be8F8eE67addBC1A82488F1C24858067;
+    bytes32 constant GAS_KEY_HASH = 0xcc294a196eeeb44da2888d17c0625cc88d70d9760a69d58d853ba6581a9ab0cd;
     uint64 constant NEW_SUBSCRIPTON = 951;
 
     function setUp()

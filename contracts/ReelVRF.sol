@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: -- BCOM --
 
-pragma solidity =0.8.23;
+pragma solidity =0.8.25;
 
-import "./CommonVRF.sol";
 import "./ReelNFT.sol";
+import "./CommonVRF.sol";
 
 struct Drawing {
     bool addBadge;
@@ -11,16 +11,17 @@ struct Drawing {
     uint256 drawId;
     uint256 astroId;
     uint256 traitId;
+    uint256 timestamp;
 }
 
-error StakedVoyager();
 error MaxNftReached();
 error InvalidTraitId();
 error RerollInProgress();
 error RerollCostLocked();
 error TooManyFreeGifts();
-error TraitNotYetDefined();
-error StakingOperatorOnly();
+error RequestNotDeadYet();
+error TraitNotDefinedYet();
+error TraitAlreadyDefined();
 error PublicMintingNotActive();
 
 contract ReelVRF is ReelNFT, CommonVRF {
@@ -28,30 +29,16 @@ contract ReelVRF is ReelNFT, CommonVRF {
     bool public isRerollCostLocked;
     bool public isPublicMintingActive;
 
-    mapping(address => bool) public stakingOperator;
-    mapping(uint256 => bool) public isVoyagerStaked;
-
     mapping(uint256 => bool) public rerollInProgress;
-    mapping(uint256 => Drawing) public requestIdToDrawing;
     mapping(uint256 => uint256) public rerollCountPerNft;
+    mapping(uint256 => Drawing) public requestIdToDrawing;
 
     uint256 public freeGiftCount;
     uint256 public publicMintCount;
 
-    uint256 public MAX_FREE_GIFT = 2000;
-    uint256 public MAX_NFT_COUNT = 10000;
-    uint256 public MAX_PUBLIC_MINT = MAX_NFT_COUNT - MAX_FREE_GIFT;
-
-    uint256[] rerollPrices = new uint256[](
-        MAX_REROLL_COUNT
-    );
-
-    modifier onlyStakingOperator() {
-        if (stakingOperator[msg.sender] == false) {
-            revert StakingOperatorOnly();
-        }
-        _;
-    }
+    uint256 public constant MAX_FREE_GIFT = 2000;
+    uint256 public constant MAX_NFT_COUNT = 10000;
+    uint256 public immutable MAX_PUBLIC_MINT;
 
     modifier whenPublicMintActive() {
         if (isPublicMintingActive == false) {
@@ -64,9 +51,7 @@ contract ReelVRF is ReelNFT, CommonVRF {
         uint256 indexed drawId,
         uint256 indexed astroId,
         uint256 traitNumber,
-        uint256 rolledNumber,
-        uint256 rerollCount,
-        uint256 rerollPrice
+        uint256 rolledNumber
     );
 
     event RerollCostUpdated(
@@ -76,6 +61,13 @@ contract ReelVRF is ReelNFT, CommonVRF {
     event InitialMint(
         uint256 indexed astroId,
         uint256[] numbers
+    );
+
+    event RerollRequested(
+        uint256 indexed astroId,
+        uint256 indexed traitId,
+        uint256 rerollCount,
+        uint256 rerollPrice
     );
 
     event RerollDone(
@@ -106,33 +98,25 @@ contract ReelVRF is ReelNFT, CommonVRF {
         )
     {
         baseCost = _characterCost;
+
         rerollPrices[0] = 0;
+        rerollPrices[1] = 600E18;
 
-        rerollPrices[1] = 300E18;
-        rerollPrices[2] = 600E18;
+        rerollPrices[2] = 1_200E18;
+        rerollPrices[3] = 3_000E18;
+        rerollPrices[4] = 8_000E18;
 
-        rerollPrices[3] = 1_500E18;
-        rerollPrices[4] = 4_000E18;
-        rerollPrices[5] = 8_000E18;
+        rerollPrices[5] = 16_000E18;
+        rerollPrices[6] = 26_000E18;
+        rerollPrices[7] = 40_000E18;
 
-        rerollPrices[6] = 13_000E18;
-        rerollPrices[7] = 20_000E18;
-        rerollPrices[8] = 50_000E18;
+        rerollPrices[8] = 100_000E18;
+        rerollPrices[9] = 150_000E18;
 
-        rerollPrices[9] = 50_000E18;
+        rerollPrices[10] = 200_000E18;
+        rerollPrices[11] = 500_000E18;
 
-        rerollPrices[10] = 100_000E18;
-        rerollPrices[11] = 250_000E18;
-    }
-
-    function setStakingOperator(
-        address _operator,
-        bool _isActive
-    )
-        external
-        onlyOwner
-    {
-        stakingOperator[_operator] = _isActive;
+        MAX_PUBLIC_MINT = MAX_NFT_COUNT - MAX_FREE_GIFT;
     }
 
     function setPublicMinting(
@@ -142,92 +126,6 @@ contract ReelVRF is ReelNFT, CommonVRF {
         onlyOwner
     {
         isPublicMintingActive = _isActive;
-    }
-
-    function stakeVoyager(
-        uint256 _voyagerId
-    )
-        external
-        onlyStakingOperator
-    {
-        isVoyagerStaked[_voyagerId] = true;
-    }
-
-    function unstakeVoyager(
-        uint256 _voyagerId
-    )
-        external
-        onlyStakingOperator
-    {
-        isVoyagerStaked[_voyagerId] = false;
-    }
-
-    function transferFrom(
-        address _from,
-        address _to,
-        uint256 _tokenId
-    )
-        public
-        override(
-            ERC721,
-            IERC721
-        )
-    {
-        if (isVoyagerStaked[_tokenId] == true) {
-            revert StakedVoyager();
-        }
-
-        super.transferFrom(
-            _from,
-            _to,
-            _tokenId
-        );
-    }
-
-    function safeTransferFrom(
-        address _from,
-        address _to,
-        uint256 _tokenId
-    )
-        public
-        override(
-            ERC721,
-            IERC721
-        )
-    {
-        if (isVoyagerStaked[_tokenId] == true) {
-            revert StakedVoyager();
-        }
-
-        super.safeTransferFrom(
-            _from,
-            _to,
-            _tokenId
-        );
-    }
-
-    function safeTransferFrom(
-        address _from,
-        address _to,
-        uint256 _tokenId,
-        bytes memory _data
-    )
-        public
-        override(
-            ERC721,
-            IERC721
-        )
-    {
-        if (isVoyagerStaked[_tokenId] == true) {
-            revert StakedVoyager();
-        }
-
-        super.safeTransferFrom(
-            _from,
-            _to,
-            _tokenId,
-            _data
-        );
     }
 
     function setRerollPrice(
@@ -273,7 +171,7 @@ contract ReelVRF is ReelNFT, CommonVRF {
     }
 
     function _increasePublicCount()
-        internal
+        private
     {
         unchecked {
             ++publicMintCount;
@@ -382,7 +280,7 @@ contract ReelVRF is ReelNFT, CommonVRF {
         }
 
         if (results[_astroId][_traitId] == 0) {
-            revert TraitNotYetDefined();
+            revert TraitNotDefinedYet();
         }
 
         if (rerollInProgress[_astroId] == true) {
@@ -413,10 +311,31 @@ contract ReelVRF is ReelNFT, CommonVRF {
             );
         }
 
-        uint256 nextCounter = ++rerollCount;
+        _increaseRerollCount(
+            _astroId,
+            rerollCount
+        );
 
-        if (nextCounter < MAX_REROLL_COUNT) {
-            rerollCountPerNft[_astroId] = nextCounter;
+        emit RerollRequested(
+            _astroId,
+            _traitId,
+            rerollCount,
+            rerollPrice
+        );
+    }
+
+    function _increaseRerollCount(
+        uint256 _astroId,
+        uint256 _rerollCount
+    )
+        private
+    {
+        unchecked {
+            ++_rerollCount;
+        }
+
+        if (_rerollCount < MAX_REROLL_COUNT) {
+            rerollCountPerNft[_astroId] = _rerollCount;
         }
     }
 
@@ -443,7 +362,7 @@ contract ReelVRF is ReelNFT, CommonVRF {
         bool _addBadge,
         address _receiver
     )
-        internal
+        private
     {
         uint256 latestCharacterId = _increaseCharacterId();
 
@@ -451,7 +370,7 @@ contract ReelVRF is ReelNFT, CommonVRF {
             revert MaxNftReached();
         }
 
-        _mint(
+        _mintNoCallBack(
             _receiver,
             latestCharacterId
         );
@@ -470,7 +389,7 @@ contract ReelVRF is ReelNFT, CommonVRF {
         uint256 _traitId,
         uint256 _astroId
     )
-        internal
+        private
     {
         uint256 requestId = _requestRandomWords(
             _wordCount
@@ -483,6 +402,7 @@ contract ReelVRF is ReelNFT, CommonVRF {
             astroId: _astroId,
             traitId: _traitId,
             addBadge: _addBadge,
+            timestamp: block.timestamp,
             isMinting: _wordCount == MAX_TRAIT_TYPES
         });
 
@@ -520,11 +440,11 @@ contract ReelVRF is ReelNFT, CommonVRF {
     }
 
     function _initialMint(
-        Drawing memory currentDraw,
+        Drawing memory _currentDraw,
         uint256[] memory _randomWords,
         uint256 _requestId
     )
-        internal
+        private
     {
         uint256 i;
         uint256[] memory numbers = new uint256[](
@@ -544,26 +464,26 @@ contract ReelVRF is ReelNFT, CommonVRF {
         }
 
         results[
-            currentDraw.astroId
+            _currentDraw.astroId
         ] = numbers;
 
-        currentDraw.addBadge == true
+        _currentDraw.addBadge == true
             ? _updateBadge(
-                currentDraw.astroId
+                _currentDraw.astroId
             )
             : _updateTrait(
-                currentDraw.astroId,
+                _currentDraw.astroId,
                 BADGE_TRAIT_ID,
                 MAX_RESULT_INDEX
             );
 
         emit InitialMint(
-            currentDraw.astroId,
+            _currentDraw.astroId,
             numbers
         );
 
         emit RequestFulfilled(
-            currentDraw.drawId,
+            _currentDraw.drawId,
             _requestId,
             numbers
         );
@@ -573,7 +493,7 @@ contract ReelVRF is ReelNFT, CommonVRF {
         Drawing memory _currentDraw,
         uint256[] memory _randomWords
     )
-        internal
+        private
     {
         uint256 rolledNumber = uniform(
             _randomWords[0],
@@ -590,14 +510,6 @@ contract ReelVRF is ReelNFT, CommonVRF {
             _currentDraw.astroId
         ] = false;
 
-        uint256 rerollCount = rerollCountPerNft[
-            _currentDraw.astroId
-        ] - 1;
-
-        uint256 rerollPrice = rerollPrices[
-            rerollCount
-        ];
-
         emit RerollDone(
             _currentDraw.astroId,
             results[_currentDraw.astroId]
@@ -607,9 +519,7 @@ contract ReelVRF is ReelNFT, CommonVRF {
             _currentDraw.drawId,
             _currentDraw.astroId,
             _currentDraw.traitId,
-            rolledNumber,
-            rerollCount,
-            rerollPrice
+            rolledNumber
         );
     }
 
@@ -618,17 +528,79 @@ contract ReelVRF is ReelNFT, CommonVRF {
         uint256 _traitId,
         uint256 _rolledNumber
     )
-        internal
+        private
     {
         results[_astroId][_traitId] = _rolledNumber;
     }
 
     function _increaseDrawId()
-        internal
+        private
         returns (uint256)
     {
         unchecked {
             return ++latestDrawId;
         }
+    }
+
+    function resetDeadReroll(
+        uint256 _drawId
+    )
+        external
+        onlyOwner
+    {
+        Drawing memory deadDraw = requestIdToDrawing[
+            drawIdToRequestId[_drawId]
+        ];
+
+        require(
+            deadDraw.isMinting == false,
+            "ReelVRF: ONLY_FOR_REROLL"
+        );
+
+        if (results[deadDraw.astroId][0] == 0) {
+            revert TraitNotDefinedYet();
+        }
+
+        if (block.timestamp < deadDraw.timestamp + 2 days) {
+            revert RequestNotDeadYet();
+        }
+
+        _startRequest({
+            _wordCount: 1,
+            _addBadge: false,
+            _astroId: deadDraw.astroId,
+            _traitId: deadDraw.traitId
+        });
+    }
+
+    function resetDeadMint(
+        uint256 _drawId
+    )
+        external
+        onlyOwner
+    {
+        Drawing memory deadDraw = requestIdToDrawing[
+            drawIdToRequestId[_drawId]
+        ];
+
+        require(
+            deadDraw.isMinting == true,
+            "ReelVRF: ONLY_FOR_MINT"
+        );
+
+        if (results[deadDraw.astroId][0] > 0) {
+            revert TraitAlreadyDefined();
+        }
+
+        if (block.timestamp < deadDraw.timestamp + 2 days) {
+            revert RequestNotDeadYet();
+        }
+
+        _startRequest({
+            _traitId: 0,
+            _astroId: deadDraw.astroId,
+            _wordCount: MAX_TRAIT_TYPES,
+            _addBadge: deadDraw.addBadge
+        });
     }
 }

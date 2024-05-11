@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: -- BCOM --
 
-pragma solidity =0.8.23;
+pragma solidity =0.8.25;
 
 import "forge-std/Test.sol";
 
 import "../../ScratchVRF.sol";
-import {VRFCoordinatorV2Mock} from "../../flats/VRFCoordinatorV2Mock.sol";
+import { VRFCoordinatorV2Mock } from "../../flats/VRFCoordinatorV2Mock.sol";
 
 contract TestScratchVRF_MAINNET is Test {
 
@@ -16,12 +16,12 @@ contract TestScratchVRF_MAINNET is Test {
     ScratchVRF public scratcher;
     uint256 constant TICKET_COST = 3_000 * 1E18;
 
-    address constant LINK_TOKEN = 0x514910771AF9Ca656af840dff83E8264EcF986CA;
-    address constant VERSE_TOKEN = 0x249cA82617eC3DfB2589c4c17ab7EC9765350a18;
     address constant WISE_DEPLOYER = 0x641AD78BAca220C5BD28b51Ce8e0F495e85Fe689;
 
     VRFCoordinatorV2Mock public coordinanotor;
 
+    address constant LINK_TOKEN = 0x514910771AF9Ca656af840dff83E8264EcF986CA;
+    address constant VERSE_TOKEN = 0x249cA82617eC3DfB2589c4c17ab7EC9765350a18;
     bytes32 constant GAS_KEY_HASH = 0xd89b2bf150e3b9e13446986e571fb9cab24b13cea0a43ea20a6049a85cc807cc;
 
     uint64 constant SUBSCRIPTON_ID = 0;

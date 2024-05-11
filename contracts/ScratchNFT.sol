@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: -- BCOM --
 
-pragma solidity =0.8.23;
+pragma solidity =0.8.25;
 
 import "./CommonNFT.sol";
-import "./helpers/LunarPrizeTiers.sol";
+import "./helpers/PizzaPrizeTiers.sol";
 
 error AlreadyClaimed();
 
-abstract contract ScratchNFT is CommonNFT, LunarPrizeTiers  {
+abstract contract ScratchNFT is CommonNFT, PizzaPrizeTiers  {
 
     using Strings for uint256;
 
@@ -52,7 +52,7 @@ abstract contract ScratchNFT is CommonNFT, LunarPrizeTiers  {
         prizes[_ticketId] = _prize;
         editions[_ticketId] = _editionId;
 
-        _mint(
+        _mintNoCallBack(
             _receiver,
             _ticketId
         );
@@ -73,7 +73,7 @@ abstract contract ScratchNFT is CommonNFT, LunarPrizeTiers  {
         override
         returns (string memory)
     {
-        if (_ownerOf(_ticketId) == address(0x0)) {
+        if (_ownerOf(_ticketId) == ZERO_ADDRESS) {
             revert InvalidId();
         }
 

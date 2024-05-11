@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: -- BCOM --
 
-pragma solidity =0.8.23;
+pragma solidity =0.8.25;
 
 import "forge-std/Test.sol";
 
 import "../../ReelVRF.sol";
-import {VRFCoordinatorV2Mock} from "../../flats/VRFCoordinatorV2Mock.sol";
+import { VRFCoordinatorV2Mock } from "../../flats/VRFCoordinatorV2Mock.sol";
 
 contract TestReelVRF_MAINNET is Test {
 
@@ -273,8 +273,14 @@ contract TestReelVRF_MAINNET is Test {
             bool isMinting,
             uint256 drawId,
             uint256 astroId,
-            uint256 traitId
+            uint256 traitId,
+            uint256 timestamp
         ) = reel.requestIdToDrawing(1);
+
+        assertGt(
+            timestamp,
+            0
+        );
 
         assertEq(
             addPin,
@@ -410,11 +416,9 @@ contract TestReelVRF_MAINNET is Test {
             1
         );
 
-        string memory newBackground = astroAfter.backgroundColor;
-
         assertNotEq(
             currentBackground,
-            newBackground
+            astroAfter.backgroundColor
         );
 
         // console.log(newBackground, 'newBackground');
@@ -470,8 +474,14 @@ contract TestReelVRF_MAINNET is Test {
             bool isMinting,
             uint256 drawId,
             uint256 astroId,
-            uint256 traitId
+            uint256 traitId,
+            uint256 timestamp
         ) = reel.requestIdToDrawing(1);
+
+        assertGt(
+            timestamp,
+            0
+        );
 
         assertEq(
             addPin,
@@ -522,6 +532,19 @@ contract TestReelVRF_MAINNET is Test {
             );
 
             uint256 rerollCost = reel.getNextRerollPrice(1);
+
+            if (i == 1) {
+                assertEq(
+                    rerollCost,
+                    0
+                );
+            } else {
+                assertGt(
+                    rerollCost,
+                    0
+                );
+            }
+
             console.log(rerollCost, 'rerollCost');
 
             reel.rerollTrait(
@@ -791,6 +814,7 @@ contract TestReelVRF_MAINNET is Test {
 
         (
             bool addPin,
+            ,
             ,
             ,
             ,
