@@ -13,8 +13,9 @@
         "foundry-test-mainnet": "forge test --match-path contracts/tests/Mainnet/*.sol --gas-report -vvv",
         "foundry-test-polygon": "forge test --match-path contracts/tests/Polygon/*.sol --gas-report -vvv",
         "foundry-coverage": "forge coverage --report lcov && genhtml lcov.info --branch-coverage --output-dir coverage",
-        "deploy-reel-vrf": "forge script contracts/scripts/Deployer.s.sol:DeployReelVRF --broadcast --verify --chain-id=137 --rpc-url polygon",
-        "verify-reel-vrf": "forge verify-contract --chain-id=137 0x2D210dc61103fBD9C5Cf9C9b0cD7F264BCf84AeE ReelVRF --watch"
+        "deploy-reel-vrf": "forge script contracts/scripts/Deployer.s.sol:DeployReelVRF --with-gas-price 270000000000 --slow --broadcast --verify --chain-id=137 --rpc-url polygon",
+        "deploy-scratch-vrf": "forge script contracts/scripts/Deployer.s.sol:DeployScratchVRF --with-gas-price 31000000000 --slow --broadcast --verify --chain-id=137 --rpc-url polygon",
+        "verify-reel-vrf": "forge verify-contract --chain-id=137 0x911D1e107a9599c491dDbDFA9736D11F85cE168e ReelVRF --watch"
     },
     "author": "",
     "license": "ISC",
