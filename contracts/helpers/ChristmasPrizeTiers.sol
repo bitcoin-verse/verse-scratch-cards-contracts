@@ -79,7 +79,7 @@ contract ChristmasPrizeTiers {
         _addPrize({
             _drawEdgeA: 888,
             _drawEdgeB: 888,
-            _winAmount: toWei(10_000_000)
+            _winAmount: toWei(8_888_888)
         });
     }
 
