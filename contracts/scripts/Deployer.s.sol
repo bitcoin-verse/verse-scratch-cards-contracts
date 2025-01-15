@@ -49,7 +49,7 @@ contract DeployScratchVRF is Script {
 
         ScratchVRF scratch = new ScratchVRF(
             "ScratchVRF",
-            "SVRF-PZZ",
+            "SVRF-LOVE",
             0xAE975071Be8F8eE67addBC1A82488F1C24858067,
             3000000000000000000000,
             0x53E0bca35eC356BD5ddDFebbD1Fc0fD03FaBad39,
