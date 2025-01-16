@@ -51,8 +51,6 @@ interface IUniswapV2Router02 {
 
 contract TicketRouter {
 
-    IUniswapV2Router02 public immutable uniswapRouter;
-
     address public immutable WETH;
     address public immutable VERSE_TOKEN;
 
@@ -64,20 +62,17 @@ contract TicketRouter {
     );
 
     constructor(
-        address _uniswapRouter,
+        address _weth,
         address _verseToken
     ) {
-        uniswapRouter = IUniswapV2Router02(
-            _uniswapRouter
-        );
-
-        WETH = uniswapRouter.WETH();
+        WETH = _weth;
         VERSE_TOKEN = _verseToken;
     }
 
     function getETHPriceForTickets(
         address _scratcherContract,
-        uint256 _ticketCount
+        uint256 _ticketCount,
+        address _uniswapRouter
     )
         public
         view
@@ -93,7 +88,7 @@ contract TicketRouter {
         path[0] = WETH;
         path[1] = VERSE_TOKEN;
 
-        uint256[] memory amounts = uniswapRouter.getAmountsIn(
+        uint256[] memory amounts = IUniswapV2Router02(_uniswapRouter).getAmountsIn(
             totalCost,
             path
         );
@@ -103,7 +98,8 @@ contract TicketRouter {
 
     function buyTicketsWithETH(
         address _scratcherContract,
-        uint256 _ticketCount
+        uint256 _ticketCount,
+        address _uniswapRouter
     )
         external
         payable
@@ -119,7 +115,8 @@ contract TicketRouter {
 
         uint256 ethRequired = getETHPriceForTickets(
             _scratcherContract,
-            _ticketCount
+            _ticketCount,
+            _uniswapRouter
         );
 
         require(
@@ -133,7 +130,7 @@ contract TicketRouter {
         path[0] = WETH;
         path[1] = VERSE_TOKEN;
 
-        uint256[] memory amounts = uniswapRouter.swapETHForExactTokens{
+        uint256[] memory amounts = IUniswapV2Router02(_uniswapRouter).swapETHForExactTokens{
             value: msg.value
         }(
             totalCost,
@@ -212,7 +209,8 @@ contract TicketRouter {
     function getTokenPriceForTickets(
         address _scratcherContract,
         uint256 _ticketCount,
-        address _inputToken
+        address _inputToken,
+        address _uniswapRouter
     )
         public
         view
@@ -228,7 +226,7 @@ contract TicketRouter {
         path[0] = _inputToken;
         path[1] = VERSE_TOKEN;
 
-        uint256[] memory amounts = uniswapRouter.getAmountsIn(
+        uint256[] memory amounts = IUniswapV2Router02(_uniswapRouter).getAmountsIn(
             totalCost,
             path
         );
@@ -240,7 +238,8 @@ contract TicketRouter {
         address _scratcherContract,
         uint256 _ticketCount,
         address _inputToken,
-        uint256 _maxTokenAmount
+        uint256 _maxTokenAmount,
+        address _uniswapRouter
     )
         external
     {
@@ -252,7 +251,8 @@ contract TicketRouter {
         uint256 tokenRequired = getTokenPriceForTickets(
             _scratcherContract,
             _ticketCount,
-            _inputToken
+            _inputToken,
+            _uniswapRouter
         );
 
         require(
@@ -277,11 +277,11 @@ contract TicketRouter {
         );
 
         IERC20(_inputToken).approve(
-            address(uniswapRouter),
+            _uniswapRouter,
             _maxTokenAmount
         );
 
-        uint256[] memory amounts = uniswapRouter.swapExactTokensForTokens(
+        uint256[] memory amounts = IUniswapV2Router02(_uniswapRouter).swapExactTokensForTokens(
             _maxTokenAmount,
             totalCost,
             path,
