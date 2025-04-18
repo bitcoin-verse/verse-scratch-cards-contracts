@@ -3,11 +3,11 @@
 pragma solidity =0.8.25;
 
 import "./CommonNFT.sol";
-import "./helpers/LoveDayPrizeTiers.sol";
+import "./helpers/EarthDayPrizeTiers.sol";
 
 error AlreadyClaimed();
 
-abstract contract ScratchNFT is CommonNFT, LoveDayPrizeTiers  {
+abstract contract ScratchNFT is CommonNFT, EarthDayPrizeTiers  {
 
     using Strings for uint256;
 

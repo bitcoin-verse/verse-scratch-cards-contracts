@@ -54,6 +54,16 @@ contract TicketRouter {
     address public immutable WETH;
     address public immutable VERSE_TOKEN;
 
+    receive()
+        external
+        payable
+    {}
+
+    fallback()
+        external
+        payable
+    {}
+
     event TokenPurchase(
         address indexed buyer,
         address indexed token,
