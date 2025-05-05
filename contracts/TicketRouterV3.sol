@@ -179,6 +179,35 @@ contract TicketRouterV3 {
         external
         payable
     {
+        _buyTicketsWithNative(
+            _scratcherContract,
+            _ticketCount,
+            msg.sender
+        );
+    }
+
+    function giftTicketsWithNative(
+        address _scratcherContract,
+        uint256 _ticketCount,
+        address _recipient
+    )
+        external
+        payable
+    {
+        _buyTicketsWithNative(
+            _scratcherContract,
+            _ticketCount,
+            _recipient
+        );
+    }
+
+    function _buyTicketsWithNative(
+        address _scratcherContract,
+        uint256 _ticketCount,
+        address _recipient
+    )
+        internal
+    {
         require(
             _ticketCount > 0,
             "TicketRouterV3: INVALID_COUNT"
@@ -293,12 +322,12 @@ contract TicketRouterV3 {
 
         // Purchase tickets
         scratcher.bulkPurchase(
-            msg.sender,
+            _recipient,
             _ticketCount
         );
 
         emit TokenPurchase(
-            msg.sender,
+            _recipient,
             WMATIC,
             wmaticUsed,
             totalVerseNeeded
@@ -310,6 +339,34 @@ contract TicketRouterV3 {
         uint256 _ticketCount
     )
         public
+    {
+        _buyTickets(
+            scratcherContract,
+            _ticketCount,
+            msg.sender
+        );
+    }
+
+    function giftTickets(
+        address scratcherContract,
+        uint256 _ticketCount,
+        address _recipient
+    )
+        public
+    {
+        _buyTickets(
+            scratcherContract,
+            _ticketCount,
+            _recipient
+        );
+    }
+
+    function _buyTickets(
+        address scratcherContract,
+        uint256 _ticketCount,
+        address _recipient
+    )
+        internal
     {
         require(
             _ticketCount > 0,
@@ -335,12 +392,12 @@ contract TicketRouterV3 {
         );
 
         scratcher.bulkPurchase(
-            msg.sender,
+            _recipient,
             _ticketCount
         );
 
         emit TokenPurchase(
-            msg.sender,
+            _recipient,
             VERSE_TOKEN,
             totalCost,
             totalCost
@@ -436,13 +493,14 @@ contract TicketRouterV3 {
         );
     }
 
-    function buyWithToken(
+    function _buyWithToken(
         address _scratcherContract,
         uint256 _ticketCount,
         address _inputToken,
-        uint256 _maxTokenAmount
+        uint256 _maxTokenAmount,
+        address _recipient
     )
-        public
+        internal
     {
         require(
             _ticketCount > 0,
@@ -580,15 +638,50 @@ contract TicketRouterV3 {
 
         // Purchase tickets
         scratcher.bulkPurchase(
-            msg.sender,
+            _recipient,
             _ticketCount
         );
 
         emit TokenPurchase(
-            msg.sender,
+            _recipient,
             _inputToken,
             amountIn,
             totalVerseNeeded
+        );
+    }
+
+    function buyWithToken(
+        address _scratcherContract,
+        uint256 _ticketCount,
+        address _inputToken,
+        uint256 _maxTokenAmount
+    )
+        public
+    {
+        _buyWithToken(
+            _scratcherContract,
+            _ticketCount,
+            _inputToken,
+            _maxTokenAmount,
+            msg.sender
+        );
+    }
+
+    function giftWithToken(
+        address _scratcherContract,
+        uint256 _ticketCount,
+        address _inputToken,
+        uint256 _maxTokenAmount,
+        address _recipient
+    )
+        public
+    {
+        _buyWithToken(
+            _scratcherContract,
+            _ticketCount,
+            _inputToken,
+            _maxTokenAmount,
+            _recipient
         );
     }
 }
