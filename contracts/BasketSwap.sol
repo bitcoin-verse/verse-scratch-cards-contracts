@@ -216,6 +216,7 @@ contract BasketSwap is Ownable, ReentrancyGuard {
         payable
         nonReentrant
     {
+        require(msg.value == _totalAmountIn, "Native value sent does not match totalAmountIn");
         _validateAndPrepareInput(
             _totalAmountIn,
             _amountsToSwapForOutputs,
@@ -323,6 +324,7 @@ contract BasketSwap is Ownable, ReentrancyGuard {
         payable
         nonReentrant
     {
+        require(msg.value == _totalAmountIn, "Native value sent does not match totalAmountIn");
         _validateAndPrepareInput(
             _totalAmountIn,
             _amountsToSwapForOutputs,

@@ -32,7 +32,7 @@ contract TicketRouterV3 {
     modifier onlyOwner() {
         require(
             msg.sender == owner,
-            "TicketRouterV3: NOT_OWNER"
+            "Not the contract owner"
         );
         _;
     }
@@ -210,7 +210,7 @@ contract TicketRouterV3 {
     {
         require(
             _ticketCount > 0,
-            "TicketRouterV3: INVALID_COUNT"
+            "Ticket count must be greater than 0"
         );
 
         IScratchContract scratcher = IScratchContract(
@@ -370,7 +370,7 @@ contract TicketRouterV3 {
     {
         require(
             _ticketCount > 0,
-            "TicketRouterV3: INVALID_COUNT"
+            "Ticket count must be greater than 0"
         );
 
         IScratchContract scratcher = IScratchContract(
@@ -504,7 +504,7 @@ contract TicketRouterV3 {
     {
         require(
             _ticketCount > 0,
-            "TicketRouterV3: INVALID_COUNT"
+            "Ticket count must be greater than 0"
         );
 
         // Special case for VERSE token to skip swapping

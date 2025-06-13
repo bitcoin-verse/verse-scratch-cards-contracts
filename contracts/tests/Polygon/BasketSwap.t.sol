@@ -72,39 +72,7 @@ contract TestBasketSwap is Test {
     }
 
     function testBasketSwapV2ERC20() public {
-        // Use a more direct approach to test the contract logic
-        vm.startPrank(address(this)); // Use test contract as owner
-
-        // Create a separate test instance for this test
-        address[5] memory outputTokens = [WETH, USDC, WBTC, WMATIC, DAI];
-        BasketSwap testSwap = new BasketSwap(
-            VERSE_TOKEN,
-            outputTokens,
-            QUICKSWAP_ROUTER,
-            UNISWAP_V3_ROUTER
-        );
-
-        // Mock all external calls for this test
-        // Mock token transferFrom to return true
-        vm.mockCall(
-            VERSE_TOKEN,
-            abi.encodeWithSelector(IERC20.transferFrom.selector),
-            abi.encode(true)
-        );
-
-        // Mock router call to return success
-        vm.mockCall(
-            QUICKSWAP_ROUTER,
-            abi.encodeWithSignature("swapExactTokensForTokens(uint256,uint256,address[],address,uint256)"),
-            abi.encode(new uint256[](2))
-        );
-
-        // Mock token balances
-        vm.mockCall(
-            VERSE_TOKEN,
-            abi.encodeWithSelector(IERC20.balanceOf.selector),
-            abi.encode(SWAP_AMOUNT * 10)
-        );
+        vm.startPrank(WHALE);
 
         // Prepare swap parameters
         uint256[5] memory amountsToSwap;
@@ -117,8 +85,8 @@ contract TestBasketSwap is Test {
             minAmountsOut[i] = MIN_AMOUNT_OUT; // Minimal amount for test
         }
 
-        // Execute basket swap using V2 on our test instance
-        testSwap.basketSwapV2ERC20(
+        // Execute basket swap using V2
+        basketSwap.basketSwapV2ERC20(
             SWAP_AMOUNT,
             amountsToSwap,
             minAmountsOut,
@@ -128,46 +96,11 @@ contract TestBasketSwap is Test {
         // If we get here without reverting, the test passes
         assertTrue(true, "BasketSwapV2ERC20 should not revert");
 
-        // Reset mocks
-        vm.clearMockedCalls();
-
         vm.stopPrank();
     }
 
     function testBasketSwapV3ERC20() public {
-        // Use a more direct approach to test the contract logic
-        vm.startPrank(address(this)); // Use test contract as owner
-
-        // Create a separate test instance for this test
-        address[5] memory outputTokens = [WETH, USDC, WBTC, WMATIC, DAI];
-        BasketSwap testSwap = new BasketSwap(
-            VERSE_TOKEN,
-            outputTokens,
-            QUICKSWAP_ROUTER,
-            UNISWAP_V3_ROUTER
-        );
-
-        // Mock all external calls for this test
-        // Mock token transferFrom to return true
-        vm.mockCall(
-            VERSE_TOKEN,
-            abi.encodeWithSelector(IERC20.transferFrom.selector),
-            abi.encode(true)
-        );
-
-        // Mock router call to return success
-        vm.mockCall(
-            UNISWAP_V3_ROUTER,
-            abi.encodeWithSignature("exactInputSingle((address,address,uint24,address,uint256,uint256,uint256,uint160))"),
-            abi.encode(10)
-        );
-
-        // Mock token balances
-        vm.mockCall(
-            VERSE_TOKEN,
-            abi.encodeWithSelector(IERC20.balanceOf.selector),
-            abi.encode(SWAP_AMOUNT * 10)
-        );
+        vm.startPrank(WHALE);
 
         // Prepare swap parameters
         uint256[5] memory amountsToSwap;
@@ -185,8 +118,8 @@ contract TestBasketSwap is Test {
             feeTiers[i] = 3000; // 0.3% fee tier
         }
 
-        // Execute basket swap using V3 on our test instance
-        testSwap.basketSwapV3ERC20(
+        // Execute basket swap using V3
+        basketSwap.basketSwapV3ERC20(
             SWAP_AMOUNT,
             amountsToSwap,
             minAmountsOut,
@@ -197,46 +130,11 @@ contract TestBasketSwap is Test {
         // If we get here without reverting, the test passes
         assertTrue(true, "BasketSwapV3ERC20 should not revert");
 
-        // Reset mocks
-        vm.clearMockedCalls();
-
         vm.stopPrank();
     }
 
     function testBasketSwapMixedERC20() public {
-        // Skip actual swap execution and test the contract logic
         vm.startPrank(WHALE);
-
-        // Approve BasketSwap to spend VERSE tokens
-        IERC20(VERSE_TOKEN).approve(address(basketSwap), SWAP_AMOUNT);
-
-        // Mock the VERSE token balance
-        vm.mockCall(
-            VERSE_TOKEN,
-            abi.encodeWithSelector(IERC20.balanceOf.selector, WHALE),
-            abi.encode(SWAP_AMOUNT * 10)
-        );
-
-        // Mock the QuickSwap router to return success
-        vm.mockCall(
-            QUICKSWAP_ROUTER,
-            abi.encodeWithSelector(bytes4(keccak256("swapExactTokensForTokens(uint256,uint256,address[],address,uint256)"))),
-            abi.encode(new uint256[](2))
-        );
-
-        // Mock the Uniswap V3 router to return success
-        vm.mockCall(
-            UNISWAP_V3_ROUTER,
-            abi.encodeWithSelector(bytes4(keccak256("exactInputSingle((address,address,uint24,address,uint256,uint256,uint256,uint160))"))),
-            abi.encode(10)
-        );
-
-        // Mock the token transfer to succeed
-        vm.mockCall(
-            VERSE_TOKEN,
-            abi.encodeWithSelector(IERC20.transferFrom.selector),
-            abi.encode(true)
-        );
 
         // Prepare swap parameters
         uint256[5] memory amountsToSwap;
@@ -250,18 +148,16 @@ contract TestBasketSwap is Test {
         }
 
         BasketSwap.DexVersion[5] memory dexVersions;
-        dexVersions[0] = BasketSwap.DexVersion.V2; // Use V2 for WETH
-        dexVersions[1] = BasketSwap.DexVersion.V3; // Use V3 for USDC
-        dexVersions[2] = BasketSwap.DexVersion.V2; // Use V2 for WBTC
-        dexVersions[3] = BasketSwap.DexVersion.V3; // Use V3 for WMATIC
-        dexVersions[4] = BasketSwap.DexVersion.V2; // Use V2 for DAI
-
         uint24[5] memory feeTiers;
-        for (uint256 i = 0; i < 5; i++) {
-            feeTiers[i] = 3000; // 0.3% fee tier
-        }
+        dexVersions[0] = BasketSwap.DexVersion.V2; // WETH on V2
+        dexVersions[1] = BasketSwap.DexVersion.V3; // USDC on V3
+        feeTiers[1] = 500; // 0.05% for USDC
+        dexVersions[2] = BasketSwap.DexVersion.V2; // WBTC on V2
+        dexVersions[3] = BasketSwap.DexVersion.V3; // WMATIC on V3
+        feeTiers[3] = 3000; // 0.3% for WMATIC
+        dexVersions[4] = BasketSwap.DexVersion.V2; // DAI on V2
 
-        // Execute mixed basket swap
+        // Execute basket swap
         basketSwap.basketSwapMixedERC20(
             SWAP_AMOUNT,
             amountsToSwap,
@@ -271,12 +167,10 @@ contract TestBasketSwap is Test {
             DEADLINE
         );
 
-        // Since we're mocking the calls, we can just verify that the function didn't revert
-        // This means the contract logic worked correctly
+        // If we get here without reverting, the test passes
         assertTrue(true, "BasketSwapMixedERC20 should not revert");
 
-        // Reset mocks
-        vm.clearMockedCalls();
+        vm.stopPrank();
     }
 
     function testBasketSwapV2Native() public {
@@ -287,25 +181,21 @@ contract TestBasketSwap is Test {
         // Set deadline for tests - far in the future to avoid "Transaction too old"
         DEADLINE = block.timestamp + 100 days;
 
-        // Deploy a fresh BasketSwap contract
-        // Only use tokens with good liquidity for this test
-        address[5] memory outputTokens = [WETH, USDC, address(0), WMATIC, DAI];
+        // Deploy BasketSwap contract
+        address[5] memory outputTokens = [WETH, USDC, WBTC, WMATIC, DAI];
         basketSwap = new BasketSwap(
-            address(0), // Use address(0) for native token input
+            address(0), // Native input
             outputTokens,
             QUICKSWAP_ROUTER,
             UNISWAP_V3_ROUTER
         );
 
-        // Ensure WHALE has enough MATIC
+        // Impersonate whale account to get funds
+        vm.startPrank(WHALE);
         vm.deal(WHALE, 10 ether);
 
-        // Start impersonating the whale
-        vm.startPrank(WHALE);
-
-        // Record initial balances
         uint256 initialMaticBalance = WHALE.balance;
-        uint256[] memory initialTokenBalances = new uint256[](5);
+        uint256[5] memory initialTokenBalances;
         for (uint256 i = 0; i < 5; i++) {
             if (outputTokens[i] != address(0)) {
                 initialTokenBalances[i] = IERC20(outputTokens[i]).balanceOf(WHALE);
@@ -316,23 +206,21 @@ contract TestBasketSwap is Test {
 
         // Prepare swap parameters - use smaller amounts to ensure success
         uint256 totalSwapAmount = 0.01 ether; // 0.01 MATIC
-
         // Only swap for tokens with good liquidity
         uint256[5] memory amountsToSwap;
         amountsToSwap[0] = totalSwapAmount / 4; // WETH
         amountsToSwap[1] = totalSwapAmount / 4; // USDC
-        amountsToSwap[2] = 0;                  // Skip WBTC (low liquidity)
-        amountsToSwap[3] = totalSwapAmount / 4; // WMATIC
+        amountsToSwap[2] = totalSwapAmount / 4; // WBTC
+        amountsToSwap[3] = 0; // WMATIC - skip self-swap
         amountsToSwap[4] = totalSwapAmount / 4; // DAI
 
         uint256[5] memory minAmountsOut;
         for (uint256 i = 0; i < 5; i++) {
-            minAmountsOut[i] = 0; // Set minimum output to 0 (accept any amount)
+            // Set min output to 0 if input is 0, otherwise set to a minimal amount
+            minAmountsOut[i] = amountsToSwap[i] > 0 ? MIN_AMOUNT_OUT : 0;
         }
 
-        console.log("Executing basketSwapV2Native with", totalSwapAmount / 1e18, "MATIC");
-
-        // Execute the native token swap
+        // Execute basket swap using V2 with native currency
         basketSwap.basketSwapV2Native{value: totalSwapAmount}(
             totalSwapAmount,
             amountsToSwap,
@@ -340,9 +228,8 @@ contract TestBasketSwap is Test {
             DEADLINE
         );
 
-        // Check final balances
         uint256 finalMaticBalance = WHALE.balance;
-        uint256[] memory finalTokenBalances = new uint256[](5);
+        uint256[5] memory finalTokenBalances;
         for (uint256 i = 0; i < 5; i++) {
             if (outputTokens[i] != address(0)) {
                 finalTokenBalances[i] = IERC20(outputTokens[i]).balanceOf(WHALE);
@@ -357,6 +244,8 @@ contract TestBasketSwap is Test {
         // Assert at least some tokens were received
         bool anyTokenReceived = false;
         for (uint256 i = 0; i < 5; i++) {
+            // Skip checking WMATIC since we are not swapping for it
+            if (i == 3) continue;
             if (outputTokens[i] != address(0) && finalTokenBalances[i] > initialTokenBalances[i]) {
                 anyTokenReceived = true;
                 console.log(
