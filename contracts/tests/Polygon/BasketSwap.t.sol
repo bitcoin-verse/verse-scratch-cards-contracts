@@ -152,18 +152,19 @@ contract TestBasketSwap is Test {
         );
 
         vm.startPrank(WHALE);
-        vm.deal(WHALE, 10 ether);
+        vm.deal(WHALE, 20 ether); // Provide ample MATIC for the swap
 
-        uint256 nativeAmount = 0.01 ether;
+        uint256 nativeAmount = 10 ether; // Use a larger amount to avoid INSUFFICIENT_OUTPUT_AMOUNT
 
         uint256[5] memory amountsToSwap;
-        amountsToSwap[0] = 0; // WETH - skip self-swap
+        amountsToSwap[0] = nativeAmount / 4; // WETH
         amountsToSwap[1] = nativeAmount / 4; // USDC
         amountsToSwap[2] = nativeAmount / 4; // WBTC
-        amountsToSwap[3] = nativeAmount / 4; // WMATIC
+        amountsToSwap[3] = 0;                // WMATIC - skip self-swap (input is native MATIC -> WMATIC)
         amountsToSwap[4] = nativeAmount / 4; // DAI
 
-        uint256 totalAmountIn = amountsToSwap[1] + amountsToSwap[2] + amountsToSwap[3] + amountsToSwap[4];
+        // The total input must match the sum of individual swap amounts
+        uint256 totalAmountIn = amountsToSwap[0] + amountsToSwap[1] + amountsToSwap[2] + amountsToSwap[4];
 
         uint256[5] memory minAmountsOut;
         for (uint256 i = 0; i < 5; i++) minAmountsOut[i] = 0;
