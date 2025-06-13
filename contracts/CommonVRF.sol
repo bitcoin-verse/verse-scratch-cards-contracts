@@ -35,7 +35,7 @@ abstract contract CommonVRF is TokenHelper, Pausable, VRFConsumerBaseV2 {
     uint16 public constant CONFIRMATIONS_NEEDED = 3;
 
     // Higher value means more gas for callback.
-    uint32 public constant CALLBACK_MAX_GAS = 2000000;
+    uint32 public constant CALLBACK_MAX_GAS = 2500000;
 
     // How much to charge for base service.
     uint256 public baseCost;
