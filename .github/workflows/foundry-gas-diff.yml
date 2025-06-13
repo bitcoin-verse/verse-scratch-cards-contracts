@@ -38,7 +38,7 @@ jobs:
           FOUNDRY_FUZZ_SEED: 0x${{ github.event.pull_request.base.sha || github.sha }}
 
       - name: Compare gas reports
-        uses: Rubilmax/foundry-gas-diff@v4
+        uses: Rubilmax/foundry-gas-diff@v3.21
         with:
           name: gas-report
           summaryQuantile: 0.9 # only display the 10% most significant gas diffs in the summary (defaults to 20%)
