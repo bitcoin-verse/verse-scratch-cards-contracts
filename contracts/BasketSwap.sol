@@ -49,8 +49,6 @@ contract BasketSwap is Ownable, ReentrancyGuard {
             calculatedTotalAmountIn += _amountsToSwapForOutputs[i];
             if (_amountsToSwapForOutputs[i] == 0) {
                 require(_minAmountsOut[i] == 0, "Min output must be 0 for 0 input");
-            } else {
-                require(_minAmountsOut[i] > 0, "Min output must be > 0 for non-zero input");
             }
         }
 
