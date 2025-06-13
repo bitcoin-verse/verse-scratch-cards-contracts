@@ -350,26 +350,26 @@ contract TestBasketSwap is Test {
         }
 
         console.log("Final MATIC balance:", finalMaticBalance / 1e18, "MATIC");
-        
+
         // Assert MATIC was spent
         assertLt(finalMaticBalance, initialMaticBalance, "MATIC balance should decrease");
-        
+
         // Assert at least some tokens were received
         bool anyTokenReceived = false;
         for (uint256 i = 0; i < 5; i++) {
             if (outputTokens[i] != address(0) && finalTokenBalances[i] > initialTokenBalances[i]) {
                 anyTokenReceived = true;
                 console.log(
-                    "Received token", 
-                    i, 
-                    "amount:", 
+                    "Received token",
+                    i,
+                    "amount:",
                     finalTokenBalances[i] - initialTokenBalances[i]
                 );
             }
         }
-        
+
         assertTrue(anyTokenReceived, "Should have received at least one token");
-        
+
         vm.stopPrank();
     }
 

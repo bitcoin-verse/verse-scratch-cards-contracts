@@ -14,21 +14,21 @@ interface IERC721 {
      * @param tokenId The ID of the token being transferred
      */
     function safeTransferFrom(address from, address to, uint256 tokenId) external;
-    
+
     /**
      * @dev Gets the balance of the specified address
      * @param owner Address to query the balance of
      * @return Balance of the owner
      */
     function balanceOf(address owner) external view returns (uint256);
-    
+
     /**
      * @dev Gets the owner of the specified token ID
      * @param tokenId Token ID to query the owner of
      * @return Owner address
      */
     function ownerOf(uint256 tokenId) external view returns (address);
-    
+
     /**
      * @dev Mint a new token
      * @param to The address that will own the minted token
