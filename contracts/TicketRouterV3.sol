@@ -533,7 +533,7 @@ contract TicketRouterV3 {
 
         require(
             _maxTokenAmount >= tokenRequired,
-            "TicketRouterV3: INVALID_COUNT"
+            "Insufficient token amount"
         );
 
         // Transfer tokens from user to this contract
