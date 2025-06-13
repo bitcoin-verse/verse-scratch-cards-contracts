@@ -5,7 +5,7 @@ pragma solidity =0.8.25;
 import "forge-std/Test.sol";
 import "forge-std/console.sol";
 import "../../BasketSwap.sol";
-import "../../interfaces/IERC721.sol";
+import "../../IERC721.sol";
 
 interface IWETH9 {
     function deposit() external payable;
