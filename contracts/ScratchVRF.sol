@@ -6,6 +6,7 @@ import "./CommonVRF.sol";
 import "./ScratchNFT.sol";
 
 error ZeroTickts();
+error ZeroAddress();
 error NotEnoughFunds();
 
 contract ScratchVRF is ScratchNFT, CommonVRF {
@@ -304,5 +305,37 @@ contract ScratchVRF is ScratchNFT, CommonVRF {
         onlyOwner
     {
         baseURI = _newBaseURI;
+    }
+
+    function addConsumer(
+        address _newConsumer
+    )
+        external
+        onlyOwner
+    {
+        if (_newConsumer == ZERO_ADDRESS) {
+            revert ZeroAddress();
+        }
+
+        VRF_COORDINATOR.addConsumer(
+            SUBSCRIPTION_ID,
+            _newConsumer
+        );
+    }
+
+    function removeConsumer(
+        address _oldConsumer
+    )
+        external
+        onlyOwner
+    {
+        if (_oldConsumer == ZERO_ADDRESS) {
+            revert ZeroAddress();
+        }
+
+        VRF_COORDINATOR.removeConsumer(
+            SUBSCRIPTION_ID,
+            _oldConsumer
+        );
     }
 }

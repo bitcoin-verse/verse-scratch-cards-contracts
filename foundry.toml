@@ -7,12 +7,12 @@ cache_path = "forge-cache"
 solc = "0.8.25"
 evm_version ="shanghai"
 optimizer = true
-optimizer_runs = 9999999
+optimizer_runs = 999999
 [rpc_endpoints]
 # mainnet = "${FOUNDRY_ETHER_RPC_URL}"
 # polygon = "${FOUNDRY_POLYGON_RPC_URL}"
-mainnet = "https://mainnet.infura.io/v3/63a593656f46456ab99b5d50f212f236"
-polygon = "https://polygon-mainnet.infura.io/v3/63a593656f46456ab99b5d50f212f236"
+mainnet = "https://mainnet.infura.io/v3/777c1ef0473c4c95aea1a4f38721f10c"
+polygon = "https://polygon-mainnet.infura.io/v3/777c1ef0473c4c95aea1a4f38721f10c"
 [etherscan]
 mainnet = { key = "${ETHERSCAN_MAINNET_KEY}" }
 polygon = { key = "${POLYGON_MAINNET_KEY}" }
