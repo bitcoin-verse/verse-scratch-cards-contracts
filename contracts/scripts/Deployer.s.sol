@@ -50,14 +50,14 @@ contract DeployScratchVRF is Script {
         );
 
         ScratchVRF scratch = new ScratchVRF(
-            "ScratchEarthDay",
-            "SVRF-EARTH-D",
+            "ScratchOceanDay",
+            "SVRF-OCEAN-D",
             0xAE975071Be8F8eE67addBC1A82488F1C24858067,
             3000000000000000000000,
             0xb0897686c545045aFc77CF20eC7A532E3120E0F1,
             0xc708D6F2153933DAA50B2D0758955Be0A93A8FEc,
             0xcc294a196eeeb44da2888d17c0625cc88d70d9760a69d58d853ba6581a9ab0cd,
-            0
+            1274
         );
 
         console.log(
