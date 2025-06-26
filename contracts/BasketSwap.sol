@@ -8,6 +8,12 @@ import "./BasketHelper.sol";
  * @dev A contract to perform a basket swap of one input currency (ERC20 or native)
  * into five predefined output ERC20 tokens using Uniswap V2 or V3.
  * The input token is now passed as a parameter to each function.
+ *
+ * @notice When the input token matches one of the output tokens, users MUST:
+ * - Set the swap amount for that token position to 0
+ * - Exclude that amount from the totalAmountIn
+ * - This ensures the matching token portion remains in the user's wallet
+ * - Exception: Native ETH can be swapped to WETH (ETH->WETH is allowed)
  */
 contract BasketSwap is Ownable, ReentrancyGuard {
 
@@ -33,6 +39,8 @@ contract BasketSwap is Ownable, ReentrancyGuard {
     }
 
     function _validateAndPrepareInput(
+        address _inputToken,
+        address[5] memory _outputTokens,
         uint256 _totalAmountIn,
         uint256[5] memory _amountsToSwapForOutputs,
         uint256[5] memory _minAmountsOut
@@ -43,9 +51,22 @@ contract BasketSwap is Ownable, ReentrancyGuard {
         uint256 calculatedTotalAmountIn = 0;
 
         for (uint256 i = 0; i < 5; i++) {
+            // Check if input token matches this output token
+            // Skip this check for native ETH (address(0)) since ETH->WETH is valid
+            if (_inputToken != address(0) && _inputToken == _outputTokens[i]) {
+                require(
+                    _amountsToSwapForOutputs[i] == 0,
+                    "MUST_SET_AMOUNT_TO_0"
+                );
+            }
+
             calculatedTotalAmountIn += _amountsToSwapForOutputs[i];
+
             if (_amountsToSwapForOutputs[i] == 0) {
-                require(_minAmountsOut[i] == 0, "Min output must be 0 for 0 input");
+                require(
+                    _minAmountsOut[i] == 0,
+                    "MUST_SET_AMOUNT_TO_0"
+                );
             }
         }
 
@@ -69,6 +90,8 @@ contract BasketSwap is Ownable, ReentrancyGuard {
         nonReentrant
     {
         _validateAndPrepareInput(
+            _inputToken,
+            outputTokens,
             _totalAmountIn,
             _amountsToSwapForOutputs,
             _minAmountsOut
@@ -155,6 +178,8 @@ contract BasketSwap is Ownable, ReentrancyGuard {
         nonReentrant
     {
         _validateAndPrepareInput(
+            _inputToken,
+            outputTokens,
             _totalAmountIn,
             _amountsToSwapForOutputs,
             _minAmountsOut
@@ -215,6 +240,8 @@ contract BasketSwap is Ownable, ReentrancyGuard {
     {
         require(msg.value == _totalAmountIn, "Native value sent does not match totalAmountIn");
         _validateAndPrepareInput(
+            address(0),
+            outputTokens,
             _totalAmountIn,
             _amountsToSwapForOutputs,
             _minAmountsOut
@@ -264,6 +291,8 @@ contract BasketSwap is Ownable, ReentrancyGuard {
         nonReentrant
     {
         _validateAndPrepareInput(
+            _inputToken,
+            outputTokens,
             _totalAmountIn,
             _amountsToSwapForOutputs,
             _minAmountsOut
@@ -324,6 +353,8 @@ contract BasketSwap is Ownable, ReentrancyGuard {
     {
         require(msg.value == _totalAmountIn, "Native value sent does not match totalAmountIn");
         _validateAndPrepareInput(
+            address(0),
+            outputTokens,
             _totalAmountIn,
             _amountsToSwapForOutputs,
             _minAmountsOut
