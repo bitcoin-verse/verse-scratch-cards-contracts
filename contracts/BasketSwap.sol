@@ -7,11 +7,10 @@ import "./BasketHelper.sol";
  * @title BasketSwap
  * @dev A contract to perform a basket swap of one input currency (ERC20 or native)
  * into five predefined output ERC20 tokens using Uniswap V2 or V3.
- * The 'inputToken' state variable dictates configuration: address(0) for native, ERC20 address otherwise.
+ * The input token is now passed as a parameter to each function.
  */
 contract BasketSwap is Ownable, ReentrancyGuard {
 
-    address public inputToken;
     address public wethAddress;
     address[5] public outputTokens;
 
@@ -21,16 +20,14 @@ contract BasketSwap is Ownable, ReentrancyGuard {
     enum DexVersion { V2, V3 }
 
     constructor(
-        address _inputToken,
         address[5] memory _outputTokens,
         address _v2Router,
         address _v3Router
     ) {
-        inputToken = _inputToken;
         outputTokens = _outputTokens;
         uniswapV2Router = _v2Router;
         uniswapV3Router = _v3Router;
-        
+
         // Always get WETH address from V2 router to ensure network compatibility
         wethAddress = IUniswapV2Router02(_v2Router).WETH();
     }
@@ -60,6 +57,7 @@ contract BasketSwap is Ownable, ReentrancyGuard {
 
     // --- Mixed V2/V3 Swaps ---
     function basketSwapMixedERC20(
+        address _inputToken,
         uint256 _totalAmountIn,
         uint256[5] memory _amountsToSwapForOutputs,
         uint256[5] memory _minAmountsOut,
@@ -76,7 +74,7 @@ contract BasketSwap is Ownable, ReentrancyGuard {
             _minAmountsOut
         );
 
-        IERC20(inputToken).transferFrom(
+        IERC20(_inputToken).transferFrom(
             msg.sender,
             address(this),
             _totalAmountIn
@@ -94,13 +92,13 @@ contract BasketSwap is Ownable, ReentrancyGuard {
 
             if (_dexVersionsToUse[i] == DexVersion.V2) {
 
-                IERC20(inputToken).approve(
+                IERC20(_inputToken).approve(
                     uniswapV2Router,
                     currentAmountIn
                 );
 
                 address[] memory path = new address[](2);
-                path[0] = inputToken;
+                path[0] = _inputToken;
                 path[1] = outputTokens[i];
 
                 uint256[] memory amounts = IUniswapV2Router02(uniswapV2Router).swapExactTokensForTokens(
@@ -117,13 +115,13 @@ contract BasketSwap is Ownable, ReentrancyGuard {
 
             } else if (_dexVersionsToUse[i] == DexVersion.V3) {
 
-                IERC20(inputToken).approve(
+                IERC20(_inputToken).approve(
                     uniswapV3Router,
                     currentAmountIn
                 );
 
                 ISwapRouter.ExactInputSingleParams memory params = ISwapRouter.ExactInputSingleParams(
-                    inputToken,
+                    _inputToken,
                     outputTokens[i],
                     _feeTiersV3[i],
                     address(this),
@@ -147,6 +145,7 @@ contract BasketSwap is Ownable, ReentrancyGuard {
 
     // --- Uniswap V2 Specific Swaps ---
     function basketSwapV2ERC20(
+        address _inputToken,
         uint256 _totalAmountIn,
         uint256[5] memory _amountsToSwapForOutputs,
         uint256[5] memory _minAmountsOut,
@@ -161,7 +160,7 @@ contract BasketSwap is Ownable, ReentrancyGuard {
             _minAmountsOut
         );
 
-        IERC20(inputToken).transferFrom(
+        IERC20(_inputToken).transferFrom(
             msg.sender,
             address(this),
             _totalAmountIn
@@ -177,13 +176,13 @@ contract BasketSwap is Ownable, ReentrancyGuard {
 
             uint256 currentAmountIn = _amountsToSwapForOutputs[i];
 
-            IERC20(inputToken).approve(
+            IERC20(_inputToken).approve(
                 uniswapV2Router,
                 currentAmountIn
             );
 
             address[] memory path = new address[](2);
-            path[0] = inputToken;
+            path[0] = _inputToken;
             path[1] = outputTokens[i];
 
             uint256[] memory amounts = IUniswapV2Router02(uniswapV2Router).swapExactTokensForTokens(
@@ -254,6 +253,7 @@ contract BasketSwap is Ownable, ReentrancyGuard {
 
     // --- Uniswap V3 Specific Swaps ---
     function basketSwapV3ERC20(
+        address _inputToken,
         uint256 _totalAmountIn,
         uint256[5] memory _amountsToSwapForOutputs,
         uint256[5] memory _minAmountsOut,
@@ -269,7 +269,7 @@ contract BasketSwap is Ownable, ReentrancyGuard {
             _minAmountsOut
         );
 
-        IERC20(inputToken).transferFrom(
+        IERC20(_inputToken).transferFrom(
             msg.sender,
             address(this),
             _totalAmountIn
@@ -285,13 +285,13 @@ contract BasketSwap is Ownable, ReentrancyGuard {
 
             uint256 currentAmountIn = _amountsToSwapForOutputs[i];
 
-            IERC20(inputToken).approve(
+            IERC20(_inputToken).approve(
                 uniswapV3Router,
                 currentAmountIn
             );
 
             ISwapRouter.ExactInputSingleParams memory params = ISwapRouter.ExactInputSingleParams(
-                inputToken,
+                _inputToken,
                 outputTokens[i],
                 _feeTiersV3[i],
                 address(this),
@@ -376,14 +376,7 @@ contract BasketSwap is Ownable, ReentrancyGuard {
         }
     }
 
-    function setInputToken(
-        address _token
-    )
-        external
-        onlyOwner
-    {
-        inputToken = _token;
-    }
+
 
     function setOutputTokens(
         address[5] memory _tokens
