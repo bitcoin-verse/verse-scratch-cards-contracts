@@ -3,7 +3,6 @@
 pragma solidity =0.8.25;
 
 import "forge-std/Test.sol";
-
 import "../../ScratchVRF.sol";
 
 contract TestScratchVRF_POLYGON is Test {
@@ -13,7 +12,6 @@ contract TestScratchVRF_POLYGON is Test {
     ScratchVRF public scratcher;
 
     address constant WISE_DEPLOYER = 0x641AD78BAca220C5BD28b51Ce8e0F495e85Fe689;
-
 
     uint256 constant TICKET_COST = 3_000 * 1E18;
     address constant LINK_TOKEN = 0x53E0bca35eC356BD5ddDFebbD1Fc0fD03FaBad39;
