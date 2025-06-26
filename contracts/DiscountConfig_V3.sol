@@ -166,10 +166,13 @@ contract DiscountConfig_V3 {
         view
         returns (bool)
     {
-        for (uint i = 0; i < _tokenList.length; i++) {
+        for (uint256 i = 0; i < _tokenList.length; i++) {
 
             address token = _tokenList[i];
-            TokenRule memory rule = rules[token];
+
+            TokenRule memory rule = rules[
+                token
+            ];
 
             // A rule with a threshold of 0 is considered invalid/deleted, so we skip.
             if (rule.threshold > 0) {

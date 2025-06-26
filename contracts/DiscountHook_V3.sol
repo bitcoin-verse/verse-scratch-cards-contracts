@@ -1,16 +1,30 @@
+
 // SPDX-License-Identifier: -- BCOM --
 
 pragma solidity ^0.8.20;
 
-/**
- * @title DiscountHook (V3)
- * @notice This hook calculates a swap fee based on whether the user is eligible for any
- * configured token discount.
- * @dev It integrates with DiscountConfig_V3. It automatically checks the caller's
- * eligibility by triggering a bounded loop, removing the need for user-provided data.
- */
+// NOTE: These imports point to the Balancer V3 monorepo structure.
+import { IVault } from "@balancer-labs/v3-interfaces/contracts/vault/IVault.sol";
+import { BaseHooks } from "@balancer-labs/v3-vault/contracts/BaseHooks.sol";
+import { VaultGuard } from "@balancer-labs/v3-vault/contracts/VaultGuard.sol";
 
-interface IDiscountConfig_V3 {
+import {
+    HookFlags,
+    PoolSwapParams,
+    TokenConfig,
+    LiquidityManagement
+} from "@balancer-labs/v3-interfaces/contracts/vault/VaultTypes.sol";
+
+interface ISenderGuard {
+
+    function getSender()
+        external
+        view
+        returns (address);
+}
+
+interface IDiscountConfig {
+
     function isEligible(
         address user
     )
@@ -19,52 +33,113 @@ interface IDiscountConfig_V3 {
         returns (bool);
 }
 
-contract DiscountHook_V3 {
+/**
+ * @title DiscountHook (V3) - Balancer V3 Compliant
+ * @notice This hook calculates a dynamic swap fee for a Balancer V3 pool.
+ * @dev This contract is fully compliant with the Balancer V3 hook standard. It applies a
+ * 10% discount if the user is eligible. It now correctly uses the onComputeDynamicSwapFeePercentage
+ * signature and securely determines the user's address via a trusted router.
+ */
+contract DiscountHook_V3 is BaseHooks, VaultGuard {
 
     // --- State Variables ---
 
-    IDiscountConfig_V3 public immutable config;
-
-    uint256 public constant DEFAULT_FEE = 30E14;      // 0.3%
-    uint256 public constant DISCOUNTED_FEE = 27E14;  // 0.27% (10% discount)
+    IDiscountConfig public immutable config;
+    address public immutable trustedRouter;
+    uint256 public constant DISCOUNT_FACTOR = 90; // 100% - 10% discount
 
     // --- Constructor ---
 
     constructor(
-        address _config
-    ) {
-        config = IDiscountConfig_V3(
+        IVault _vault,
+        address _config,
+        address _trustedRouter
+    )
+        VaultGuard(_vault)
+    {
+        config = IDiscountConfig(
             _config
         );
+
+        trustedRouter = _trustedRouter;
+    }
+
+    // --- Balancer V3 Hook Standard Functions ---
+
+    function getHookFlags()
+        public
+        pure
+        override
+        returns (HookFlags memory)
+    {
+        HookFlags memory flags;
+        flags.shouldCallComputeDynamicSwapFee = true;
+        return flags;
+    }
+
+    function onRegister(
+        address, // factory
+        address, // pool
+        TokenConfig[] memory,
+        LiquidityManagement calldata
+    )
+        public
+        view
+        override
+        onlyVault
+        returns (bool)
+    {
+        return true;
     }
 
     /**
-     * @notice Balancer V3 hook entry point, called before every swap.
-     * @dev It automatically checks if the `caller` is eligible for a discount by calling
-     * the config contract. The return value is an ABI-encoded fee that the
-     * Balancer vault will apply to the swap.
-     * @param caller The address of the swapping user, provided by the Balancer Vault.
-     * @return An ABI-encoded uint256 representing the calculated swap fee.
+     * @notice Dynamically calculates the swap fee percentage for the current swap.
+     * @dev This function now uses the correct signature from the Balancer V3 IHooks interface.
+     * It securely gets the user's address by calling `getSender()` on the trusted router
+     * that is passed via the swap parameters.
+     * @param params Swap parameters, which include the router address.
+     * @param staticSwapFeePercentage The pool's currently configured static swap fee.
+     * @return The new swap fee percentage to be applied to the swap.
      */
-    function beforeSwap(
-        address caller,
-        address, // tokenIn (unused)
-        address, // tokenOut (unused)
-        uint256, // amount (unused)
-        bytes calldata // userData (unused)
+    function onComputeDynamicSwapFeePercentage(
+        PoolSwapParams calldata params,
+        address, // pool (unused in this hook)
+        uint256 staticSwapFeePercentage
     )
-        external
+        public
+        override
         view
-        returns (bytes memory)
+        returns (
+            bool,
+            uint256
+        )
     {
+        // Security check: Only allow calls from the trusted router.
+        if (params.router != trustedRouter) {
+            return (false, 0); // Do not apply a dynamic fee
+        }
+
+        // Securely get the original user's address from the trusted router.
+        address user = ISenderGuard(
+            params.router
+        ).getSender();
+
         bool eligible = config.isEligible(
-            caller
+            user
         );
 
-        uint256 fee = eligible
-            ? DISCOUNTED_FEE
-            : DEFAULT_FEE;
+        uint256 dynamicFee;
+        if (eligible) {
+            // Apply a 10% discount.
+            dynamicFee = (staticSwapFeePercentage * DISCOUNT_FACTOR) / 100;
+        } else {
+            // If not eligible, return the pool's original fee.
+            dynamicFee = staticSwapFeePercentage;
+        }
 
-        return abi.encode(fee);
+        return (
+            true,
+            dynamicFee
+        );
     }
 }
