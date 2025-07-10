@@ -1,0 +1,2 @@
+@balancer-labs/v3-interfaces/=lib/balancer-v3-monorepo/pkg/interfaces/
+@balancer-labs/v3-vault/=lib/balancer-v3-monorepo/pkg/vault/
