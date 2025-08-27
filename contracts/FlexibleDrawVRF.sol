@@ -4,7 +4,14 @@ pragma solidity =0.8.25;
 
 import "./CommonVRF.sol";
 import "./ScratchNFT.sol";
-import "./flats/ERC721Enumerable.sol";
+
+interface IScratcherContract {
+    function bulkPurchase(
+        address _receiver,
+        uint256 _ticketCount
+    )
+        external;
+}
 
 error ZeroTickets();
 error ZeroAddress();
@@ -12,14 +19,18 @@ error NotEnoughFunds();
 error BelowMinimumDeposit();
 error InvalidNFTAddress();
 error NFTTransferFailed();
+error NotTheOwner();
 
 contract FlexibleDrawVRF is ScratchNFT, CommonVRF {
 
     // Base cost for a standard ticket
     uint256 public standardCost;
 
-    // Scratcher NFT contract
+    // Scratcher NFT contract (for reading balance and transfers)
     IERC721Enumerable public scratcherNFT;
+
+    // Scratcher contract interface (for minting)
+    IScratcherContract public scratcherContract;
 
     // Voyager NFT contract
     IERC721Enumerable public voyagerNFT;
@@ -35,8 +46,8 @@ contract FlexibleDrawVRF is ScratchNFT, CommonVRF {
     uint256 public voyagerChance = 30;    // 30% chance to get Voyagers
     uint256 public minNFTChance = 10;     // 10% chance to get at least one NFT if randomized to 0
 
-    // We no longer track reserved NFTs to save gas
-    // NFT counts are determined during callback but distributed during claim
+    // Maximum number of scratcher NFTs that can be substituted per ticket
+    uint256 public maxScratcherSubstitution = 1;
 
     // Structure to store flexible drawing data
     struct FlexibleDrawing {
@@ -47,7 +58,9 @@ contract FlexibleDrawVRF is ScratchNFT, CommonVRF {
 
     // Mapping to store NFT distribution data for each ticket
     mapping(uint256 => uint256) public ticketToScratcherCount;
-    mapping(uint256 => uint256) public ticketToVoyagerCount;
+
+    // Mapping to store flexible drawing data
+    mapping(uint256 => FlexibleDrawing) public requestIdToFlexibleDrawing;
 
     constructor(
         address _vrfCoordinatorV2Address,
@@ -81,7 +94,7 @@ contract FlexibleDrawVRF is ScratchNFT, CommonVRF {
         standardCost = _standardCost;
         baseCost = _minimumDeposit;
 
-        scratcherNFT = IERC721Enumerable(
+        scratcherContract = IScratcherContract(
             _scratcherNFT
         );
 
@@ -113,6 +126,45 @@ contract FlexibleDrawVRF is ScratchNFT, CommonVRF {
         );
     }
 
+    /**
+     * @notice Allows to purchase multiple flexible draws with different deposit amounts
+     * @param _depositAmounts Array of Verse token amounts to deposit for each draw (each must be >= baseCost)
+     */
+    function buyFlexibleDrawBulk(
+        uint256[] calldata _depositAmounts
+    )
+        external
+        whenNotPaused
+    {
+        if (_depositAmounts.length == 0) {
+            revert ZeroTickets();
+        }
+
+        uint256 totalAmount = 0;
+
+        // Validate each deposit amount and calculate total
+        for (uint256 i = 0; i < _depositAmounts.length; i++) {
+            if (_depositAmounts[i] < baseCost) {
+                revert BelowMinimumDeposit();
+            }
+            totalAmount += _depositAmounts[i];
+        }
+
+        // Take all tokens upfront
+        _takeTokens(
+            VERSE_TOKEN,
+            totalAmount
+        );
+
+        // Create each draw with its specific deposit amount
+        for (uint256 i = 0; i < _depositAmounts.length; i++) {
+            _drawFlexibleRequest(
+                msg.sender,
+                _depositAmounts[i]
+            );
+        }
+    }
+
     function _newFlexibleDraw(
         address _receiver,
         uint256 _depositAmount
@@ -130,17 +182,18 @@ contract FlexibleDrawVRF is ScratchNFT, CommonVRF {
         );
     }
 
-    // Mapping to store flexible drawing data
-    mapping(uint256 => FlexibleDrawing) public requestIdToFlexibleDrawing;
-
     function _drawFlexibleRequest(
         address _receiver,
         uint256 _depositAmount
     )
         internal
     {
+        // Need 3 random words:
+        // 1 for prize tier,
+        // 1 for edition,
+        // 1 for NFT distribution
         uint256 requestId = _requestRandomWords({
-            _wordCount: 3 // Need 3 random words: 1 for prize tier, 1 for edition, 1 for NFT distribution
+            _wordCount: 3
         });
 
         uint256 latestDrawId = _increaseLatestDrawId();
@@ -219,10 +272,9 @@ contract FlexibleDrawVRF is ScratchNFT, CommonVRF {
             1000
         );
 
-        // Determine how many NFTs to give based on prize amount and random number
+        // Determine scratcher NFTs based on prize amount and random number
         (
             uint256 scratcherCount,
-            uint256 voyagerCount,
             uint256 remainingPrize
         ) = _calculateNFTDistribution(
             adjustedPrize,
@@ -239,9 +291,8 @@ contract FlexibleDrawVRF is ScratchNFT, CommonVRF {
             currentDraw.ticketReceiver
         );
 
-        // Store NFT distribution data for claiming later
+        // Store only scratcher count - voyagers will be calculated dynamically during claiming
         ticketToScratcherCount[latestTicketId] = scratcherCount;
-        ticketToVoyagerCount[latestTicketId] = voyagerCount;
 
         // Emit the standard VRF event for compatibility
         emit RequestFulfilled(
@@ -252,7 +303,7 @@ contract FlexibleDrawVRF is ScratchNFT, CommonVRF {
     }
 
     /**
-     * @notice Calculate how many NFTs to distribute based on prize amount
+     * @notice Calculate scratcher NFT distribution based on prize amount
      * @param _prizeAmount Total prize amount in Verse tokens
      * @param _randomNumber Random number to determine distribution
      */
@@ -264,56 +315,24 @@ contract FlexibleDrawVRF is ScratchNFT, CommonVRF {
         view
         returns (
             uint256 scratcherCount,
-            uint256 voyagerCount,
             uint256 remainingPrize
         )
     {
         remainingPrize = _prizeAmount;
 
-        // Get current NFT balances in the contract
-        uint256 availableScratchers = scratcherNFT.balanceOf(
-            address(this)
-        );
-
-        uint256 availableVoyagers = voyagerNFT.balanceOf(
-            address(this)
-        );
-
-        // If no NFTs available after accounting for reservations, return early with all prize as Verse
-        if (availableScratchers == 0 && availableVoyagers == 0) {
-            return (
-                0,
-                0,
-                _prizeAmount
-            );
-        }
-
-        // Calculate NFT distributions using shared logic
-        // First for Scratchers
-        if (remainingPrize >= scratcherCost && availableScratchers > 0) {
+        // Calculate Scratcher NFT distributions (will be minted on-demand during claiming)
+        if (remainingPrize >= scratcherCost) {
             (scratcherCount, remainingPrize) = _calculateNFTCount(
                 remainingPrize,
                 scratcherCost,
-                availableScratchers,
+                maxScratcherSubstitution, // Use max substitution limit
                 scratcherChance,
                 _randomNumber
             );
         }
 
-        // Then for Voyagers, using a different part of the random number
-        if (remainingPrize >= voyagerCost && availableVoyagers > 0) {
-            (voyagerCount, remainingPrize) = _calculateNFTCount(
-                remainingPrize,
-                voyagerCost,
-                availableVoyagers,
-                voyagerChance,
-                _randomNumber / 100 // Use a different part of the random number
-            );
-        }
-
         return (
             scratcherCount,
-            voyagerCount,
             remainingPrize
         );
     }
@@ -379,7 +398,7 @@ contract FlexibleDrawVRF is ScratchNFT, CommonVRF {
      * @notice Distribute NFTs to the winner
      * @param _receiver Address to receive the NFTs
      * @param _scratcherCount Number of Scratcher NFTs to mint
-     * @param _voyagerCount Number of Voyager NFTs to mint
+     * @param _voyagerCount Number of Voyager NFTs to distribute (if available)
      */
     function _distributeNFTs(
         address _receiver,
@@ -388,35 +407,211 @@ contract FlexibleDrawVRF is ScratchNFT, CommonVRF {
     )
         internal
     {
-        // Transfer Scratcher NFTs if any
-        for (uint256 i = 0; i < _scratcherCount; i++) {
-
-            uint256 tokenId = scratcherNFT.tokenOfOwnerByIndex(
-                address(this),
-                0
-            );
-
-            scratcherNFT.safeTransferFrom(
-                address(this),
+        if (_scratcherCount > 0) {
+            _mintScratcherNFTs(
                 _receiver,
-                tokenId
+                _scratcherCount
             );
         }
 
-        // Transfer Voyager NFTs if any
-        for (uint256 i = 0; i < _voyagerCount; i++) {
+        if (_voyagerCount == 0) {
+            return;
+        }
 
-            uint256 tokenId = voyagerNFT.tokenOfOwnerByIndex(
-                address(this),
-                0
-            );
+        uint256 availableVoyagers = voyagerNFT.balanceOf(
+            address(this)
+        );
 
-            voyagerNFT.safeTransferFrom(
-                address(this),
-                _receiver,
-                tokenId
+        // Only distribute voyagers if we have enough available
+        if (availableVoyagers >= _voyagerCount) {
+            for (uint256 i = 0; i < _voyagerCount; i++) {
+                uint256 tokenId = voyagerNFT.tokenOfOwnerByIndex(
+                    address(this),
+                    0
+                );
+
+                voyagerNFT.safeTransferFrom(
+                    address(this),
+                    _receiver,
+                    tokenId
+                );
+            }
+        }
+    }
+
+    /**
+     * @notice Calculate voyager eligibility for a ticket dynamically
+     * @param _ticketId The ticket ID to check voyager eligibility for
+     * @return voyagerCount Number of voyager NFTs the ticket is eligible for
+     */
+    function _getVoyagerEligibility(
+        uint256 _ticketId
+    )
+        internal
+        view
+        returns (uint256 voyagerCount)
+    {
+        // Calculate voyager eligibility based on original prize amount + scratcher cost
+        uint256 originalPrize = prizes[_ticketId] + (
+            ticketToScratcherCount[_ticketId] * scratcherCost
+        );
+
+        // Use ticket ID as random seed for voyager calculation
+        uint256 randomSeed = uint256(
+            keccak256(
+                abi.encodePacked(
+                    _ticketId,
+                    "voyager"
+                )
+            )
+        ) % 1000;
+
+        // Calculate potential voyager count based on original prize
+        if (originalPrize >= voyagerCost) {
+            (voyagerCount,) = _calculateNFTCount(
+                originalPrize,
+                voyagerCost,
+                1, // Maximum 1 voyager per ticket
+                voyagerChance,
+                randomSeed
             );
         }
+
+        return voyagerCount;
+    }
+
+    /**
+     * @notice Internal function to mint scratcher NFTs
+     * @param _receiver Address to receive the NFTs
+     * @param _count Number of scratcher NFTs to mint
+     */
+    function _mintScratcherNFTs(
+        address _receiver,
+        uint256 _count
+    )
+        internal
+    {
+        if (_count == 0) return;
+
+        // Calculate total cost for scratcher NFTs
+        uint256 totalCost = _count * scratcherCost;
+
+        // Check if we have enough Verse tokens to pay for the scratchers
+        uint256 balance = VERSE_TOKEN.balanceOf(
+            address(this)
+        );
+
+        if (balance >= totalCost) {
+            // Approve the scratcher contract to spend our tokens
+            VERSE_TOKEN.approve(
+                address(scratcherContract),
+                totalCost
+            );
+
+            scratcherContract.bulkPurchase(
+                _receiver,
+                _count
+            );
+        }
+    }
+
+    /**
+     * @notice Internal function to handle claiming logic for a single ticket
+     * @param _ticketId ID of the ticket to claim
+     * @param _claimer Address of the claimer
+     * @return basePrize The base prize amount
+     * @return scratcherCount Number of scratcher NFTs to distribute
+     * @return voyagerCount Number of voyager NFTs to distribute
+     */
+    function _processTicketClaim(
+        uint256 _ticketId,
+        address _claimer
+    )
+        internal
+        returns (
+            uint256 basePrize,
+            uint256 scratcherCount,
+            uint256 voyagerCount
+        )
+    {
+        // Check ownership
+        if (ownerOf(_ticketId) != _claimer) {
+            revert NotTheOwner();
+        }
+
+        _setClaimed(
+            _ticketId
+        );
+
+        basePrize = prizes[
+            _ticketId
+        ];
+
+        scratcherCount = ticketToScratcherCount[
+            _ticketId
+        ];
+
+        voyagerCount = _getVoyagerEligibility(
+            _ticketId
+        );
+
+        return (
+            basePrize,
+            scratcherCount,
+            voyagerCount
+        );
+    }
+
+    /**
+     * @notice Internal function to completely process a single ticket claim
+     * @param _ticketId ID of the ticket to claim
+     * @param _claimer Address of the claimer
+     */
+    function _claimSingleTicketComplete(
+        uint256 _ticketId,
+        address _claimer
+    )
+        internal
+    {
+        (
+            uint256 basePrize,
+            uint256 scratcherCount,
+            uint256 voyagerCount
+        ) = _processTicketClaim(
+            _ticketId,
+            _claimer
+        );
+
+        // Check if we have enough tokens for the base prize
+        uint256 balance = VERSE_TOKEN.balanceOf(
+            address(this)
+        );
+
+        if (balance < basePrize) {
+            revert NotEnoughFunds();
+        }
+
+        // Transfer base prize
+        _giveTokens(
+            VERSE_TOKEN,
+            _claimer,
+            basePrize
+        );
+
+        // Distribute any NFTs associated with this ticket
+        if (scratcherCount > 0 || voyagerCount > 0) {
+            _distributeNFTs(
+                _claimer,
+                scratcherCount,
+                voyagerCount
+            );
+        }
+
+        emit PrizeClaimed(
+            _ticketId,
+            _claimer,
+            basePrize
+        );
     }
 
     /**
@@ -428,57 +623,34 @@ contract FlexibleDrawVRF is ScratchNFT, CommonVRF {
     )
         external
         whenNotPaused
-        onlyTokenOwner(_ticketId)
     {
-        _setClaimed(
-            _ticketId
-        );
-
-        uint256 prizeWei = prizes[
-            _ticketId
-        ];
-
-        // Check if we have enough tokens for the prize
-        uint256 balance = VERSE_TOKEN.balanceOf(
-            address(this)
-        );
-
-        if (balance < prizeWei) {
-            revert NotEnoughFunds();
-        }
-
-        _giveTokens(
-            VERSE_TOKEN,
-            msg.sender,
-            prizeWei
-        );
-
-        uint256 scratcherCount = ticketToScratcherCount[
-            _ticketId
-        ];
-
-        uint256 voyagerCount = ticketToVoyagerCount[
-            _ticketId
-        ];
-
-        // Distribute any NFTs associated with this ticket
-        if (scratcherCount > 0 || voyagerCount > 0) {
-            _distributeNFTs(
-                msg.sender,
-                scratcherCount,
-                voyagerCount
-            );
-
-            // Clear the NFT counts to prevent double-claiming
-            ticketToScratcherCount[_ticketId] = 0;
-            ticketToVoyagerCount[_ticketId] = 0;
-        }
-
-        emit PrizeClaimed(
+        _claimSingleTicketComplete(
             _ticketId,
-            msg.sender,
-            prizeWei
+            msg.sender
         );
+    }
+
+    /**
+     * @notice Allows claim prizes for multiple galaxy ticket NFTs
+     * @param _ticketIds Array of galaxy ticket NFT IDs to claim
+     */
+    function claimPrizeBulk(
+        uint256[] calldata _ticketIds
+    )
+        external
+        whenNotPaused
+    {
+        if (_ticketIds.length == 0) {
+            revert ZeroTickets();
+        }
+
+        // Process each ticket using the same logic as single claim
+        for (uint256 i = 0; i < _ticketIds.length; i++) {
+            _claimSingleTicketComplete(
+                _ticketIds[i],
+                msg.sender
+            );
+        }
     }
 
     /**
@@ -566,6 +738,10 @@ contract FlexibleDrawVRF is ScratchNFT, CommonVRF {
         scratcherNFT = IERC721Enumerable(
             _newScratcherNFT
         );
+
+        scratcherContract = IScratcherContract(
+            _newScratcherNFT
+        );
     }
 
     /**
@@ -647,6 +823,23 @@ contract FlexibleDrawVRF is ScratchNFT, CommonVRF {
         minNFTChance = _newChance;
     }
 
+    /**
+     * @notice Update the maximum scratcher substitution amount
+     * @param _newMax New maximum number of scratcher NFTs that can be substituted per ticket
+     */
+    function updateMaxScratcherSubstitution(
+        uint256 _newMax
+    )
+        external
+        onlyOwner
+    {
+        if (_newMax == 0) {
+            revert InvalidCost();
+        }
+
+        maxScratcherSubstitution = _newMax;
+    }
+
     function _increaseLatestTicketId()
         internal
         returns (uint256)
@@ -689,7 +882,7 @@ contract FlexibleDrawVRF is ScratchNFT, CommonVRF {
         }
     }
 
-    function addConsumer(
+    /* function addConsumer(
         address _newConsumer
     )
         external
@@ -703,25 +896,12 @@ contract FlexibleDrawVRF is ScratchNFT, CommonVRF {
             SUBSCRIPTION_ID,
             _newConsumer
         );
-    }
-
-    /**
-     * @notice Get the number of Scratcher NFTs owned by the contract
-     * @return count The number of Scratcher NFTs
-     */
-    function getScratcherCount()
-        external
-        view
-        returns (uint256)
-    {
-        return scratcherNFT.balanceOf(
-            address(this)
-        );
-    }
+    } */
 
     /**
      * @notice Get the number of Voyager NFTs owned by the contract
-     * @return count The number of Voyager NFTs
+     * @dev Scratcher NFTs are now minted on-demand, so no pre-stored count needed
+     * @return count The number of Voyager NFTs available for substitution
      */
     function getVoyagerCount()
         external
@@ -733,7 +913,7 @@ contract FlexibleDrawVRF is ScratchNFT, CommonVRF {
         );
     }
 
-    function removeConsumer(
+    /* function removeConsumer(
         address _oldConsumer
     )
         external
@@ -747,5 +927,5 @@ contract FlexibleDrawVRF is ScratchNFT, CommonVRF {
             SUBSCRIPTION_ID,
             _oldConsumer
         );
-    }
+    } */
 }
