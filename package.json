@@ -52,7 +52,7 @@
     "dependencies": {
         "@ethersproject/address": "^5.7.0",
         "hardhat": "^3.14.0",
-        "hardhat-gas-reporter": "^1.0.9"
+        "hardhat-gas-reporter": "^2.3.0"
     },
     "devDependencies": {
         "@nomicfoundation/hardhat-foundry": "^3.0.4",
