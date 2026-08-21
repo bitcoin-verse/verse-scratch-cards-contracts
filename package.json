@@ -48,26 +48,5 @@
         "verify-reel-vrf": "forge verify-contract --chain-id=137 0x911D1e107a9599c491dDbDFA9736D11F85cE168e ReelVRF --watch"
     },
     "author": "",
-    "license": "ISC",
-    "dependencies": {
-        "@ethersproject/address": "^5.7.0",
-        "hardhat": "^3.14.0",
-        "hardhat-gas-reporter": "^1.0.9"
-    },
-    "devDependencies": {
-        "@nomicfoundation/hardhat-foundry": "^3.0.4",
-        "@nomicfoundation/hardhat-network-helpers": "^3.0.11",
-        "@nomiclabs/hardhat-ethers": "^2.1.1",
-        "@nomiclabs/hardhat-waffle": "^2.0.3",
-        "@nomiclabs/hardhat-web3": "^2.0.0",
-        "chai": "^4.3.6",
-        "custom-error-test-helper": "^1.0.6",
-        "ethers": "^5.7.1"
-    },
-    "overrides": {
-        "pbkdf2": "3.1.6",
-        "sha.js": "2.4.12",
-        "brace-expansion@1": "1.1.18",
-        "brace-expansion@2": "2.1.4"
-    }
+    "license": "ISC"
 }
