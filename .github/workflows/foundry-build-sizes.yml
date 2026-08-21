@@ -18,9 +18,6 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Install Dependencies
-        run: npm install
-
       - name: Install Foundry
         uses: bitcoin-portal/foundry-toolchain@v1
         with:
